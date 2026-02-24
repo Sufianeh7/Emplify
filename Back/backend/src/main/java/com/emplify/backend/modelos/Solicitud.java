@@ -57,4 +57,8 @@ public class Solicitud {
 
     public Empleado getEmpleado() { return empleado; }
     public void setEmpleado(Empleado empleado) { this.empleado = empleado; }
+
+    public TipoSolicitud getTipoSolicitud() { return tipoSolicitud; }
+
+    public void setTipoSolicitud(TipoSolicitud tipoSolicitud) { this.tipoSolicitud = tipoSolicitud; }
 }
