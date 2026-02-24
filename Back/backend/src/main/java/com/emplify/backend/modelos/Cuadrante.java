@@ -2,6 +2,7 @@ package com.emplify.backend.modelos;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "cuadrante")
@@ -17,6 +18,12 @@ public class Cuadrante {
 
     @Column(name = "turno", nullable = false)
     private String turno; // Ej: "MAÑANA", "TARDE", "NOCHE", "LIBRE", "VACACIONES"
+
+    @Column(name = "hora_inicio")
+    private LocalTime horaInicio;
+
+    @Column(name = "hora_fin")
+    private LocalTime horaFin;
 
     // La clave de todo: Muchos días de cuadrante pertenecen a un solo Empleado
     @ManyToOne
@@ -39,4 +46,10 @@ public class Cuadrante {
 
     public Empleado getEmpleado() { return empleado; }
     public void setEmpleado(Empleado empleado) { this.empleado = empleado; }
+
+    public LocalTime getHoraInicio() { return horaInicio; }
+    public void setHoraInicio(LocalTime horaInicio) { this.horaInicio = horaInicio; }
+
+    public LocalTime getHoraFin() { return horaFin; }
+    public void setHoraFin(LocalTime horaFin) { this.horaFin = horaFin; }
 }

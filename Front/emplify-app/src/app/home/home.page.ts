@@ -40,6 +40,15 @@ export class HomePage {
           // Guardamos los datos del empleado en la memoria del móvil pasándolos a texto
           localStorage.setItem('empleadoLogueado', JSON.stringify(respuesta))
 
+          // Guardamos el token para futuras peticiones
+          localStorage.setItem('token', credenciales)
+
+          // ---> ESTA ES LA LÍNEA MÁGICA QUE QUITA EL WARNING <---
+          // "Soltamos" cualquier botón o input que estuviera seleccionado
+          if (document.activeElement) {
+            (document.activeElement as HTMLElement).blur();
+          }
+
           // LA MAGIA DE LA NAVEGACIÓN
           // Si todo va bien, le decimos a Ionic que cambie de pantalla
           this.router.navigate(['/inicio']);
