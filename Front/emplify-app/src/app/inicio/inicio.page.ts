@@ -44,4 +44,13 @@ export class InicioPage implements OnInit {
     // 2. Navegamos a la pantalla del cuadrante
     this.router.navigate(['/cuadrante']);
   }
+
+  goSolicitudes(){
+    if(document.activeElement){
+      (document.activeElement as HTMLElement).blur();
+    }
+
+    // Navegamos a la pantalla de solicitudes
+    this.router.navigate(['/solicitudes'])
+  }
 }

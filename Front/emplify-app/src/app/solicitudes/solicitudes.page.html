@@ -1,0 +1,49 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="secondary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/inicio"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Pedir Días Libres</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Nueva Solicitud</ion-card-title>
+      <ion-card-subtitle>Rellena los datos para enviar tu petición</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-list>
+
+        <ion-item>
+          <ion-select label="Tipo de permiso" label-placement="floating" [(ngModel)]="tipoSeleccionado" placeholder="Selecciona una opción">
+            <ion-select-option *ngFor="let tipo of tiposSolicitud" [value]="tipo.idTipo">
+              {{ tipo.nombre }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-input label="Fecha de inicio" label-placement="floating" type="date" [(ngModel)]="fechaInicio"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-input label="Fecha de fin" label-placement="floating" type="date" [(ngModel)]="fechaFin"></ion-input>
+        </ion-item>
+
+      </ion-list>
+
+      <ion-button expand="block" class="ion-margin-top" color="secondary"
+                  (click)="enviarSolicitud()"
+                  [disabled]="!tipoSeleccionado || !fechaInicio || !fechaFin">
+        <ion-icon name="send-outline" slot="start"></ion-icon>
+        Enviar Petición
+      </ion-button>
+
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>
