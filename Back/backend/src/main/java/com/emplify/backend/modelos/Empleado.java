@@ -21,7 +21,6 @@ public class Empleado {
     private String departamento;
     private String puesto;
     private Integer idManager;
-    private Integer idCuadrante;
 
     public Empleado() {}
 
@@ -32,14 +31,6 @@ public class Empleado {
 
     public void setIdEmpleado(Integer idEmpleado) {
         this.idEmpleado = idEmpleado;
-    }
-
-    public Integer getIdCuadrante() {
-        return idCuadrante;
-    }
-
-    public void setIdCuadrante(Integer idCuadrante) {
-        this.idCuadrante = idCuadrante;
     }
 
     public Integer getIdManager() {
