@@ -15,6 +15,7 @@
   </div>
 
   <ion-card *ngFor="let pub of publicaciones">
+
     <ion-item lines="none">
       <ion-avatar slot="start">
         <img src="https://ionicframework.com/docs/img/demos/avatar.svg" />
@@ -28,20 +29,42 @@
     <ion-card-header>
       <ion-card-title>{{ pub.titulo }}</ion-card-title>
     </ion-card-header>
-
     <ion-card-content>
       {{ pub.contenido }}
     </ion-card-content>
 
     <ion-item lines="none">
-      <ion-button fill="clear" slot="start">
+      <ion-button fill="clear" slot="start" color="tertiary" (click)="toggleComentarios(pub)">
         <ion-icon name="chatbubble-outline" slot="start"></ion-icon>
-        Comentar
+        {{ pub.mostrarComentarios ? 'Ocultar comentarios' : 'Ver / Escribir comentarios' }}
       </ion-button>
     </ion-item>
+
+    <div *ngIf="pub.mostrarComentarios" class="ion-padding-horizontal ion-padding-bottom">
+
+      <ion-list lines="none" class="ion-margin-bottom">
+
+        <ion-item *ngFor="let com of pub.comentarios" color="light" class="ion-margin-bottom" style="border-radius: 10px;">
+          <ion-label class="ion-text-wrap">
+            <h2><b>{{ com.empleado?.usuario?.nombre }}</b> <span style="color: gray; font-size: 0.8em;">{{ com.fechaCreacion | date:'short' }}</span></h2>
+            <p>{{ com.contenido }}</p>
+          </ion-label>
+        </ion-item>
+
+        <p *ngIf="pub.comentarios.length === 0" style="color: gray; font-size: 0.9em; text-align: center;">Sé el primero en comentar.</p>
+      </ion-list>
+
+      <ion-item fill="solid" style="border-radius: 20px;">
+        <ion-input [(ngModel)]="pub.nuevoTexto" placeholder="Escribe un comentario..."></ion-input>
+        <ion-button fill="clear" slot="end" (click)="enviarComentario(pub)" [disabled]="!pub.nuevoTexto">
+          <ion-icon name="send-outline" color="tertiary"></ion-icon>
+        </ion-button>
+      </ion-item>
+
+    </div>
   </ion-card>
 
-<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button color="tertiary" id="open-modal">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>

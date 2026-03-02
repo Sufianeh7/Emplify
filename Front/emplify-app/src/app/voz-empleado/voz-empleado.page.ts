@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { addIcons } from 'ionicons';
-import { chatbubblesOutline, chatbubbleOutline, add } from 'ionicons/icons';
+import { chatbubblesOutline, chatbubbleOutline, add, sendOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-voz-empleado',
@@ -23,7 +23,7 @@ export class VozEmpleadoPage implements OnInit {
   nuevoContenido: string='';
 
   constructor(private http: HttpClient) {
-    addIcons({chatbubbleOutline, chatbubblesOutline, add})
+    addIcons({chatbubbleOutline, chatbubblesOutline, add, sendOutline})
   }
 
   ngOnInit() {
@@ -37,12 +37,20 @@ export class VozEmpleadoPage implements OnInit {
     }
   }
 
-  cargarMuro() {
+cargarMuro() {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
     this.http.get(`http://localhost:8080/api/voz-empleado/empresa/${this.idEmpresa}`, { headers })
-      .subscribe((res: any) => this.publicaciones = res);
+      .subscribe((res: any) => {
+        // Añadimos propiedades extra a cada post para controlar su propio cajón de comentarios
+        this.publicaciones = res.map((pub: any) => ({
+          ...pub,
+          mostrarComentarios: false, // Controla si el acordeón está abierto
+          comentarios: [],           // Guardará la lista de comentarios
+          nuevoTexto: ''             // Lo que el usuario está escribiendo
+        }));
+      });
   }
 
 publicar(modal: any) {
@@ -70,6 +78,52 @@ publicar(modal: any) {
           modal.dismiss(); // Cerramos la ventana
         },
         error: (err) => console.error('Error al publicar', err)
+      });
+  }
+
+// 1. Abre o cierra la zona de comentarios
+  toggleComentarios(pub: any) {
+    pub.mostrarComentarios = !pub.mostrarComentarios;
+    // Si lo abrimos y aún no tiene comentarios cargados, los pedimos al servidor
+    if (pub.mostrarComentarios && pub.comentarios.length === 0) {
+      this.cargarComentarios(pub);
+    }
+  }
+
+  // 2. Trae los comentarios de la base de datos
+  cargarComentarios(pub: any) {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
+
+    this.http.get(`http://localhost:8080/api/comentarios/publicacion/${pub.idPublicacion}`, { headers })
+      .subscribe((res: any) => {
+        pub.comentarios = res;
+      });
+  }
+
+  // 3. Envía el comentario nuevo
+  enviarComentario(pub: any) {
+    if (!pub.nuevoTexto || pub.nuevoTexto.trim() === '') return;
+
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': 'Basic ' + token,
+      'Content-Type': 'application/json'
+    });
+
+    const body = {
+      contenido: pub.nuevoTexto,
+      vozEmpleado: { idPublicacion: pub.idPublicacion },
+      empleado: { idEmpleado: this.idEmpleado }
+    };
+
+    this.http.post('http://localhost:8080/api/comentarios/nuevo', body, { headers })
+      .subscribe({
+        next: (res: any) => {
+          pub.comentarios.push(res); // Añadimos el comentario a la lista visualmente
+          pub.nuevoTexto = '';       // Vaciamos el cajón de texto
+        },
+        error: (err) => console.error('Error al comentar', err)
       });
   }
 }
