@@ -1,0 +1,50 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="success">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/inicio"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Peticiones del Equipo</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <div *ngIf="solicitudes.length === 0" class="ion-text-center ion-padding" style="margin-top: 50px;">
+    <ion-icon name="calendar-outline" style="font-size: 64px; color: gray;"></ion-icon>
+    <p>No tienes peticiones de vacaciones pendientes en tu equipo. ¡Buen trabajo!</p>
+  </div>
+
+  <ion-card *ngFor="let sol of solicitudes">
+    <ion-item lines="full">
+      <ion-avatar slot="start">
+        <img src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+      </ion-avatar>
+      <ion-label>
+        <h2><b>{{ sol.empleado?.usuario?.nombre }}</b></h2>
+        <p>{{ sol.empleado?.puesto }}</p>
+      </ion-label>
+    </ion-item>
+
+    <ion-card-content>
+      <p><b>Desde:</b> {{ sol.fechaInicio | date:'dd/MM/yyyy' }}</p>
+      <p><b>Hasta:</b> {{ sol.fechaFin | date:'dd/MM/yyyy' }}</p>
+      <p class="ion-margin-top" *ngIf="sol.comentarios"><i>"{{ sol.comentarios }}"</i></p>
+    </ion-card-content>
+
+    <ion-row class="ion-padding-bottom">
+      <ion-col>
+        <ion-button expand="block" color="danger" fill="outline" (click)="cambiarEstado(sol.idSolicitud, 'RECHAZADA')">
+          <ion-icon name="close-outline" slot="start"></ion-icon>
+          Rechazar
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="block" color="success" (click)="cambiarEstado(sol.idSolicitud, 'APROBADA')">
+          <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+          Aprobar
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-card>
+
+</ion-content>

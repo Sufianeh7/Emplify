@@ -34,6 +34,10 @@
           <ion-input label="Fecha de fin" label-placement="floating" type="date" [(ngModel)]="fechaFin"></ion-input>
         </ion-item>
 
+        <ion-item>
+          <ion-textarea label="Comentarios / Motivo" label-placement="floating" [(ngModel)]="comentarios" placeholder="Ej: Viaje familiar o cita médica..."></ion-textarea>
+        </ion-item>
+
       </ion-list>
 
       <ion-button expand="block" class="ion-margin-top" color="secondary"
@@ -46,13 +50,15 @@
     </ion-card-content>
   </ion-card>
 
-  <h2 class="ion-margin-start">Mis Peticiones</h2>
+  <h2 class="ion-margin-start ion-margin-top">Mis Peticiones</h2>
 
   <ion-list lines="full">
     <ion-item *ngFor="let sol of misSolicitudes">
+      <ion-icon name="document-text-outline" slot="start" color="medium"></ion-icon>
       <ion-label>
-        <h3>{{ sol.tipoSolicitud?.nombre }}</h3>
-        <p>{{ sol.fechaInicio }} hasta {{ sol.fechaFin }}</p>
+        <h3><b>{{ sol.tipoSolicitud?.nombre }}</b></h3>
+        <p>{{ sol.fechaInicio | date:'dd/MM/yyyy' }} - {{ sol.fechaFin | date:'dd/MM/yyyy' }}</p>
+        <p *ngIf="sol.comentarios" style="font-size: 0.8em; color: gray;"><i>"{{ sol.comentarios }}"</i></p>
       </ion-label>
 
       <ion-badge slot="end"
@@ -63,6 +69,7 @@
   </ion-list>
 
   <div *ngIf="misSolicitudes.length === 0" class="ion-text-center ion-padding">
+    <ion-icon name="calendar-outline" style="font-size: 48px; color: lightgray;"></ion-icon>
     <p style="color: gray;">Aún no has realizado ninguna solicitud.</p>
   </div>
 

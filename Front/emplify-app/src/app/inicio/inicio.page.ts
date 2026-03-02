@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { RouterModule, Router } from '@angular/router'; // <-- Añadimos Router aquí
 
 import { addIcons } from 'ionicons';
-import { calendarOutline, airplaneOutline, megaphoneOutline, ticketOutline, personCircleOutline } from 'ionicons/icons';
+import { calendarOutline, airplaneOutline, megaphoneOutline, ticketOutline, personCircleOutline, peopleOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-inicio',
@@ -18,10 +18,11 @@ export class InicioPage implements OnInit {
 
   nombreUsuario: string = '';
   nombreEmpresa: string = '';
+  esManager: boolean = false;
 
   // Inyectamos el Router en el constructor
   constructor(private router: Router) {
-    addIcons({ calendarOutline, airplaneOutline, megaphoneOutline, ticketOutline, personCircleOutline });
+    addIcons({ calendarOutline, airplaneOutline, megaphoneOutline, ticketOutline, personCircleOutline, peopleOutline });
   }
 
   ngOnInit() {
@@ -35,6 +36,16 @@ export class InicioPage implements OnInit {
 
       this.nombreUsuario = empleado?.usuario?.nombre || empleado?.usuario?.email || 'Compañero/a';
       this.nombreEmpresa = empleado?.empresa?.nombre || 'tu empresa';
+    }
+  }
+
+  ionViewWillEnter() {
+    // Leemos el empleado logueado para saber su rol
+    const datos = localStorage.getItem('empleadoLogueado');
+    if (datos) {
+      const empleado = JSON.parse(datos);
+      // Comprobamos si el rol en su tabla Usuario es MANAGER
+      this.esManager = (empleado.usuario?.rol === 'MANAGER');
     }
   }
 
@@ -79,5 +90,8 @@ export class InicioPage implements OnInit {
     this.router.navigate(['perfil'])
   }
 
+  goEquipo() {
+    this.router.navigate(['/equipo']);
+  }
 
 }
