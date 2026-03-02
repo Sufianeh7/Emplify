@@ -36,7 +36,7 @@ export class CuadrantePage implements OnInit {
 
     if (datosGuardados && token) {
       const empleado = JSON.parse(datosGuardados);
-      const idEmpleado = empleado[0].idEmpleado;
+      const idEmpleado = empleado.idEmpleado;
 
       const headers = new HttpHeaders({
         'Authorization': 'Basic ' + token

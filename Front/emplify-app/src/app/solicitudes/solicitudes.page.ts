@@ -18,6 +18,8 @@ import { Router } from '@angular/router';
 export class SolicitudesPage implements OnInit {
 
   tiposSolicitud: any[] = []; // Guardará: Vacaciones, Asuntos Propios...
+  misSolicitudes: any[] = []; // Para guardar el historial
+  turnosCuadrante: any[] = []; // Para guardar los días de trabajo
 
   // Variables conectadas al formulario HTML
   tipoSeleccionado: number | null = null;
@@ -30,6 +32,8 @@ export class SolicitudesPage implements OnInit {
 
   ngOnInit() {
     this.cargarTipos();
+    this.cargarHistorial();
+    this.cargarCuadrante();
   }
 
   cargarTipos() {
@@ -49,7 +53,13 @@ export class SolicitudesPage implements OnInit {
   }
 
   enviarSolicitud() {
-    // 1. Abrimos la "mochila" para coger los datos del empleado logueado
+    // --- 1. VALIDACIÓN INTELIGENTE (Lo primero de todo) ---
+    // Si la función de validarFechas detecta un día libre, corta la ejecución aquí
+    if (!this.validarFechas()) {
+      return;
+    }
+
+    // 2. Si pasa la validación, cogemos los datos para el envío
     const datosGuardados = localStorage.getItem('empleadoLogueado');
     const token = localStorage.getItem('token');
 
@@ -57,7 +67,7 @@ export class SolicitudesPage implements OnInit {
       const empleado = JSON.parse(datosGuardados);
       const idEmpleado = empleado[0].idEmpleado;
 
-      // 2. Preparamos el paquete de datos exactamente igual que hicimos en Postman
+      // 3. Preparamos el paquete de datos
       const paqueteDatos = {
         idEmpleado: idEmpleado,
         idTipo: this.tipoSeleccionado,
@@ -65,19 +75,19 @@ export class SolicitudesPage implements OnInit {
         fechaFin: this.fechaFin
       };
 
-      // 3. Preparamos la llave de seguridad
+      // 4. Preparamos las cabeceras
       const headers = new HttpHeaders({
         'Authorization': 'Basic ' + token,
         'Content-Type': 'application/json'
       });
 
-      // 4. Hacemos el envío (POST)
+      // 5. Hacemos el envío (POST)
       this.http.post('http://localhost:8080/api/solicitudes/nueva', paqueteDatos, { headers: headers })
         .subscribe({
           next: (respuesta: any) => {
             console.log('¡Solicitud guardada con éxito!', respuesta);
-            alert('¡Tu solicitud ha sido enviada correctamente!'); // Mensaje para el usuario
-            this.router.navigate(['/inicio']); // Le devolvemos a la pantalla principal
+            alert('¡Tu solicitud ha sido enviada correctamente!');
+            this.router.navigate(['/inicio']);
           },
           error: (error) => {
             console.error('Error al guardar la solicitud', error);
@@ -85,6 +95,51 @@ export class SolicitudesPage implements OnInit {
           }
         });
     }
+  }
+
+  cargarHistorial(){
+    const datosGuardados = localStorage.getItem('empleadoLogueado');
+    const token = localStorage.getItem('token');
+
+    if(datosGuardados && token) {
+      const empleado = JSON.parse(datosGuardados);
+      const idEmpleado = empleado.idEmpleado;
+      const headers = new HttpHeaders({'Authorization': 'Basic ' + token});
+
+      this.http.get(`http://localhost:8080/api/solicitudes/empleado/${idEmpleado}`, { headers })
+        .subscribe({
+          next: (respuesta: any) => {
+            this.misSolicitudes = respuesta;
+          },
+          error: (error) => console.error('Error al cargar historial', error)
+        });
+    }
+  }
+
+  cargarCuadrante() {
+    const datosGuardados = localStorage.getItem('empleadoLogueado');
+    const token = localStorage.getItem('token');
+    if (datosGuardados && token) {
+      const empleado = JSON.parse(datosGuardados);
+      const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
+      this.http.get(`http://localhost:8080/api/cuadrante/empleado/${empleado.idEmpleado}`, { headers })
+        .subscribe(res => { this.turnosCuadrante = res as any[]; });
+    }
+  }
+
+  validarFechas(): boolean {
+    // 1. Buscamos si alguno de los días en el rango elegido es "LIBRE" en el cuadrante
+    const hayDiasLibres = this.turnosCuadrante.some(turno => {
+      return turno.fecha >= this.fechaInicio &&
+            turno.fecha <= this.fechaFin &&
+            turno.turno.toUpperCase() === 'LIBRE';
+    });
+
+    if (hayDiasLibres) {
+      alert('Atención: Has seleccionado un rango que incluye días en los que ya estás LIBRE. Por favor, ajusta las fechas.');
+      return false;
+    }
+    return true;
   }
 
 }

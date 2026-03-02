@@ -31,7 +31,7 @@ export class HomePage {
     });
 
     // 3. Lanzamos la petición GET a tu backend
-    this.http.get('http://localhost:8080/api/empleados', { headers: headers })
+    this.http.get('http://localhost:8080/api/empleados/yo', { headers: headers })
       .subscribe({
         next: (respuesta: any) => {
           // Si el backend devuelve un 200 OK, entraremos por aquí

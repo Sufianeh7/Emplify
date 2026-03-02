@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { RouterModule, Router } from '@angular/router'; // <-- Añadimos Router aquí
 
 import { addIcons } from 'ionicons';
-import { calendarOutline, airplaneOutline } from 'ionicons/icons';
+import { calendarOutline, airplaneOutline, megaphoneOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-inicio',
@@ -21,7 +21,7 @@ export class InicioPage implements OnInit {
 
   // Inyectamos el Router en el constructor
   constructor(private router: Router) {
-    addIcons({ calendarOutline, airplaneOutline });
+    addIcons({ calendarOutline, airplaneOutline, megaphoneOutline });
   }
 
   ngOnInit() {
@@ -29,12 +29,22 @@ export class InicioPage implements OnInit {
 
     if (datosGuardados) {
       const empleado = JSON.parse(datosGuardados);
-      this.nombreUsuario = empleado[0]?.usuario?.nombre || empleado[0]?.usuario?.email || 'Compañero/a';
-      this.nombreEmpresa = empleado[0]?.empresa?.nombre || 'tu empresa';
+      console.log(empleado);
+      console.log(empleado.usuario.nombre);
+
+
+      this.nombreUsuario = empleado?.usuario?.nombre || empleado?.usuario?.email || 'Compañero/a';
+      this.nombreEmpresa = empleado?.empresa?.nombre || 'tu empresa';
     }
   }
 
   // --- NUEVA FUNCIÓN ---
+  cerrarSesion(){
+    localStorage.clear()
+
+    this.router.navigate(['/home'])
+  }
+
   goCuadrante() {
     // 1. Quitamos el foco del botón del menú
     if (document.activeElement) {
@@ -52,5 +62,10 @@ export class InicioPage implements OnInit {
 
     // Navegamos a la pantalla de solicitudes
     this.router.navigate(['/solicitudes'])
+  }
+
+  goVozEmpleado() {
+    if (document.activeElement) (document.activeElement as HTMLElement).blur();
+    this.router.navigate(['/voz-empleado']);
   }
 }

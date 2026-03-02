@@ -14,7 +14,7 @@ public class BackendApplication {
 		/*
 		// --- Ver el HASH generado ---
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		String miHash = encoder.encode("password");
+		String miHash = encoder.encode("1234");
 		System.out.println("=========================================");
 		System.out.println("Hash exacto para 'password' es:" + miHash);
 		System.out.println("=========================================");

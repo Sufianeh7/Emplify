@@ -7,7 +7,7 @@
 <ion-content [fullscreen]="true" class="ion-padding">
 
   <div style="text-align: center; margin-top: 30px; margin-bottom: 30px;">
-    <h2>¡Bienvenido/a, {{nombreUsuario}}</h2>
+    <h2>¡Bienvenido/a, {{nombreUsuario}}¡</h2>
     <p>Has iniciado sesión correctamente en <strong>{{nombreEmpresa}}</strong>.</p>
   </div>
 
@@ -21,9 +21,14 @@
       <ion-icon name="airplane-outline" slot="start" color="secondary"></ion-icon>
       <ion-label>Solicitar días libres</ion-label>
     </ion-item>
+
+    <ion-item button detail="true" (click)="goVozEmpleado()">
+      <ion-icon name="megaphone-outline" slot="start" color="tertiary"></ion-icon>
+      <ion-label>Voz del Empleado</ion-label>
+    </ion-item>
   </ion-list>
 
-  <ion-button expand="block" color="danger" class="ion-margin-top" routerLink="/home">
+  <ion-button expand="block" color="danger" class="ion-margin-top" (click)="cerrarSesion()">
     Cerrar Sesión
   </ion-button>
 

@@ -46,4 +46,24 @@
     </ion-card-content>
   </ion-card>
 
+  <h2 class="ion-margin-start">Mis Peticiones</h2>
+
+  <ion-list lines="full">
+    <ion-item *ngFor="let sol of misSolicitudes">
+      <ion-label>
+        <h3>{{ sol.tipoSolicitud?.nombre }}</h3>
+        <p>{{ sol.fechaInicio }} hasta {{ sol.fechaFin }}</p>
+      </ion-label>
+
+      <ion-badge slot="end"
+        [color]="sol.estado === 'PENDIENTE' ? 'warning' : (sol.estado === 'APROBADA' ? 'success' : 'danger')">
+        {{ sol.estado }}
+      </ion-badge>
+    </ion-item>
+  </ion-list>
+
+  <div *ngIf="misSolicitudes.length === 0" class="ion-text-center ion-padding">
+    <p style="color: gray;">Aún no has realizado ninguna solicitud.</p>
+  </div>
+
 </ion-content>
