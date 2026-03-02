@@ -9,6 +9,9 @@ import java.util.List;
 @Repository
 public interface SolicitudRepo extends JpaRepository<Solicitud, Integer> {
 
-    // Busca todas las solicitudes de un empleado
+    // Método para el empleado base
     List<Solicitud> findByEmpleado_IdEmpleado(Integer idEmpleado);
+
+    // Método para el mánager (¡Este es el que tiene que coincidir!)
+    List<Solicitud> findByEmpleado_Manager_IdEmpleadoAndEstado(Integer idManager, String estado);
 }

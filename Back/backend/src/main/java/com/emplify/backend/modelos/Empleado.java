@@ -18,9 +18,13 @@ public class Empleado {
     @JoinColumn(name = "id_empresa")
     private Empresa empresa; // Relación N:1 con Empresa
 
+    // Un empleado puede tener un mánager (que también es un empleado)
+    @ManyToOne
+    @JoinColumn(name = "id_manager")
+    private Empleado manager;
+
     private String departamento;
     private String puesto;
-    private Integer idManager;
 
     public Empleado() {}
 
@@ -31,14 +35,6 @@ public class Empleado {
 
     public void setIdEmpleado(Integer idEmpleado) {
         this.idEmpleado = idEmpleado;
-    }
-
-    public Integer getIdManager() {
-        return idManager;
-    }
-
-    public void setIdManager(Integer idManager) {
-        this.idManager = idManager;
     }
 
     public String getPuesto() {

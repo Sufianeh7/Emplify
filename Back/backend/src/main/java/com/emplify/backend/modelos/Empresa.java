@@ -14,6 +14,12 @@ public class Empresa {
     @Column(name = "nombre")
     private String nombre;
 
+    @Column(name = "sector")
+    private String sector;
+
+    @Column(name = "direccion")
+    private String direccion;
+
     @Column(name = "logo_url")
     private String logoUrl;
 
