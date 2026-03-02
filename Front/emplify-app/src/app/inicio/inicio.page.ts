@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { RouterModule, Router } from '@angular/router'; // <-- Añadimos Router aquí
 
 import { addIcons } from 'ionicons';
-import { calendarOutline, airplaneOutline, megaphoneOutline } from 'ionicons/icons';
+import { calendarOutline, airplaneOutline, megaphoneOutline, ticketOutline, personCircleOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-inicio',
@@ -21,7 +21,7 @@ export class InicioPage implements OnInit {
 
   // Inyectamos el Router en el constructor
   constructor(private router: Router) {
-    addIcons({ calendarOutline, airplaneOutline, megaphoneOutline });
+    addIcons({ calendarOutline, airplaneOutline, megaphoneOutline, ticketOutline, personCircleOutline });
   }
 
   ngOnInit() {
@@ -68,4 +68,16 @@ export class InicioPage implements OnInit {
     if (document.activeElement) (document.activeElement as HTMLElement).blur();
     this.router.navigate(['/voz-empleado']);
   }
+
+  goTickets(){
+    if(document.activeElement) (document.activeElement as HTMLElement).blur();
+    this.router.navigate(['tickets'])
+  }
+
+  goPerfil(){
+    if(document.activeElement) (document.activeElement as HTMLElement).blur();
+    this.router.navigate(['perfil'])
+  }
+
+
 }
