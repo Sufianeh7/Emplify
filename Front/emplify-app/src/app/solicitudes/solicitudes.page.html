@@ -1,76 +1,112 @@
-<ion-header [translucent]="true">
-  <ion-toolbar color="secondary">
+<ion-header>
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/inicio"></ion-back-button>
     </ion-buttons>
-    <ion-title>Pedir Días Libres</ion-title>
+    <ion-title>Solicitar Ausencia</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="ion-padding">
+<ion-content class="ion-padding">
 
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Nueva Solicitud</ion-card-title>
-      <ion-card-subtitle>Rellena los datos para enviar tu petición</ion-card-subtitle>
-    </ion-card-header>
+  <ion-grid class="ion-no-padding ion-margin-bottom">
+    <ion-row>
+      <ion-col size="6">
+        <ion-card class="ion-no-margin ion-margin-end" color="primary" style="text-align: center; padding: 10px 0;">
+          <ion-card-subtitle style="color: rgba(255,255,255,0.8); font-size: 0.7em; text-transform: uppercase;">Vacaciones</ion-card-subtitle>
+          <ion-card-title style="font-size: 2em; font-weight: bold; margin: 5px 0;">{{ diasVacaciones }}</ion-card-title>
+          <p style="font-size: 0.6em; margin: 0; opacity: 0.9;">Días libres</p>
+        </ion-card>
+      </ion-col>
+      <ion-col size="6">
+        <ion-card class="ion-no-margin ion-margin-start" color="tertiary" style="text-align: center; padding: 10px 0;">
+          <ion-card-subtitle style="color: rgba(255,255,255,0.8); font-size: 0.7em; text-transform: uppercase;">Asuntos P.</ion-card-subtitle>
+          <ion-card-title style="font-size: 2em; font-weight: bold; margin: 5px 0;">{{ diasAsuntos }}</ion-card-title>
+          <p style="font-size: 0.6em; margin: 0; opacity: 0.9;">Disponibles</p>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
-    <ion-card-content>
-      <ion-list>
+  <ion-list inset="true" class="ion-no-margin">
+    <ion-item>
+      <ion-select label="Tipo de solicitud" label-placement="floating" [(ngModel)]="tipoSeleccionado">
+        <ion-select-option *ngFor="let tipo of tiposSolicitud" [value]="tipo.idTipo">
+          {{ tipo.nombre }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
 
-        <ion-item>
-          <ion-select label="Tipo de permiso" label-placement="floating" [(ngModel)]="tipoSeleccionado" placeholder="Selecciona una opción">
-            <ion-select-option *ngFor="let tipo of tiposSolicitud" [value]="tipo.idTipo">
-              {{ tipo.nombre }}
-            </ion-select-option>
-          </ion-select>
-        </ion-item>
+    <ion-item id="open-modal-inicio" button="true" detail="false">
+      <ion-icon name="calendar-outline" slot="start" color="primary"></ion-icon>
+      <ion-label>Fecha Inicio</ion-label>
+      <ion-text slot="end" color="primary">
+        {{ fechaInicio ? (fechaInicio | date:'dd/MM/yyyy') : 'Seleccionar' }}
+      </ion-text>
+    </ion-item>
 
-        <ion-item>
-          <ion-input label="Fecha de inicio" label-placement="floating" type="date" [(ngModel)]="fechaInicio"></ion-input>
-        </ion-item>
+    <ion-item id="open-modal-fin" button="true" detail="false">
+      <ion-icon name="calendar-outline" slot="start" color="primary"></ion-icon>
+      <ion-label>Fecha Fin</ion-label>
+      <ion-text slot="end" color="primary">
+        {{ fechaFin ? (fechaFin | date:'dd/MM/yyyy') : 'Seleccionar' }}
+      </ion-text>
+    </ion-item>
 
-        <ion-item>
-          <ion-input label="Fecha de fin" label-placement="floating" type="date" [(ngModel)]="fechaFin"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-textarea label="Comentarios / Motivo" label-placement="floating" [(ngModel)]="comentarios" placeholder="Ej: Viaje familiar o cita médica..."></ion-textarea>
-        </ion-item>
-
-      </ion-list>
-
-      <ion-button expand="block" class="ion-margin-top" color="secondary"
-                  (click)="enviarSolicitud()"
-                  [disabled]="!tipoSeleccionado || !fechaInicio || !fechaFin">
-        <ion-icon name="send-outline" slot="start"></ion-icon>
-        Enviar Petición
-      </ion-button>
-
-    </ion-card-content>
-  </ion-card>
-
-  <h2 class="ion-margin-start ion-margin-top">Mis Peticiones</h2>
-
-  <ion-list lines="full">
-    <ion-item *ngFor="let sol of misSolicitudes">
-      <ion-icon name="document-text-outline" slot="start" color="medium"></ion-icon>
-      <ion-label>
-        <h3><b>{{ sol.tipoSolicitud?.nombre }}</b></h3>
-        <p>{{ sol.fechaInicio | date:'dd/MM/yyyy' }} - {{ sol.fechaFin | date:'dd/MM/yyyy' }}</p>
-        <p *ngIf="sol.comentarios" style="font-size: 0.8em; color: gray;"><i>"{{ sol.comentarios }}"</i></p>
-      </ion-label>
-
-      <ion-badge slot="end"
-        [color]="sol.estado === 'PENDIENTE' ? 'warning' : (sol.estado === 'APROBADA' ? 'success' : 'danger')">
-        {{ sol.estado }}
-      </ion-badge>
+    <ion-item>
+      <ion-textarea label="Comentarios" label-placement="floating" [(ngModel)]="comentarios" rows="3"></ion-textarea>
     </ion-item>
   </ion-list>
 
-  <div *ngIf="misSolicitudes.length === 0" class="ion-text-center ion-padding">
-    <ion-icon name="calendar-outline" style="font-size: 48px; color: lightgray;"></ion-icon>
-    <p style="color: gray;">Aún no has realizado ninguna solicitud.</p>
-  </div>
+  <ion-button expand="block" (click)="enviarSolicitud()" class="ion-margin-top">
+    <ion-icon name="send-outline" slot="start"></ion-icon>
+    Enviar Petición
+  </ion-button>
+
+  <h3 class="ion-padding-horizontal ion-margin-top" *ngIf="misSolicitudes.length > 0">Historial</h3>
+  <ion-card *ngFor="let sol of misSolicitudes" class="ion-no-margin ion-margin-bottom">
+    <ion-item lines="none">
+      <ion-label>
+        <h2><b>{{ sol.tipoSolicitud?.nombre }}</b></h2>
+        <p>{{ sol.fechaInicio | date:'dd/MM/yyyy' }} - {{ sol.fechaFin | date:'dd/MM/yyyy' }}</p>
+      </ion-label>
+      <ion-badge slot="end"
+        [color]="sol.estado === 'APROBADA' ? 'success' : (sol.estado === 'PENDIENTE' ? 'warning' : 'danger')">
+        {{ sol.estado }}
+      </ion-badge>
+    </ion-item>
+  </ion-card>
+
+  <ion-modal trigger="open-modal-inicio" #modalInicio>
+    <ng-template>
+      <ion-datetime
+        presentation="date"
+        [(ngModel)]="fechaInicio"
+        [isDateEnabled]="isDiaLaboral"
+        [min]="hoyISO"
+        color="primary"
+        [showDefaultButtons]="true"
+        doneText="Seleccionar"
+        cancelText="Cancelar"
+        (ionChange)="modalInicio.dismiss()"
+      ></ion-datetime>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal trigger="open-modal-fin" #modalFin>
+    <ng-template>
+      <ion-datetime
+        presentation="date"
+        [(ngModel)]="fechaFin"
+        [isDateEnabled]="isDiaLaboral"
+        [min]="fechaInicio || hoyISO"
+        color="primary"
+        [showDefaultButtons]="true"
+        doneText="Seleccionar"
+        cancelText="Cancelar"
+        (ionChange)="modalFin.dismiss()"
+      ></ion-datetime>
+    </ng-template>
+  </ion-modal>
 
 </ion-content>
