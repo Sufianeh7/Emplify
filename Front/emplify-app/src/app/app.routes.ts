@@ -42,4 +42,8 @@ export const routes: Routes = [
     path: 'gestion-rrhh',
     loadComponent: () => import('./gestion-rrhh/gestion-rrhh.page').then( m => m.GestionRRHHPage)
   },
+  {
+    path: 'cuadrantes',
+    loadComponent: () => import('./cuadrantes/cuadrantes.page').then( m => m.CuadrantesPage)
+  },
 ];

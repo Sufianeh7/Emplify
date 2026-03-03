@@ -1,0 +1,63 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="tertiary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/inicio"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Asignar Turnos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content color="light" class="ion-padding">
+
+  <div class="form-container">
+    <ion-list inset="true">
+      <ion-item>
+        <ion-icon name="people-outline" slot="start" color="primary"></ion-icon>
+        <ion-select label="1. Elige Empleados" label-placement="floating"
+                    [multiple]="true"
+                    [(ngModel)]="empleadosSeleccionados"
+                    cancelText="Cancelar" okText="Aceptar">
+          <ion-select-option *ngFor="let emp of empleados" [value]="emp.idEmpleado">
+            {{ emp.usuario?.nombre }} - {{ emp.departamento }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+
+    <ion-list inset="true">
+      <ion-item>
+        <ion-icon name="calendar-outline" slot="start" color="secondary"></ion-icon>
+        <ion-select label="2. Tipo de Turno" label-placement="floating" [(ngModel)]="tipoTurno">
+          <ion-select-option value="MAÑANA">Mañana (08:00 - 16:00)</ion-select-option>
+          <ion-select-option value="TARDE">Tarde (16:00 - 00:00)</ion-select-option>
+          <ion-select-option value="NOCHE">Noche (00:00 - 08:00)</ion-select-option>
+          <ion-select-option value="LIBRE">Día Libre</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title style="font-size: 1.1em;">3. Marca los días en el calendario</ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="ion-text-center">
+        <ion-datetime presentation="date"
+                      [multiple]="true"
+                      [(ngModel)]="fechasSeleccionadas"
+                      size="cover">
+        </ion-datetime>
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="block" color="success" class="ion-margin" (click)="guardarCuadrante()">
+      <ion-icon name="save-outline" slot="start"></ion-icon>
+      Guardar Cuadrante Masivo
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>
