@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface EmpleadoRepo extends JpaRepository<Empleado, Integer> {
-    // Esta "magia" de Spring busca dentro de la relación Usuario el campo email
+    // Busca dentro de la relación Usuario el campo email y nombre
     Optional<Empleado> findByUsuarioEmail(String email);
+
+    Optional<Empleado> findByUsuarioNombre(String nombre);
 }

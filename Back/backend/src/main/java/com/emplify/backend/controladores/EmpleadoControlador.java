@@ -7,16 +7,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List; // <-- Añadimos este import
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/empleados")
+@CrossOrigin(origins = "http://localhost:8100") // <-- ¡Vital para que Ionic no dé error de CORS!
 public class EmpleadoControlador {
 
     @Autowired
     private EmpleadoRepo empleadoRepo;
 
-    // NUEVO: Obtener SOLO los datos del empleado que ha iniciado sesión
+    // NUEVO: Obtener la lista de TODOS los empleados (Para RRHH)
+    @GetMapping("/todos")
+    public ResponseEntity<List<Empleado>> obtenerTodos() {
+        return ResponseEntity.ok(empleadoRepo.findAll());
+    }
+
+    // Obtener SOLO los datos del empleado que ha iniciado sesión
     @GetMapping("/yo")
     public ResponseEntity<?> obtenerMisDatos(Principal principal) {
         if (principal == null) {
@@ -24,7 +32,6 @@ public class EmpleadoControlador {
         }
 
         // Buscamos al empleado filtrando por el email del usuario autenticado
-        // principal.getName() nos da el email (ej: luis@ok.com)
         Optional<Empleado> empleado = empleadoRepo.findByUsuarioEmail(principal.getName());
 
         if (empleado.isPresent()) {
@@ -34,7 +41,7 @@ public class EmpleadoControlador {
         }
     }
 
-    // POST: Crear un nuevo empleado (se queda igual)
+    // POST: Crear un nuevo empleado
     @PostMapping
     public Empleado crearEmpleado(@RequestBody Empleado empleado){
         return empleadoRepo.save(empleado);
