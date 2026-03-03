@@ -7,43 +7,47 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List; // <-- Añadimos este import
+import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/empleados")
-@CrossOrigin(origins = "http://localhost:8100") // <-- ¡Vital para que Ionic no dé error de CORS!
+@CrossOrigin(origins = "http://localhost:8100")
 public class EmpleadoControlador {
 
     @Autowired
     private EmpleadoRepo empleadoRepo;
 
-    // NUEVO: Obtener la lista de TODOS los empleados (Para RRHH)
+    // 1. Obtener la lista de TODOS los empleados (Para RRHH)
     @GetMapping("/todos")
     public ResponseEntity<List<Empleado>> obtenerTodos() {
         return ResponseEntity.ok(empleadoRepo.findAll());
     }
 
-    // Obtener SOLO los datos del empleado que ha iniciado sesión
-    @GetMapping("/yo")
+    // 2. ACTUALIZADO: Endpoint para el perfil (Coincide con Ionic)
+    @GetMapping("/perfil")
     public ResponseEntity<?> obtenerMisDatos(Principal principal) {
         if (principal == null) {
-            return ResponseEntity.status(401).body("No autorizado");
+            return ResponseEntity.status(401).body("{\"error\": \"No autorizado\"}");
         }
 
         // Buscamos al empleado filtrando por el email del usuario autenticado
-        Optional<Empleado> empleado = empleadoRepo.findByUsuarioEmail(principal.getName());
-
-        if (empleado.isPresent()) {
-            return ResponseEntity.ok(empleado.get());
-        } else {
-            return ResponseEntity.status(404).body("Empleado no encontrado");
-        }
+        return empleadoRepo.findByUsuarioEmail(principal.getName())
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(404).body(null));
     }
 
-    // POST: Crear un nuevo empleado
+    // 3. POST: Crear un nuevo empleado
     @PostMapping
-    public Empleado crearEmpleado(@RequestBody Empleado empleado){
-        return empleadoRepo.save(empleado);
+    public ResponseEntity<Empleado> crearEmpleado(@RequestBody Empleado empleado){
+        return ResponseEntity.ok(empleadoRepo.save(empleado));
+    }
+
+    // 4. OPCIONAL: Obtener un empleado por ID (Útil para edición)
+    @GetMapping("/{id}")
+    public ResponseEntity<Empleado> obtenerPorId(@PathVariable Integer id) {
+        return empleadoRepo.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

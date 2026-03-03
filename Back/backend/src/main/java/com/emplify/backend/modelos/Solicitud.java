@@ -14,28 +14,29 @@ public class Solicitud {
     private Integer idSolicitud;
 
     @Column(name = "fecha_inicio", nullable = false)
-    private LocalDate fechaInicio; // El día que empiezan las vacaciones
+    private LocalDate fechaInicio;
 
     @Column(name = "fecha_fin", nullable = false)
-    private LocalDate fechaFin; // El día que terminan
+    private LocalDate fechaFin;
 
     @Column(name = "estado", nullable = false)
-    private String estado; // Ej: "PENDIENTE", "APROBADA", "RECHAZADA"
+    private String estado; // "PENDIENTE", "APROBADA", "RECHAZADA"
 
     @Column(name = "fecha_solicitud")
-    private LocalDateTime fechaSolicitud; // Cuándo le dio al botón de pedir
+    private LocalDateTime fechaSolicitud;
 
-    // Relación: Muchas solicitudes pertenecen a un Empleado
+    // NUEVO: Para que coincida con lo que enviamos desde Ionic
+    @Column(name = "comentarios", columnDefinition = "TEXT")
+    private String comentarios;
+
     @ManyToOne
     @JoinColumn(name = "id_empleado", nullable = false)
     private Empleado empleado;
 
-    // Relación: Una solicitud pertenece a un Tipo específico (Vacaciones, Asuntos propios...)
     @ManyToOne
     @JoinColumn(name = "id_tipo", nullable = false)
     private TipoSolicitud tipoSolicitud;
 
-    // Constructor vacío
     public Solicitud() {
     }
 
@@ -55,10 +56,12 @@ public class Solicitud {
     public LocalDateTime getFechaSolicitud() { return fechaSolicitud; }
     public void setFechaSolicitud(LocalDateTime fechaSolicitud) { this.fechaSolicitud = fechaSolicitud; }
 
+    public String getComentarios() { return comentarios; }
+    public void setComentarios(String comentarios) { this.comentarios = comentarios; }
+
     public Empleado getEmpleado() { return empleado; }
     public void setEmpleado(Empleado empleado) { this.empleado = empleado; }
 
     public TipoSolicitud getTipoSolicitud() { return tipoSolicitud; }
-
     public void setTipoSolicitud(TipoSolicitud tipoSolicitud) { this.tipoSolicitud = tipoSolicitud; }
 }

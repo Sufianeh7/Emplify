@@ -18,4 +18,6 @@ public interface TurnoRepo extends JpaRepository<Turno, Integer> {
 
     // Para borrar turnos existentes antes de sobrescribirlos (evita duplicados)
     void deleteByEmpleado_IdEmpleadoAndFechaIn(Integer idEmpleado, List<LocalDate> fechas);
+
+    List<Turno> findByEmpleado_IdEmpleadoAndFechaBetween(Integer idEmpleado, LocalDate inicio, LocalDate fin);
 }
