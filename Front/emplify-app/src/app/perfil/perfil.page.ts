@@ -39,6 +39,7 @@ export class PerfilPage {
 
   cerrarSesion() {
     localStorage.clear();
+    if (document.activeElement) (document.activeElement as HTMLElement).blur();
     this.router.navigate(['/home']);
   }
 

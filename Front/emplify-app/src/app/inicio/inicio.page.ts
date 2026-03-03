@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { RouterModule, Router } from '@angular/router'; // <-- Añadimos Router aquí
 
 import { addIcons } from 'ionicons';
-import { calendarOutline, airplaneOutline, megaphoneOutline, ticketOutline, personCircleOutline, peopleOutline } from 'ionicons/icons';
+import { calendarOutline, airplaneOutline, megaphoneOutline, ticketOutline, personCircleOutline, peopleOutline, briefcaseOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-inicio',
@@ -19,10 +19,11 @@ export class InicioPage implements OnInit {
   nombreUsuario: string = '';
   nombreEmpresa: string = '';
   esManager: boolean = false;
+  esRRHH: boolean = false;
 
   // Inyectamos el Router en el constructor
   constructor(private router: Router) {
-    addIcons({ calendarOutline, airplaneOutline, megaphoneOutline, ticketOutline, personCircleOutline, peopleOutline });
+    addIcons({ calendarOutline, airplaneOutline, megaphoneOutline, ticketOutline, personCircleOutline, peopleOutline, briefcaseOutline });
   }
 
   ngOnInit() {
@@ -40,6 +41,9 @@ export class InicioPage implements OnInit {
   }
 
   ionViewWillEnter() {
+    const empleado = JSON.parse(localStorage.getItem('empleadoLogueado') || '{}');
+    this.esRRHH = (empleado.usuario?.rol === 'RRHH' || empleado.usuario?.rol === 'ADMIN');
+
     // Leemos el empleado logueado para saber su rol
     const datos = localStorage.getItem('empleadoLogueado');
     if (datos) {
@@ -52,7 +56,7 @@ export class InicioPage implements OnInit {
   // --- NUEVA FUNCIÓN ---
   cerrarSesion(){
     localStorage.clear()
-
+    if (document.activeElement) (document.activeElement as HTMLElement).blur();
     this.router.navigate(['/home'])
   }
 
@@ -91,7 +95,13 @@ export class InicioPage implements OnInit {
   }
 
   goEquipo() {
+    if(document.activeElement) (document.activeElement as HTMLElement).blur();
     this.router.navigate(['/equipo']);
+  }
+
+  goGestionRRHH(){
+    if(document.activeElement) (document.activeElement as HTMLElement).blur();
+    this.router.navigate(['gestion-rrhh'])
   }
 
 }

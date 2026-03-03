@@ -37,6 +37,11 @@
       <ion-label>Mi Equipo (Peticiones)</ion-label>
     </ion-item>
 
+    <ion-item button detail="true" (click)="goGestionRRHH()" *ngIf="esRRHH">
+      <ion-icon name="briefcase-outline" slot="start" color="tertiary"></ion-icon>
+      <ion-label>Gestión de Tickets (RRHH)</ion-label>
+    </ion-item>
+
     <ion-item button detail="true" (click)="goPerfil()">
       <ion-icon name="person-circle-outline" slot="start" color="medium"></ion-icon>
       <ion-label>Mi Perfil</ion-label>
