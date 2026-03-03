@@ -2,6 +2,7 @@ package com.emplify.backend.modelos;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "tickets_rrhh")
@@ -28,6 +29,14 @@ public class Ticket {
     @ManyToOne
     @JoinColumn(name = "id_empleado", nullable = false)
     private Empleado empleado;
+
+    // Añadir esto dentro de la clase Ticket.java
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OrderBy("fechaEnvio ASC")
+    private List<TicketMensaje> mensajes;
+
+    // Y su respectivo Getter
+    public List<TicketMensaje> getMensajes() { return mensajes; }
 
     public Ticket() {}
 
