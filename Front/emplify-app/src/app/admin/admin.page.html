@@ -1,0 +1,119 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/inicio"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Panel de Administración</ion-title>
+  </ion-toolbar>
+
+  <ion-toolbar color="dark">
+    <ion-segment [(ngModel)]="seccionActual">
+      <ion-segment-button value="empresas">
+        <ion-label>Empresas</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="empleados">
+        <ion-label>Empleados</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <div *ngIf="seccionActual === 'empresas'">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="business-outline" class="ion-margin-end"></ion-icon>
+          Nueva Empresa
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-input label="Nombre de la Empresa" labelPlacement="floating" [(ngModel)]="nuevaEmpresa.nombre" type="text" placeholder="Ej: TechCorp"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input label="Sector" labelPlacement="floating" [(ngModel)]="nuevaEmpresa.sector" type="text" placeholder="Ej: Informática"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input label="Dirección" labelPlacement="floating" [(ngModel)]="nuevaEmpresa.direccion" type="text" placeholder="Ej: Calle Principal 123"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input label="Color Primario (Hex)" labelPlacement="floating" [(ngModel)]="nuevaEmpresa.colorPrimario" type="text"></ion-input>
+        </ion-item>
+        <ion-button expand="block" class="ion-margin-top" (click)="crearEmpresa()">
+          <ion-icon name="save-outline" slot="start"></ion-icon> Guardar Empresa
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <h3 class="ion-padding-start ion-margin-top">Empresas Registradas</h3>
+    <ion-list inset="true">
+      <ion-item *ngFor="let emp of empresas">
+        <ion-icon name="business-outline" slot="start" [style.color]="emp.colorPrimario"></ion-icon>
+        <ion-label>
+          <h2><b>{{ emp.nombre }}</b></h2>
+          <p>{{ emp.sector }}</p>
+        </ion-label>
+      </ion-item>
+      <ion-item *ngIf="empresas.length === 0">
+        <ion-label color="medium">No hay empresas registradas aún.</ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <div *ngIf="seccionActual === 'empleados'">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="person-add-outline" class="ion-margin-end"></ion-icon>
+          Nuevo Usuario / Empleado
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+
+        <ion-item>
+          <ion-input label="Nombre Completo" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.nombre" type="text"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-input label="Correo Electrónico" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.email" type="email"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-input label="Contraseña" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.password" type="password"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-select label="Rol del Sistema" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.rol">
+            <ion-select-option value="EMPLEADO">Empleado Normal</ion-select-option>
+            <ion-select-option value="MANAGER">Mánager (Supervisor)</ion-select-option>
+            <ion-select-option value="RRHH">Recursos Humanos</ion-select-option>
+            <ion-select-option value="ADMIN">Administrador Global</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-select label="Asignar a Empresa" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.idEmpresa">
+            <ion-select-option *ngFor="let emp of empresas" [value]="emp.idEmpresa">
+              {{ emp.nombre }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-input label="Departamento" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.departamento" type="text"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-input label="Puesto" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.puesto" type="text"></ion-input>
+        </ion-item>
+
+        <ion-button expand="block" class="ion-margin-top" color="success" (click)="crearEmpleado()">
+          <ion-icon name="save-outline" slot="start"></ion-icon> Dar de Alta
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+</ion-content>

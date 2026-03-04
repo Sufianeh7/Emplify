@@ -1,0 +1,64 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="tertiary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/inicio"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Portal de RRHH</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <div class="ion-text-center ion-margin-bottom ion-padding-top">
+    <ion-icon name="people-outline" style="font-size: 64px; color: var(--ion-color-tertiary);"></ion-icon>
+    <h2 style="font-weight: bold; margin-top: 10px;">Alta de Empleado</h2>
+    <p style="color: gray;">Añade nuevos miembros a tu empresa y asígnales un responsable.</p>
+  </div>
+
+  <ion-card>
+    <ion-card-content>
+
+      <ion-item>
+        <ion-input label="Nombre Completo" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.nombre" type="text" placeholder="Ej: Ana Gómez"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-input label="Correo Electrónico" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.email" type="email"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-input label="Contraseña temporal" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.password" type="password"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-select label="Rol del Sistema" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.rol">
+          <ion-select-option value="EMPLEADO">Empleado Normal</ion-select-option>
+          <ion-select-option value="MANAGER">Mánager (Responsable de equipo)</ion-select-option>
+          </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-input label="Departamento" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.departamento" type="text"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-input label="Puesto" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.puesto" type="text"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-select label="Asignar Mánager (Opcional)" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.idManager">
+          <ion-select-option [value]="null">Sin mánager asignado</ion-select-option>
+          <ion-select-option *ngFor="let emp of posiblesManagers" [value]="emp.idEmpleado">
+            {{ emp.usuario?.nombre || emp.usuario?.email }} ({{ emp.puesto || 'Sin puesto' }})
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-button expand="block" class="ion-margin-top" color="tertiary" (click)="crearEmpleado()">
+        <ion-icon name="person-add-outline" slot="start"></ion-icon> Crear Empleado
+      </ion-button>
+
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

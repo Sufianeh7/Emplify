@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { RouterModule, Router } from '@angular/router'; // <-- Añadimos Router aquí
+import { RouterModule, Router } from '@angular/router';
 
 import { addIcons } from 'ionicons';
 import {
@@ -13,6 +13,7 @@ import {
   personCircleOutline,
   peopleOutline,
   briefcaseOutline,
+  settingsOutline // <-- Añadimos el icono para el panel de Admin
 } from 'ionicons/icons';
 
 @Component({
@@ -25,10 +26,12 @@ import {
 export class InicioPage implements OnInit {
   nombreUsuario: string = '';
   nombreEmpresa: string = '';
+
+  // Variables booleanas para mostrar/ocultar botones en el HTML
   esManager: boolean = false;
   esRRHH: boolean = false;
+  esAdmin: boolean = false; // <-- NUEVA: Controla la vista del Administrador
 
-  // Inyectamos el Router en el constructor
   constructor(private router: Router) {
     addIcons({
       calendarOutline,
@@ -37,63 +40,50 @@ export class InicioPage implements OnInit {
       ticketOutline,
       personCircleOutline,
       peopleOutline,
-      briefcaseOutline
+      briefcaseOutline,
+      settingsOutline // <-- Registramos el icono
     });
   }
 
   ngOnInit() {
+    // Lo dejamos vacío porque ionViewWillEnter se ejecuta cada vez que
+    // entramos en la pantalla, asegurando que los datos siempre estén frescos.
+  }
+
+  ionViewWillEnter() {
     const datosGuardados = localStorage.getItem('empleadoLogueado');
 
     if (datosGuardados) {
       const empleado = JSON.parse(datosGuardados);
-      console.log(empleado);
-      console.log(empleado.usuario.nombre);
 
-      this.nombreUsuario =
-        empleado?.usuario?.nombre || empleado?.usuario?.email || 'Compañero/a';
+      // 1. Cargamos datos de presentación
+      this.nombreUsuario = empleado?.usuario?.nombre || empleado?.usuario?.email || 'Compañero/a';
       this.nombreEmpresa = empleado?.empresa?.nombre || 'tu empresa';
+
+      // 2. Comprobamos los roles (todo centralizado y limpio)
+      const rol = empleado.usuario?.rol;
+
+      this.esManager = (rol === 'MANAGER');
+      this.esRRHH = (rol === 'RRHH' || rol === 'ADMIN'); // Permitimos que el ADMIN también vea lo de RRHH
+      this.esAdmin = (rol === 'ADMIN'); // Solo el ADMIN verá el panel de crear empresas
     }
   }
 
-  ionViewWillEnter() {
-    const empleado = JSON.parse(
-      localStorage.getItem('empleadoLogueado') || '{}',
-    );
-    this.esRRHH =
-      empleado.usuario?.rol === 'RRHH' || empleado.usuario?.rol === 'ADMIN';
-
-    // Leemos el empleado logueado para saber su rol
-    const datos = localStorage.getItem('empleadoLogueado');
-    if (datos) {
-      const empleado = JSON.parse(datos);
-      // Comprobamos si el rol en su tabla Usuario es MANAGER
-      this.esManager = empleado.usuario?.rol === 'MANAGER';
-    }
-  }
-
-  // --- NUEVA FUNCIÓN ---
   cerrarSesion() {
     localStorage.clear();
     if (document.activeElement) (document.activeElement as HTMLElement).blur();
     this.router.navigate(['/home']);
   }
 
-  goCuadrante() {
-    // 1. Quitamos el foco del botón del menú
-    if (document.activeElement) {
-      (document.activeElement as HTMLElement).blur();
-    }
+  // --- NAVEGACIÓN ---
 
-    // 2. Navegamos a la pantalla del cuadrante
+  goCuadrante() {
+    if (document.activeElement) (document.activeElement as HTMLElement).blur();
     this.router.navigate(['/cuadrante']);
   }
 
   goSolicitudes() {
-    if (document.activeElement) {
-      (document.activeElement as HTMLElement).blur();
-    }
-
-    // Navegamos a la pantalla de solicitudes
+    if (document.activeElement) (document.activeElement as HTMLElement).blur();
     this.router.navigate(['/solicitudes']);
   }
 
@@ -104,12 +94,12 @@ export class InicioPage implements OnInit {
 
   goTickets() {
     if (document.activeElement) (document.activeElement as HTMLElement).blur();
-    this.router.navigate(['tickets']);
+    this.router.navigate(['/tickets']);
   }
 
   goPerfil() {
     if (document.activeElement) (document.activeElement as HTMLElement).blur();
-    this.router.navigate(['perfil']);
+    this.router.navigate(['/perfil']);
   }
 
   goEquipo() {
@@ -119,11 +109,19 @@ export class InicioPage implements OnInit {
 
   goGestionRRHH() {
     if (document.activeElement) (document.activeElement as HTMLElement).blur();
-    this.router.navigate(['gestion-rrhh']);
+    // Lo he cambiado a '/rrhh' basándome en la página que creamos antes.
+    // (Cámbialo a '/gestion-rrhh' si al final la llamaste así en el app.routes.ts)
+    this.router.navigate(['/rrhh']);
   }
 
   goGestionCuadrantes() {
     if (document.activeElement) (document.activeElement as HTMLElement).blur();
-    this.router.navigate(['cuadrantes']);
+    this.router.navigate(['/cuadrantes']);
+  }
+
+  // --- NUEVO MÉTODO PARA EL ADMIN ---
+  goAdmin() {
+    if (document.activeElement) (document.activeElement as HTMLElement).blur();
+    this.router.navigate(['/admin']);
   }
 }

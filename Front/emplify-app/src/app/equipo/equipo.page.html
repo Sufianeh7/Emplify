@@ -3,16 +3,18 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/inicio"></ion-back-button>
     </ion-buttons>
-    <ion-title>Peticiones del Equipo</ion-title>
+    <ion-title>Gestión de Equipo</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
 
-  <div *ngIf="solicitudes.length === 0" class="ion-text-center ion-padding" style="margin-top: 50px;">
+  <h2 class="ion-padding-start" style="font-size: 1.2rem; font-weight: bold; margin-bottom: 0;">Peticiones Pendientes</h2>
+
+  <div *ngIf="solicitudes.length === 0" class="ion-text-center ion-padding" style="margin-top: 20px; margin-bottom: 20px;">
     <ion-icon name="calendar-outline" style="font-size: 64px; color: #ccc;"></ion-icon>
     <h4 style="color: gray;">¡Todo al día!</h4>
-    <p style="color: gray;">No hay peticiones de vacaciones pendientes en tu equipo.</p>
+    <p style="color: gray;">No hay peticiones pendientes en tu equipo.</p>
   </div>
 
   <ion-card *ngFor="let sol of solicitudes" class="ion-margin-bottom">
@@ -21,7 +23,7 @@
         <img src="https://ionicframework.com/docs/img/demos/avatar.svg" alt="avatar" />
       </ion-avatar>
       <ion-label>
-        <h2 style="font-weight: bold;">{{ sol.empleado?.usuario?.nombre }}</h2>
+        <h2 style="font-weight: bold;">{{ sol.empleado?.usuario?.nombre || sol.empleado?.usuario?.email }}</h2>
         <p>{{ sol.empleado?.puesto || 'Empleado' }}</p>
       </ion-label>
       <ion-badge slot="end" color="light">{{ sol.tipoSolicitud?.nombre }}</ion-badge>
@@ -53,5 +55,27 @@
       </ion-col>
     </ion-row>
   </ion-card>
+
+  <h2 class="ion-padding-start" style="font-size: 1.2rem; font-weight: bold; margin-top: 30px;">Saldos del Equipo</h2>
+
+  <ion-list inset="true" class="ion-margin-top" style="border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+    <ion-item *ngFor="let empleado of miEquipo" lines="full">
+      <ion-icon name="person-circle-outline" slot="start" color="medium" style="font-size: 2.5em;"></ion-icon>
+
+      <ion-label>
+        <h2 style="font-weight: bold;">{{ empleado.usuario?.nombre || empleado.usuario?.email }}</h2>
+        <p>{{ empleado.puesto || 'Miembro del equipo' }}</p>
+      </ion-label>
+
+      <div slot="end" style="display: flex; flex-direction: column; gap: 5px; align-items: flex-end;">
+        <ion-badge color="primary">Vac: {{ empleado.vacacionesDisponibles }}</ion-badge>
+        <ion-badge color="tertiary">Asuntos: {{ empleado.asuntosPropiosDisponibles }}</ion-badge>
+      </div>
+    </ion-item>
+  </ion-list>
+
+  <div *ngIf="miEquipo.length === 0" class="ion-text-center ion-padding" style="margin-top: 10px;">
+    <p style="color: gray;">No tienes empleados asignados a tu cargo.</p>
+  </div>
 
 </ion-content>
