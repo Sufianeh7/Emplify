@@ -75,6 +75,22 @@ public class Empresa {
         this.colorPrimario = colorPrimario;
     }
 
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public String getSector() {
+        return sector;
+    }
+
+    public void setSector(String sector) {
+        this.sector = sector;
+    }
+
     public String getColorSecundario() {
         return colorSecundario;
     }

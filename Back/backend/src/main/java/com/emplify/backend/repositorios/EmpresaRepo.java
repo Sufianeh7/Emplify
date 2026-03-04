@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EmpresaRepo extends JpaRepository<Empresa, Integer> {
-    // Hereda métodos como findAll() y save() de JpaRepository
+    // Si en un futuro necesitas buscar por nombre, puedes añadir:
+    // Optional<Empresa> findByNombre(String nombre);
 }

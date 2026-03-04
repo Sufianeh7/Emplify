@@ -50,4 +50,24 @@ public class EmpleadoControlador {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    // 5. NUEVO: Obtener el equipo a cargo del mánager autenticado
+    @GetMapping("/mi-equipo")
+    public ResponseEntity<?> obtenerMiEquipo(Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(401).body("{\"error\": \"No autorizado\"}");
+        }
+
+        // Primero encontramos quién es el mánager que está haciendo la petición
+        Optional<Empleado> managerOpt = empleadoRepo.findByUsuarioEmail(principal.getName());
+
+        if (managerOpt.isPresent()) {
+            Integer idManager = managerOpt.get().getIdEmpleado();
+            // Luego buscamos a todos los empleados que lo tienen asignado como mánager
+            List<Empleado> equipo = empleadoRepo.findByManager_IdEmpleado(idManager);
+            return ResponseEntity.ok(equipo);
+        }
+
+        return ResponseEntity.status(404).body("{\"error\": \"Mánager no encontrado\"}");
+    }
 }
