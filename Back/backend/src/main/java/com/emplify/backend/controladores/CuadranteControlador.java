@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,16 +28,13 @@ public class CuadranteControlador {
     @GetMapping("/empleado/{idEmpleado}")
     public ResponseEntity<?> obtenerCuadrantePorEmpleado(@PathVariable Integer idEmpleado, Principal principal) {
 
-        // Buscamos al que hace la consulta
         Optional<Empleado> consultanteOpt = empleadoRepo.findByUsuarioEmail(principal.getName());
-        // Buscamos al empleado del que queremos ver el cuadrante
         Optional<Empleado> objetivoOpt = empleadoRepo.findById(idEmpleado);
 
         if (consultanteOpt.isPresent() && objetivoOpt.isPresent()) {
             Empleado consultante = consultanteOpt.get();
             Empleado objetivo = objetivoOpt.get();
 
-            // VALIDACIÓN: ¿Pertenecen a la misma empresa?
             if (!consultante.getEmpresa().getIdEmpresa().equals(objetivo.getEmpresa().getIdEmpresa())) {
                 return ResponseEntity.status(403).body("{\"error\": \"No tienes permiso para ver cuadrantes de otra empresa\"}");
             }
@@ -53,14 +51,12 @@ public class CuadranteControlador {
     public ResponseEntity<?> asignarTurno(@RequestBody Cuadrante nuevoTurno, Principal principal) {
 
         Optional<Empleado> autorOpt = empleadoRepo.findByUsuarioEmail(principal.getName());
-        // El empleado al que se le asigna el turno viene dentro del objeto Cuadrante
         Optional<Empleado> receptorOpt = empleadoRepo.findById(nuevoTurno.getEmpleado().getIdEmpleado());
 
         if (autorOpt.isPresent() && receptorOpt.isPresent()) {
             Empleado autor = autorOpt.get();
             Empleado receptor = receptorOpt.get();
 
-            // BLOQUEO: Solo si son de la misma empresa
             if (autor.getEmpresa().getIdEmpresa().equals(receptor.getEmpresa().getIdEmpresa())) {
                 Cuadrante guardado = cuadranteRepo.save(nuevoTurno);
                 return ResponseEntity.ok(guardado);
@@ -79,11 +75,47 @@ public class CuadranteControlador {
 
         if (rrhhOpt.isPresent()) {
             Integer idEmpresa = rrhhOpt.get().getEmpresa().getIdEmpresa();
-            // Usamos la query que ya tenemos en el repo para filtrar por empresa
             List<Empleado> misEmpleados = empleadoRepo.findByEmpresa_IdEmpresa(idEmpresa);
             return ResponseEntity.ok(misEmpleados);
         }
 
         return ResponseEntity.status(401).body("{\"error\": \"No autorizado\"}");
+    }
+
+    // ==========================================
+    // 4. NUEVO: ASIGNACIÓN MASIVA DE TURNOS
+    // ==========================================
+    @PostMapping("/asignar-masivo")
+    public ResponseEntity<?> asignarTurnosMasivo(@RequestBody List<Cuadrante> nuevosTurnos, Principal principal) {
+
+        Optional<Empleado> autorOpt = empleadoRepo.findByUsuarioEmail(principal.getName());
+        if (autorOpt.isEmpty()) {
+            return ResponseEntity.status(401).body("{\"error\": \"No autorizado\"}");
+        }
+
+        Empleado autor = autorOpt.get();
+        Integer idEmpresaAutor = autor.getEmpresa().getIdEmpresa();
+
+        // Lista para guardar los turnos validados
+        List<Cuadrante> turnosAprobados = new ArrayList<>();
+
+        // Validamos TODOS los turnos antes de guardar nada en base de datos
+        for (Cuadrante turno : nuevosTurnos) {
+            Optional<Empleado> receptorOpt = empleadoRepo.findById(turno.getEmpleado().getIdEmpleado());
+
+            if (receptorOpt.isEmpty() || !receptorOpt.get().getEmpresa().getIdEmpresa().equals(idEmpresaAutor)) {
+                // Si encontramos un solo fraude, bloqueamos toda la operación
+                return ResponseEntity.status(403).body("{\"error\": \"Intento de asignación a un empleado no válido o de otra empresa. Operación abortada.\"}");
+            }
+
+            // Si es válido, nos aseguramos de asignar el objeto Empleado completo al turno
+            turno.setEmpleado(receptorOpt.get());
+            turnosAprobados.add(turno);
+        }
+
+        // Si el bucle termina sin errores, es que todos son de la misma empresa. Guardamos de golpe.
+        List<Cuadrante> guardados = cuadranteRepo.saveAll(turnosAprobados);
+
+        return ResponseEntity.ok("{\"mensaje\": \"Se han asignado " + guardados.size() + " turnos correctamente.\"}");
     }
 }
