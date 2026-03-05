@@ -11,9 +11,11 @@ import java.util.Optional;
 @Repository
 public interface CuadranteRepo extends JpaRepository<Cuadrante, Integer> {
 
-    // Busca todos los turnos de un empleado específico
     List<Cuadrante> findByEmpleado_IdEmpleado(Integer idEmpleado);
 
-    // NUEVO: Busca si un empleado ya tiene un turno asignado en una fecha concreta
+    // Cambiamos String por LocalDate
     Optional<Cuadrante> findByEmpleado_IdEmpleadoAndFecha(Integer idEmpleado, LocalDate fecha);
+
+    // Cambiamos String por LocalDate en los parámetros de rango
+    List<Cuadrante> findByEmpleado_IdEmpleadoAndFechaBetween(Integer idEmpleado, LocalDate inicio, LocalDate fin);
 }
