@@ -83,7 +83,7 @@ public class CuadranteControlador {
     }
 
     // ==========================================
-    // 4. NUEVO: ASIGNACIÓN MASIVA DE TURNOS
+    // 4. NUEVO: ASIGNACIÓN MASIVA DE TURNOS (Con Upsert)
     // ==========================================
     @PostMapping("/asignar-masivo")
     public ResponseEntity<?> asignarTurnosMasivo(@RequestBody List<Cuadrante> nuevosTurnos, Principal principal) {
@@ -108,14 +108,28 @@ public class CuadranteControlador {
                 return ResponseEntity.status(403).body("{\"error\": \"Intento de asignación a un empleado no válido o de otra empresa. Operación abortada.\"}");
             }
 
-            // Si es válido, nos aseguramos de asignar el objeto Empleado completo al turno
-            turno.setEmpleado(receptorOpt.get());
-            turnosAprobados.add(turno);
+            // --- LÓGICA DE SOBRESCRITURA (UPSERT) ---
+            Optional<Cuadrante> turnoExistente = cuadranteRepo.findByEmpleado_IdEmpleadoAndFecha(
+                    receptorOpt.get().getIdEmpleado(),
+                    turno.getFecha()
+            );
+
+            if (turnoExistente.isPresent()) {
+                // Si el empleado ya tenía turno ese día, lo actualizamos
+                Cuadrante actualizar = turnoExistente.get();
+                actualizar.setTurno(turno.getTurno());
+                turnosAprobados.add(actualizar);
+            } else {
+                // Si ese día estaba libre, lo creamos de cero
+                turno.setEmpleado(receptorOpt.get());
+                turnosAprobados.add(turno);
+            }
         }
 
-        // Si el bucle termina sin errores, es que todos son de la misma empresa. Guardamos de golpe.
+        // Si el bucle termina sin errores, guardamos de golpe.
+        // saveAll actualizará los existentes y creará los nuevos.
         List<Cuadrante> guardados = cuadranteRepo.saveAll(turnosAprobados);
 
-        return ResponseEntity.ok("{\"mensaje\": \"Se han asignado " + guardados.size() + " turnos correctamente.\"}");
+        return ResponseEntity.ok("{\"mensaje\": \"Se han procesado " + guardados.size() + " turnos correctamente.\"}");
     }
 }
