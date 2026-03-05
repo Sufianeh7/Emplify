@@ -18,6 +18,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tickets")
+@CrossOrigin(origins = "http://localhost:8100") // Aseguramos que Ionic pueda comunicarse
 public class TicketControlador {
 
     @Autowired
@@ -27,9 +28,9 @@ public class TicketControlador {
     private EmpleadoRepo empleadoRepo;
 
     @Autowired
-    private TicketMensajeRepo mensajeRepo; // Nuevo repositorio para el chat
+    private TicketMensajeRepo mensajeRepo;
 
-    // 1. Obtener SOLO los tickets del usuario logueado (Mantenido)
+    // 1. Obtener SOLO los tickets del usuario logueado
     @GetMapping("/mis-tickets")
     public ResponseEntity<?> obtenerMisTickets(Principal principal) {
         Optional<Empleado> emp = empleadoRepo.findByUsuarioEmail(principal.getName());
@@ -48,7 +49,7 @@ public class TicketControlador {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // 2. Crear un nuevo ticket (Mantenido)
+    // 2. Crear un nuevo ticket
     @PostMapping("/nuevo")
     public ResponseEntity<?> crearTicket(@RequestBody Ticket ticket, Principal principal) {
         Optional<Empleado> emp = empleadoRepo.findByUsuarioEmail(principal.getName());
@@ -63,20 +64,26 @@ public class TicketControlador {
         return ResponseEntity.status(401).body("No autorizado");
     }
 
-    // 3. Obtener TODOS los tickets (Mantenido - Vista RRHH)
+    // 3. Obtener TODOS los tickets DE MI EMPRESA (Vista RRHH Blindada) <--- AQUÍ ESTÁ LA MAGIA
     @GetMapping("/todos")
-    public ResponseEntity<?> obtenerTodosLosTickets() {
-        List<Ticket> todos = ticketRepo.findAll();
-        return ResponseEntity.ok(todos);
+    public ResponseEntity<?> obtenerTodosLosTickets(Principal principal) {
+        Optional<Empleado> rrhhOpt = empleadoRepo.findByUsuarioEmail(principal.getName());
+
+        if(rrhhOpt.isPresent()) {
+            Integer idEmpresa = rrhhOpt.get().getEmpresa().getIdEmpresa();
+            // Filtramos los tickets para que solo salgan los de SU empresa
+            List<Ticket> ticketsEmpresa = ticketRepo.findByEmpleado_Empresa_IdEmpresaOrderByFechaCreacionDesc(idEmpresa);
+            return ResponseEntity.ok(ticketsEmpresa);
+        }
+        return ResponseEntity.status(401).body("{\"error\": \"No autorizado\"}");
     }
 
-    // 4. NUEVO: Enviar un mensaje al chat del ticket
+    // 4. Enviar un mensaje al chat del ticket
     @PostMapping("/{id}/enviar-mensaje")
     public ResponseEntity<?> enviarMensaje(@PathVariable Integer id, @RequestBody Map<String, String> body, Principal principal) {
         Optional<Ticket> ticketOpt = ticketRepo.findById(id);
 
         if (ticketOpt.isPresent()) {
-            // Buscamos al autor (quien escribe) por su token
             Empleado autor = empleadoRepo.findByUsuarioEmail(principal.getName()).orElse(null);
 
             if (autor == null) return ResponseEntity.status(401).build();
@@ -86,25 +93,23 @@ public class TicketControlador {
             nuevoMsg.setTicket(ticketOpt.get());
             nuevoMsg.setAutor(autor);
 
-            mensajeRepo.save(nuevoMsg); // Se guarda en la tabla independiente
+            mensajeRepo.save(nuevoMsg);
             return ResponseEntity.ok("{\"mensaje\": \"Mensaje enviado\"}");
         }
         return ResponseEntity.status(404).build();
     }
 
-    // 5. Responder a un ticket / Cambiar estado (Mantenido)
+    // 5. Responder a un ticket / Cambiar estado
     @PutMapping("/{id}/responder")
     public ResponseEntity<?> responderTicket(@PathVariable Integer id, @RequestBody Map<String, String> body) {
         Optional<Ticket> ticketOpt = ticketRepo.findById(id);
 
         if (ticketOpt.isPresent()) {
             Ticket ticket = ticketOpt.get();
-            ticket.setEstado(body.get("estado")); // Recibe "RESUELTO" o "EN PROCESO"
+            ticket.setEstado(body.get("estado"));
             ticketRepo.save(ticket);
             return ResponseEntity.ok("{\"mensaje\": \"Ticket actualizado con éxito\"}");
         }
         return ResponseEntity.status(404).body("{\"error\": \"Ticket no encontrado\"}");
     }
-
-
 }
