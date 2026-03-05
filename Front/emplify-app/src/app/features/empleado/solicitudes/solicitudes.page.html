@@ -1,25 +1,16 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/inicio"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Solicitar Ausencia</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content class="ion-padding">
+<div class="solicitudes-container">
 
   <ion-grid class="ion-no-padding ion-margin-bottom">
     <ion-row>
       <ion-col size="6">
-        <ion-card class="ion-no-margin ion-margin-end" color="primary" style="text-align: center; padding: 10px 0;">
+        <ion-card class="ion-no-margin ion-margin-end" color="primary" style="text-align: center; padding: 10px 0; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
           <ion-card-subtitle style="color: rgba(255,255,255,0.8); font-size: 0.7em; text-transform: uppercase;">Vacaciones</ion-card-subtitle>
           <ion-card-title style="font-size: 2em; font-weight: bold; margin: 5px 0;">{{ diasVacaciones }}</ion-card-title>
           <p style="font-size: 0.6em; margin: 0; opacity: 0.9;">Días libres</p>
         </ion-card>
       </ion-col>
       <ion-col size="6">
-        <ion-card class="ion-no-margin ion-margin-start" color="tertiary" style="text-align: center; padding: 10px 0;">
+        <ion-card class="ion-no-margin ion-margin-start" color="tertiary" style="text-align: center; padding: 10px 0; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
           <ion-card-subtitle style="color: rgba(255,255,255,0.8); font-size: 0.7em; text-transform: uppercase;">Asuntos P.</ion-card-subtitle>
           <ion-card-title style="font-size: 2em; font-weight: bold; margin: 5px 0;">{{ diasAsuntos }}</ion-card-title>
           <p style="font-size: 0.6em; margin: 0; opacity: 0.9;">Disponibles</p>
@@ -28,7 +19,7 @@
     </ion-row>
   </ion-grid>
 
-  <ion-list inset="true" class="ion-no-margin">
+  <ion-list inset="true" class="ion-no-margin" style="border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
     <ion-item>
       <ion-select label="Tipo de solicitud" label-placement="floating" [(ngModel)]="tipoSeleccionado">
         <ion-select-option *ngFor="let tipo of tiposSolicitud" [value]="tipo.idTipo">
@@ -58,20 +49,22 @@
     </ion-item>
   </ion-list>
 
-  <ion-button expand="block" (click)="enviarSolicitud()" class="ion-margin-top">
+  <ion-button expand="block" (click)="enviarSolicitud()" class="ion-margin-top" style="--border-radius: 10px; margin-top: 15px;">
     <ion-icon name="send-outline" slot="start"></ion-icon>
     Enviar Petición
   </ion-button>
 
-  <h3 class="ion-padding-horizontal ion-margin-top" *ngIf="misSolicitudes.length > 0">Historial</h3>
-  <ion-card *ngFor="let sol of misSolicitudes" class="ion-no-margin ion-margin-bottom">
+  <h3 class="ion-padding-horizontal ion-margin-top" *ngIf="misSolicitudes.length > 0" style="font-size: 1.1em; font-weight: 700; color: #1a1a1a; margin-top: 25px;">Historial</h3>
+
+  <ion-card *ngFor="let sol of misSolicitudes" class="ion-no-margin ion-margin-bottom" style="border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); border: 1px solid #e0e0e0;">
     <ion-item lines="none">
       <ion-label>
-        <h2><b>{{ sol.tipoSolicitud?.nombre }}</b></h2>
-        <p>{{ sol.fechaInicio | date:'dd/MM/yyyy' }} - {{ sol.fechaFin | date:'dd/MM/yyyy' }}</p>
+        <h2 style="font-size: 1.05em; font-weight: 600; color: #1a1a1a;">{{ sol.tipoSolicitud?.nombre }}</h2>
+        <p style="color: #666; font-size: 0.85em;">{{ sol.fechaInicio | date:'dd/MM/yyyy' }} - {{ sol.fechaFin | date:'dd/MM/yyyy' }}</p>
       </ion-label>
       <ion-badge slot="end"
-        [color]="sol.estado === 'APROBADA' ? 'success' : (sol.estado === 'PENDIENTE' ? 'warning' : 'danger')">
+        [color]="sol.estado === 'APROBADA' ? 'success' : (sol.estado === 'PENDIENTE' ? 'warning' : 'danger')"
+        style="padding: 6px 10px; border-radius: 6px;">
         {{ sol.estado }}
       </ion-badge>
     </ion-item>
@@ -109,4 +102,4 @@
     </ng-template>
   </ion-modal>
 
-</ion-content>
+</div>

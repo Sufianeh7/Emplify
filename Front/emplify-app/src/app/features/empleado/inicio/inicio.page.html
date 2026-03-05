@@ -1,0 +1,80 @@
+<app-header></app-header>
+
+<ion-content class="fondo-gris">
+
+  <div class="news-container ion-padding-vertical">
+    <div class="news-scroll">
+
+      <ion-card class="news-card">
+        <div class="news-image" style="background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop');">
+          <ion-badge color="primary" class="news-badge">Novedad</ion-badge>
+        </div>
+        <ion-card-content class="news-content">
+          <h2 class="news-title">Juntos hicimos de 2025 un año para recordar</h2>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="news-card">
+        <div class="news-image" style="background-image: url('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=800&auto=format&fit=crop');">
+        </div>
+        <ion-card-content class="news-content">
+          <h2 class="news-title">Actualización del manual de prevención</h2>
+        </ion-card-content>
+      </ion-card>
+
+    </div>
+  </div>
+
+  <ion-grid class="ion-padding-horizontal">
+
+    <ion-row>
+      <ion-col size="6">
+        <ion-card class="quick-card" button="true" routerLink="/cuadrante">
+          <ion-card-content>
+            <h3 class="card-title">Mi Cuadrante</h3>
+            <p class="card-subtitle">Ver próximos turnos</p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="6">
+        <ion-card class="quick-card" button="true" routerLink="/solicitudes">
+          <ion-card-content>
+            <h3 class="card-title">Ausencias</h3>
+            <p class="card-subtitle">Pedir vacaciones</p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="12">
+        <ion-card class="quick-card" button="true">
+          <ion-item lines="none" detail="false">
+            <ion-icon name="time-outline" slot="start" color="primary"></ion-icon>
+            <ion-label>
+              <h3 class="card-title">Fichajes de hoy</h3>
+              <p class="card-subtitle">Aún no has fichado hoy</p>
+            </ion-label>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="12">
+        <ion-card class="quick-card" button="true">
+          <ion-item lines="none" detail="false">
+            <ion-icon name="bulb-outline" slot="start" color="warning"></ion-icon>
+            <ion-label>
+              <h3 class="card-title">Formación</h3>
+              <p class="card-subtitle">Explora los cursos disponibles</p>
+            </ion-label>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+  </ion-grid>
+
+</ion-content>

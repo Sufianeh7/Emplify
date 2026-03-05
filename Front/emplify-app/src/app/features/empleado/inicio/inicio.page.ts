@@ -14,15 +14,20 @@ import {
   peopleOutline,
   briefcaseOutline,
   settingsOutline, // <-- Añadimos el icono para el panel de Admin
-  logOutOutline
+  logOutOutline,
+  chatboxEllipsesOutline,
+  notificationsCircleOutline,
+  timeOutline,
+  bulbOutline
 } from 'ionicons/icons';
+import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
 
 @Component({
   selector: 'app-inicio',
   templateUrl: './inicio.page.html',
   styleUrls: ['./inicio.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, RouterModule],
+  imports: [IonicModule, CommonModule, FormsModule, RouterModule, HeaderComponent],
 })
 export class InicioPage implements OnInit {
   nombreUsuario: string = '';
@@ -43,7 +48,11 @@ export class InicioPage implements OnInit {
       peopleOutline,
       briefcaseOutline,
       settingsOutline,
-      logOutOutline
+      logOutOutline,
+      chatboxEllipsesOutline,
+      notificationsCircleOutline,
+      timeOutline,
+      bulbOutline
     });
   }
 

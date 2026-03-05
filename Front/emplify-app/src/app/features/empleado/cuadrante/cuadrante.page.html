@@ -1,0 +1,54 @@
+<ion-header class="ion-no-border">
+  <app-header></app-header>
+
+  <ion-toolbar color="light" style="--background: #ffffff; padding: 0 10px 10px 10px;">
+    <ion-segment [(ngModel)]="vistaActual" mode="ios">
+      <ion-segment-button value="horario">
+        <ion-label>Mi Horario</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="ausencias">
+        <ion-label>Ausencias</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" style="--background: #f2f4f8;">
+
+  <div *ngIf="vistaActual === 'horario'">
+    <ion-datetime
+      presentation="date"
+      [highlightedDates]="diasDestacados"
+      (ionChange)="diaSeleccionado($event)"
+      size="cover"
+      style="border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+    </ion-datetime>
+
+    <ion-card class="ion-margin-top" *ngIf="turnoElegido" style="border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid #e0e0e0;">
+      <ion-card-header>
+        <ion-card-subtitle>Detalle del día</ion-card-subtitle>
+        <ion-card-title>{{ fechaElegidaNormal }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <h3>Turno: <strong>{{ turnoElegido?.turno }}</strong></h3>
+        <p *ngIf="turnoElegido?.turno === 'MAÑANA'" style="font-size: 1.1em; margin-top: 10px;">
+          <ion-icon name="time-outline" style="vertical-align: middle;"></ion-icon> Horario: <strong>08:00 - 16:00</strong>
+        </p>
+        <p *ngIf="turnoElegido?.turno === 'TARDE'" style="font-size: 1.1em; margin-top: 10px;">
+          <ion-icon name="time-outline" style="vertical-align: middle;"></ion-icon> Horario: <strong>16:00 - 00:00</strong>
+        </p>
+        <p *ngIf="turnoElegido?.turno === 'NOCHE'" style="font-size: 1.1em; margin-top: 10px;">
+          <ion-icon name="time-outline" style="vertical-align: middle;"></ion-icon> Horario: <strong>00:00 - 08:00</strong>
+        </p>
+        <p *ngIf="turnoElegido?.turno === 'LIBRE' || turnoElegido?.turno === 'VACACIONES'" style="color: gray; margin-top: 10px;">
+          <ion-icon name="happy-outline" style="vertical-align: middle;"></ion-icon> ¡Día libre! No hay horario asignado.
+        </p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <div *ngIf="vistaActual === 'ausencias'">
+    <app-solicitudes></app-solicitudes>
+  </div>
+
+</ion-content>

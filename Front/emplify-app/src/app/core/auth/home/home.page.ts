@@ -3,6 +3,8 @@ import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http'; // <-- Importamos HttpClient y HttpHeaders
 import { Router } from '@angular/router'; // <-- IMPORTAMOS EL ROUTER
+import { addIcons } from 'ionicons';
+import { briefcaseOutline, busOutline, helpOutline, peopleOutline, searchOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-home',
@@ -17,9 +19,13 @@ export class HomePage {
   password: string = '';
 
   // Inyectamos el HttpClient en el constructor
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) {
+    addIcons({
+      busOutline, peopleOutline, briefcaseOutline, searchOutline, helpOutline
+    })
+  }
 
-  hacerLogin() {
+  login() {
     console.log('Intentando conectar con el backend...');
 
     // 1. Preparamos las credenciales (Spring Security exige que vayan en Base64)
