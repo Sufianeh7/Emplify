@@ -111,7 +111,7 @@ export class InicioPage implements OnInit {
     if (document.activeElement) (document.activeElement as HTMLElement).blur();
     // Lo he cambiado a '/rrhh' basándome en la página que creamos antes.
     // (Cámbialo a '/gestion-rrhh' si al final la llamaste así en el app.routes.ts)
-    this.router.navigate(['/rrhh']);
+    this.router.navigate(['/gestion-rrhh']);
   }
 
   goGestionCuadrantes() {

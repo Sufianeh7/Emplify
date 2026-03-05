@@ -1,48 +1,85 @@
-<div *ngIf="ticketSeleccionado" class="chat-container">
-    <ion-toolbar color="white">
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="goInicio()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Gestión de Tickets</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-list *ngIf="!ticketSeleccionado">
+    <ion-list-header>
+      <ion-label>Consultas de Empleados</ion-label>
+    </ion-list-header>
+
+    <ion-item *ngIf="tickets.length === 0">
+      <ion-label>No hay tickets en este momento.</ion-label>
+    </ion-item>
+
+    <ion-item *ngFor="let ticket of tickets" button (click)="seleccionarTicket(ticket)">
+      <ion-icon name="briefcase-outline" slot="start" color="tertiary"></ion-icon>
+      <ion-label>
+        <h2>{{ ticket?.titulo }}</h2>
+        <p>{{ ticket?.empleado?.usuario?.nombre || 'Empleado sin nombre' }}</p>
+      </ion-label>
+      <ion-badge slot="end" [color]="ticket?.estado === 'RESUELTO' ? 'success' : 'warning'">
+        {{ ticket?.estado }}
+      </ion-badge>
+    </ion-item>
+  </ion-list>
+
+  <div *ngIf="ticketSeleccionado" class="chat-container">
+    <ion-toolbar color="light">
       <ion-buttons slot="start">
         <ion-button (click)="ticketSeleccionado = null">
           <ion-icon name="close"></ion-icon>
         </ion-button>
       </ion-buttons>
-      <ion-title>{{ ticketSeleccionado.titulo }}</ion-title>
+      <ion-title>{{ ticketSeleccionado?.titulo }}</ion-title>
     </ion-toolbar>
 
-    <div class="messages-list">
+    <div class="messages-list ion-padding">
 
       <div class="message in">
         <div class="bubble">
-          <small>{{ ticketSeleccionado.empleado?.usuario?.nombre }}</small>
-          <p>{{ ticketSeleccionado.descripcion }}</p>
+          <small><strong>{{ ticketSeleccionado?.empleado?.usuario?.nombre }}</strong></small>
+          <p>{{ ticketSeleccionado?.descripcion }}</p>
         </div>
       </div>
 
-      <div *ngFor="let msg of ticketSeleccionado.mensajes"
+      <div *ngFor="let msg of ticketSeleccionado?.mensajes"
            class="message"
-           [ngClass]="{'out': msg.autor?.idEmpleado !== ticketSeleccionado.empleado?.idEmpleado,
-                       'in': msg.autor?.idEmpleado === ticketSeleccionado.empleado?.idEmpleado}">
+           [ngClass]="{'out': msg?.autor?.idEmpleado !== ticketSeleccionado?.empleado?.idEmpleado,
+                       'in': msg?.autor?.idEmpleado === ticketSeleccionado?.empleado?.idEmpleado}">
 
         <div class="bubble">
-          <small *ngIf="msg.autor?.idEmpleado === ticketSeleccionado.empleado?.idEmpleado">
-            {{ msg.autor?.usuario?.nombre }}
+          <small *ngIf="msg?.autor?.idEmpleado === ticketSeleccionado?.empleado?.idEmpleado">
+            {{ msg?.autor?.usuario?.nombre }}
           </small>
-
-          <p>{{ msg.contenido }}</p>
-          <span class="time">{{ msg.fechaEnvio | date:'HH:mm' }}</span>
+          <p>{{ msg?.contenido }}</p>
+          <span class="time" *ngIf="msg?.fechaEnvio">{{ msg?.fechaEnvio | date:'HH:mm' }}</span>
         </div>
       </div>
 
     </div>
-
-    <ion-footer class="ion-no-border" *ngIf="ticketSeleccionado.estado !== 'RESUELTO'">
-      <ion-item lines="none" class="input-item">
-        <ion-textarea [(ngModel)]="nuevoMensaje" placeholder="Escribe a RRHH..." auto-grow="true" rows="1"></ion-textarea>
-        <ion-button fill="clear" (click)="enviarRespuesta()">
-          <ion-icon name="send" slot="icon-only"></ion-icon>
-        </ion-button>
-      </ion-item>
-      <ion-button expand="block" color="success" (click)="resolverTicket(ticketSeleccionado.idTicket)" class="ion-margin">
-        Cerrar Ticket como Resuelto
-      </ion-button>
-    </ion-footer>
   </div>
+
+</ion-content>
+
+<ion-footer class="ion-no-border" *ngIf="ticketSeleccionado && ticketSeleccionado?.estado !== 'RESUELTO'">
+  <ion-toolbar>
+    <ion-item lines="none" class="input-item">
+      <ion-textarea [(ngModel)]="nuevoMensaje" placeholder="Escribe a RRHH..." auto-grow="true" rows="1"></ion-textarea>
+      <ion-button fill="clear" (click)="enviarRespuesta()">
+        <ion-icon name="send" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <ion-button expand="block" color="success" (click)="resolverTicket(ticketSeleccionado.idTicket)" class="ion-margin">
+      Cerrar Ticket como Resuelto
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>
