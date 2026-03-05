@@ -52,7 +52,6 @@ export class HomePage {
           // LA MAGIA DE LA NAVEGACIÓN
           // Si todo va bien, le decimos a Ionic que cambie de pantalla
           this.router.navigate(['/inicio']);
-          alert('¡Login correcto! Mira la consola.');
         },
         error: (error) => {
           // Si el backend devuelve 401 Unauthorized, entraremos por aquí

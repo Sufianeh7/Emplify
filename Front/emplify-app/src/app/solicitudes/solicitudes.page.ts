@@ -22,7 +22,7 @@ import {
 export class SolicitudesPage implements OnInit {
   tiposSolicitud: any[] = [];
   misSolicitudes: any[] = [];
-  turnosCuadrante: any[] = [];
+  turnosCuadrante: any[] = []; // Ahora vendrá de la tabla Cuadrante
 
   // Variables para los contadores
   diasVacaciones: number = 0;
@@ -82,10 +82,11 @@ export class SolicitudesPage implements OnInit {
     // No permitir días pasados
     if (fechaSeleccionada < hoy) return false;
 
-    // Solo permitir días que existan en el cuadrante y no sean LIBRE
+    // Solo permitir días que existan en el cuadrante y no sean LIBRE ni VACACIONES
     const fechaISO = dateString.split('T')[0];
     return this.turnosCuadrante.some(
-      (t) => t.fecha === fechaISO && t.tipo !== 'LIBRE',
+      // CAMBIO 1: Cambiado 't.tipo' por 't.turno' para que coincida con la BD
+      (t) => t.fecha === fechaISO && t.turno !== 'LIBRE' && t.turno !== 'VACACIONES',
     );
   };
 
@@ -98,11 +99,17 @@ export class SolicitudesPage implements OnInit {
 
   cargarCuadrante() {
     const token = localStorage.getItem('token');
-    if (token) {
+    const empleadoStr = localStorage.getItem('empleadoLogueado');
+
+    if (token && empleadoStr) {
+      const empleado = JSON.parse(empleadoStr);
+      const idEmpleado = empleado.idEmpleado;
+
       const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
-      const año = new Date().getFullYear();
+
+      // CAMBIO 2: Actualizado al endpoint seguro de la tabla Cuadrante
       this.http
-        .get(`http://localhost:8080/api/turnos/mis-turnos?inicio=${año}-01-01&fin=${año}-12-31`, { headers })
+        .get(`http://localhost:8080/api/cuadrante/empleado/${idEmpleado}`, { headers })
         .subscribe({
           next: (res: any) => (this.turnosCuadrante = res),
           error: (err) => console.error('Error al cargar cuadrante', err),
@@ -184,7 +191,7 @@ export class SolicitudesPage implements OnInit {
   async mostrarToast(mensaje: string, color: string) {
     const toast = await this.toastController.create({
       message: mensaje,
-      duration: 3000, // Un poco más de tiempo para leer errores de validación
+      duration: 3000,
       color: color,
       position: 'bottom',
     });

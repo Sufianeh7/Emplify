@@ -23,24 +23,24 @@
     </ion-card-header>
 
     <ion-card-content>
-      <h3>Turno: <strong>{{ turnoElegido?.tipo }}</strong></h3>
+      <h3>Turno: <strong>{{ turnoElegido?.turno }}</strong></h3>
 
-      <p *ngIf="turnoElegido?.tipo === 'MAÑANA'" style="font-size: 1.1em; margin-top: 10px;">
+      <p *ngIf="turnoElegido?.turno === 'MAÑANA'" style="font-size: 1.1em; margin-top: 10px;">
         <ion-icon name="time-outline" style="vertical-align: middle;"></ion-icon>
         Horario: <strong>08:00 - 16:00</strong>
       </p>
 
-      <p *ngIf="turnoElegido?.tipo === 'TARDE'" style="font-size: 1.1em; margin-top: 10px;">
+      <p *ngIf="turnoElegido?.turno === 'TARDE'" style="font-size: 1.1em; margin-top: 10px;">
         <ion-icon name="time-outline" style="vertical-align: middle;"></ion-icon>
         Horario: <strong>16:00 - 00:00</strong>
       </p>
 
-      <p *ngIf="turnoElegido?.tipo === 'NOCHE'" style="font-size: 1.1em; margin-top: 10px;">
+      <p *ngIf="turnoElegido?.turno === 'NOCHE'" style="font-size: 1.1em; margin-top: 10px;">
         <ion-icon name="time-outline" style="vertical-align: middle;"></ion-icon>
         Horario: <strong>00:00 - 08:00</strong>
       </p>
 
-      <p *ngIf="turnoElegido?.tipo === 'LIBRE' || turnoElegido?.tipo === 'VACACIONES'" style="color: gray; margin-top: 10px;">
+      <p *ngIf="turnoElegido?.turno === 'LIBRE' || turnoElegido?.turno === 'VACACIONES'" style="color: gray; margin-top: 10px;">
         <ion-icon name="happy-outline" style="vertical-align: middle;"></ion-icon>
         ¡Día libre! No hay horario asignado.
       </p>

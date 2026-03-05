@@ -13,7 +13,8 @@ import {
   personCircleOutline,
   peopleOutline,
   briefcaseOutline,
-  settingsOutline // <-- Añadimos el icono para el panel de Admin
+  settingsOutline, // <-- Añadimos el icono para el panel de Admin
+  logOutOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -41,7 +42,8 @@ export class InicioPage implements OnInit {
       personCircleOutline,
       peopleOutline,
       briefcaseOutline,
-      settingsOutline // <-- Registramos el icono
+      settingsOutline,
+      logOutOutline
     });
   }
 

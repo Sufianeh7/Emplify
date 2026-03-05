@@ -16,7 +16,7 @@ import { timeOutline, happyOutline, ellipse } from 'ionicons/icons';
 })
 export class CuadrantePage implements OnInit {
 
-  turnos: any[] = []; // La lista cruda de la base de datos
+  turnos: any[] = []; // La lista cruda de la base de datos (ahora desde Cuadrante)
   diasDestacados: any[] = []; // La lista formateada para pintar el calendario
 
   turnoElegido: any = null; // Guardará el turno del día que toques
@@ -32,19 +32,19 @@ export class CuadrantePage implements OnInit {
 
   cargarCuadrante() {
     const token = localStorage.getItem('token');
+    // Extraemos los datos del empleado logueado para saber su ID
+    const empleadoStr = localStorage.getItem('empleadoLogueado');
 
-    if (token) {
+    if (token && empleadoStr) {
+      const empleado = JSON.parse(empleadoStr);
+      const idEmpleado = empleado.idEmpleado;
+
       const headers = new HttpHeaders({
         'Authorization': 'Basic ' + token
       });
 
-      // Pedimos los turnos del año en curso
-      const añoActual = new Date().getFullYear();
-      const inicio = `${añoActual}-01-01`;
-      const fin = `${añoActual}-12-31`;
-
-      // NUEVO ENDPOINT: No necesita el ID del empleado porque usa el Token (Principal)
-      this.http.get(`http://localhost:8080/api/turnos/mis-turnos?inicio=${inicio}&fin=${fin}`, { headers })
+      // CAMBIO 1: Llamamos a la API de Cuadrantes, que está segura y optimizada
+      this.http.get(`http://localhost:8080/api/cuadrante/empleado/${idEmpleado}`, { headers })
         .subscribe({
           next: (respuesta: any) => {
             this.turnos = respuesta;
@@ -63,8 +63,8 @@ export class CuadrantePage implements OnInit {
       return {
         date: turno.fecha, // Tiene que estar en formato "YYYY-MM-DD"
         textColor: '#ffffff', // Letra blanca
-        // ACTUALIZADO: En la base de datos se llama 'tipo'
-        backgroundColor: this.obtenerColorPorTurno(turno.tipo)
+        // CAMBIO 2: En el modelo Cuadrante de Spring Boot, la variable es 'turno' (no 'tipo')
+        backgroundColor: this.obtenerColorPorTurno(turno.turno)
       };
     });
   }
