@@ -9,12 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/cuadrante")
+@RequestMapping("/api/cuadrante") // ¡Ojo! Está en singular
 @CrossOrigin(origins = "http://localhost:8100")
 public class CuadranteControlador {
 
@@ -82,9 +84,7 @@ public class CuadranteControlador {
         return ResponseEntity.status(401).body("{\"error\": \"No autorizado\"}");
     }
 
-    // ==========================================
-    // 4. NUEVO: ASIGNACIÓN MASIVA DE TURNOS (Con Upsert)
-    // ==========================================
+    // 4. ASIGNACIÓN MASIVA DE TURNOS (Con Upsert)
     @PostMapping("/asignar-masivo")
     public ResponseEntity<?> asignarTurnosMasivo(@RequestBody List<Cuadrante> nuevosTurnos, Principal principal) {
 
@@ -96,40 +96,59 @@ public class CuadranteControlador {
         Empleado autor = autorOpt.get();
         Integer idEmpresaAutor = autor.getEmpresa().getIdEmpresa();
 
-        // Lista para guardar los turnos validados
         List<Cuadrante> turnosAprobados = new ArrayList<>();
 
-        // Validamos TODOS los turnos antes de guardar nada en base de datos
         for (Cuadrante turno : nuevosTurnos) {
             Optional<Empleado> receptorOpt = empleadoRepo.findById(turno.getEmpleado().getIdEmpleado());
 
             if (receptorOpt.isEmpty() || !receptorOpt.get().getEmpresa().getIdEmpresa().equals(idEmpresaAutor)) {
-                // Si encontramos un solo fraude, bloqueamos toda la operación
                 return ResponseEntity.status(403).body("{\"error\": \"Intento de asignación a un empleado no válido o de otra empresa. Operación abortada.\"}");
             }
 
-            // --- LÓGICA DE SOBRESCRITURA (UPSERT) ---
             Optional<Cuadrante> turnoExistente = cuadranteRepo.findByEmpleado_IdEmpleadoAndFecha(
                     receptorOpt.get().getIdEmpleado(),
                     turno.getFecha()
             );
 
             if (turnoExistente.isPresent()) {
-                // Si el empleado ya tenía turno ese día, lo actualizamos
                 Cuadrante actualizar = turnoExistente.get();
                 actualizar.setTurno(turno.getTurno());
                 turnosAprobados.add(actualizar);
             } else {
-                // Si ese día estaba libre, lo creamos de cero
                 turno.setEmpleado(receptorOpt.get());
                 turnosAprobados.add(turno);
             }
         }
 
-        // Si el bucle termina sin errores, guardamos de golpe.
-        // saveAll actualizará los existentes y creará los nuevos.
         List<Cuadrante> guardados = cuadranteRepo.saveAll(turnosAprobados);
-
         return ResponseEntity.ok("{\"mensaje\": \"Se han procesado " + guardados.size() + " turnos correctamente.\"}");
+    }
+
+    // ==========================================
+    // 5. NUEVO: OBTENER EL PRÓXIMO TURNO DEL EMPLEADO
+    // ==========================================
+    @GetMapping("/proximo/{idEmpleado}")
+    public ResponseEntity<?> obtenerProximoTurno(@PathVariable Integer idEmpleado, Principal principal) {
+        // Validamos que el usuario existe
+        Optional<Empleado> consultanteOpt = empleadoRepo.findByUsuarioEmail(principal.getName());
+        if (consultanteOpt.isEmpty()) {
+            return ResponseEntity.status(401).body("{\"error\": \"No autorizado\"}");
+        }
+
+        // Sacamos todos los turnos del empleado
+        List<Cuadrante> turnos = cuadranteRepo.findByEmpleado_IdEmpleado(idEmpleado);
+
+        // Filtramos para quedarnos solo con los turnos de hoy en adelante, y cogemos el más cercano (min)
+        LocalDate hoy = LocalDate.now();
+        Optional<Cuadrante> proximoTurno = turnos.stream()
+                .filter(t -> t.getFecha() != null && !t.getFecha().isBefore(hoy))
+                .min(Comparator.comparing(Cuadrante::getFecha));
+
+        // Si encontramos un turno futuro, lo devolvemos. Si no, devolvemos null (200 OK, sin contenido)
+        if (proximoTurno.isPresent()) {
+            return ResponseEntity.ok(proximoTurno.get());
+        } else {
+            return ResponseEntity.ok(null);
+        }
     }
 }
