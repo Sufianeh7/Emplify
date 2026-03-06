@@ -1,0 +1,198 @@
+/* --- FONDOS Y CONTENEDORES --- */
+.app-background {
+  --background: #f2f4f8;
+}
+
+/* --- CUERPO --- */
+.dashboard-container {
+  padding: 0 15px 30px 15px;
+  background: #f2f4f8;
+  position: relative;
+  z-index: 10;
+}
+
+/* --- HERO: GRADIENTE OSCURECIDO Y TEXTO BLANCO --- */
+.profile-hero {
+  /* Gradiente que empieza en blanco (cabecera) y termina en un azul cian profundo */
+  background: linear-gradient(to bottom, #ffffff 0%, #005a8d 100%); /* Azul cian profundo */
+  padding: 10px 20px 40px 20px;
+  text-align: center;
+  margin-bottom: 20px; /* Separación de la siguiente tarjeta */
+  position: relative; /* Para el avatar superpuesto */
+  z-index: 1;
+
+  .avatar-container {
+    width: 90px;
+    height: 90px;
+    margin: 0 auto 15px auto;
+    border-radius: 50%;
+    padding: 3px;
+    background: rgba(255, 255, 255, 0.2); /* Efecto cristalino */
+    border: 2px solid rgba(255, 255, 255, 0.8);
+
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+  }
+
+  .main-info {
+    /* Nombre y Puesto en BLANCO para resaltar sobre el azul oscuro */
+    h2 { margin: 0 0 5px 0; font-size: 1.6rem; font-weight: 800; color: #ffffff; }
+    .subtitle { color: rgba(255, 255, 255, 0.9); font-size: 1rem; margin: 0 0 4px 0; font-weight: 500; }
+
+    .subtitle-dept {
+      display: inline-block;
+      margin-top: 5px;
+      color: #045d8f;
+      background: #ffffff;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+  }
+}
+
+/* --- TARJETAS --- */
+.flat-card {
+  background: #ffffff;
+  border: 1px solid #d5d9d9;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+
+/* --- SUPERVISOR SECTION --- */
+.supervisor-section {
+  .section-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+
+    h3 { font-size: 1.25rem; font-weight: 800; margin: 0; color: #1a1a1a; }
+
+    .badge-visibility {
+      font-size: 0.8rem;
+      color: #565959;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+  }
+
+  .supervisor-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    .sup-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 8px; /* Cuadrado con bordes redondeados */
+      overflow: hidden;
+      img { width: 100%; height: 100%; object-fit: cover; }
+    }
+
+    .sup-details {
+      h4 { margin: 0 0 3px 0; font-size: 1rem; font-weight: 700; color: #0f1111; }
+      p { margin: 0; font-size: 0.9rem; color: #565959; }
+    }
+  }
+}
+
+/* --- DETALLES DEL TRABAJO --- */
+.details-section {
+  margin-top: 25px;
+
+  h3 { font-size: 1.25rem; font-weight: 800; margin: 0 0 15px 5px; color: #1a1a1a; }
+
+  .detail-list {
+    background: #ffffff;
+    border-top: 1px solid #e7e9e9;
+    border-bottom: 1px solid #e7e9e9;
+  }
+
+  .detail-item {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 16px;
+    border-bottom: 1px solid #f2f4f8;
+
+    &:last-child { border-bottom: none; }
+
+    label { font-size: 0.75rem; color: #565959; margin-bottom: 4px; font-weight: 500;}
+    span { font-size: 1rem; font-weight: 500; color: #0f1111; }
+  }
+}
+
+/* --- ACCIONES & BOTONES --- */
+.actions-section {
+  margin-top: 30px;
+}
+
+.btn-secundario {
+  --background: #ffffff;
+  --color: #0f1111;
+  --border-style: solid;
+  --border-width: 1px;
+  --border-color: #d5d9d9;
+  --border-radius: 8px;
+  --box-shadow: none;
+  font-weight: 600;
+  height: 48px;
+}
+
+.btn-logout {
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.form-container {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e7e9e9;
+  overflow: hidden;
+}
+
+.form-item {
+  --padding-start: 16px;
+  --inner-padding-end: 16px;
+  border-bottom: 1px solid #f2f4f8;
+  &:last-child { border-bottom: none; }
+}
+
+.btn-corporativo {
+  --background: #0071ad;
+  --border-radius: 8px;
+  --box-shadow: none;
+  font-weight: 700;
+  height: 48px;
+}
+
+/* --- BARRA DE PESTAÑAS (TABS) --- */
+.custom-footer {
+  background: #ffffff;
+  border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+.custom-tab-bar {
+  --background: #ffffff;
+  --border: none;
+  padding-bottom: env(safe-area-inset-bottom);
+
+  ion-tab-button {
+    color: #565959;
+
+    ion-icon { font-size: 1.4rem; margin-bottom: 4px; }
+    ion-label { font-size: 0.7rem; font-weight: 600; }
+
+    /* Estado seleccionado: Icono Azul */
+    &.tab-active {
+      color: #0071ad;
+    }
+  }
+}

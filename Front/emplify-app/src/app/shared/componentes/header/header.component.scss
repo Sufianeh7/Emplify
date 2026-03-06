@@ -1,3 +1,9 @@
 ion-header {
   box-shadow: none;
 }
+
+ion-toolbar {
+  /* Añade el espacio automático de la barra de estado + 10px extra de respiro */
+  --padding-top: calc(env(safe-area-inset-top) + 20px);
+  --padding-bottom: 5px;
+}

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { homeOutline, calendarOutline, ellipsisHorizontalCircleOutline } from 'ionicons/icons';
+import { homeOutline, calendarOutline, menuOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-tabs',
@@ -15,7 +15,7 @@ import { homeOutline, calendarOutline, ellipsisHorizontalCircleOutline } from 'i
 export class TabsPage implements OnInit {
 
   constructor() {
-    addIcons({ homeOutline, calendarOutline, ellipsisHorizontalCircleOutline });
+    addIcons({ homeOutline, calendarOutline, menuOutline });
   }
 
   ngOnInit() {

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router'; // <-- NUEVO: Para leer los queryParams
 
 import { addIcons } from 'ionicons';
 import {
@@ -41,7 +42,11 @@ export class CuadrantePage implements OnInit {
   comentarios: string = '';
   hoyISO: string = new Date().toISOString();
 
-  constructor(private http: HttpClient, private toastController: ToastController) {
+  constructor(
+    private http: HttpClient,
+    private toastController: ToastController,
+    private route: ActivatedRoute // <-- NUEVO: Inyectamos el ActivatedRoute
+  ) {
     addIcons({
       timeOutline, happyOutline, ellipse, chatboxEllipsesOutline,
       personCircleOutline, notificationsOutline, airplaneOutline,
@@ -50,6 +55,13 @@ export class CuadrantePage implements OnInit {
   }
 
   ngOnInit() {
+    // --- NUEVO: Escuchamos la URL para ver qué pestaña debemos abrir ---
+    this.route.queryParams.subscribe(params => {
+      if (params['tab']) {
+        this.vistaActual = params['tab'];
+      }
+    });
+
     this.inicializarDatos();
   }
 
@@ -160,7 +172,7 @@ export class CuadrantePage implements OnInit {
 
     if (fechaSeleccionada < hoy) return false;
     const fechaISO = dateString.split('T')[0];
-    // Usamos 'this.turnos' que cargó el calendario
+
     return this.turnos.some(t => t.fecha === fechaISO && t.turno !== 'LIBRE' && t.turno !== 'VACACIONES');
   };
 

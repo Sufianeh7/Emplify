@@ -1,105 +1,117 @@
-.brand-logo {
-  font-weight: 800;
-  font-size: 2.2rem;
-  color: #1a1a1a;
-  margin-top: 0;
-  .dot { color: #3880ff; }
+.login-content {
+  --background: #f4f6f9; /* Fondo gris muy clarito para que la tarjeta destaque */
 }
 
-.welcome-text h2 {
-  font-weight: 700;
-  font-size: 1.8rem;
-  margin: 20px 0;
-  color: #1a1a1a;
+.login-container {
+  display: block; /* Quitamos el flex para evitar el salto */
+  padding: 0 20px;
+  margin-top: 15vh; /* Lo empujamos hacia abajo un 15% del tamaño de la pantalla */
 }
 
+/* --- LOGO --- */
+.brand-header {
+  margin-bottom: 40px;
+
+  .logo {
+    font-size: 3.2rem;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin: 0;
+    letter-spacing: -1.5px;
+
+    .dot { color: #3880ff; }
+  }
+
+  .subtitle {
+    color: #666;
+    margin-top: 5px;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+}
+
+/* --- TARJETA DE LOGIN --- */
+.form-wrapper {
+  background: #ffffff;
+  padding: 30px 20px;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04); // Sombra súper suave
+  border: 1px solid rgba(0,0,0,0.02);
+
+  .form-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-top: 0;
+    margin-bottom: 25px;
+  }
+}
+
+/* --- ESTILO DE LOS INPUTS --- */
 .custom-input {
-  --background: transparent;
-  --padding-start: 0;
-  margin-bottom: 5px;
+  --background: #f8f9fb;
+  --padding-start: 15px;
+  --inner-padding-end: 15px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+
+  /* Borde azul cuando el usuario está escribiendo */
+  &:focus-within {
+    border: 1px solid #3880ff;
+    --background: #ffffff;
+  }
 
   ion-label {
+    color: #666 !important;
+    font-size: 0.9rem !important;
     font-weight: 600;
-    color: #1a1a1a !important;
-    margin-bottom: 10px !important;
-    font-size: 1rem !important;
-    transform: none !important;
+    margin-top: 10px !important;
   }
 
   ion-input {
-    border: 1.5px solid #ccc;
-    border-radius: 8px;
-    --padding-start: 12px;
-    margin-top: 8px;
-    height: 45px;
-  }
-}
-
-.forgot-link {
-  color: #0071ad;
-  font-weight: 600;
-  margin: 15px 0 25px 0;
-}
-
-.main-btn {
-  --background: #3880ff;
-  --border-radius: 25px;
-  font-weight: 700;
-  height: 50px;
-  text-transform: none;
-}
-
-.separator {
-  width: 100%;
-  text-align: center;
-  border-bottom: 1px solid #ddd;
-  line-height: 0.1em;
-  margin: 40px 0;
-  span {
-    background: #fff;
-    padding: 0 10px;
-    color: #666;
-  }
-}
-
-.option-card {
-  --background: #ffffff;
-  border: 1px solid #e0e0e0;
-  border-radius: 12px;
-  margin-bottom: 12px;
-  --padding-start: 10px;
-
-  ion-thumbnail {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f4f7ff;
-    border-radius: 8px;
-    margin: 8px;
-    ion-icon { font-size: 1.5rem; }
-  }
-
-  h3 {
+    --padding-top: 5px;
+    --padding-bottom: 15px;
+    font-size: 1.05rem;
     font-weight: 500;
-    font-size: 0.95rem;
     color: #1a1a1a;
   }
+
+  .eye-icon {
+    color: #999;
+    font-size: 1.4rem;
+    margin-top: 15px;
+    cursor: pointer;
+    transition: color 0.2s;
+
+    &:hover { color: #3880ff; }
+  }
 }
 
-.help-text {
-  color: #0071ad;
-  font-weight: 700;
-  margin-top: 20px;
-}
-
-.footer-links {
+/* --- ENLACES Y BOTONES --- */
+.options-row {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
-  padding-bottom: 15px;
-  color: #666;
-  font-size: 0.9rem;
-  ion-icon { vertical-align: middle; margin-right: 5px; }
-  .dot-sep { font-size: 1.2rem; }
+  justify-content: flex-end;
+  margin-bottom: 25px;
+  margin-top: 5px;
+
+  .forgot-link {
+    color: #3880ff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+  }
+}
+
+.login-btn {
+  --background: #3880ff;
+  --border-radius: 12px;
+  --box-shadow: 0 4px 12px rgba(56, 128, 255, 0.25);
+  height: 52px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin: 0;
+  text-transform: none; // Quita las mayúsculas automáticas
 }

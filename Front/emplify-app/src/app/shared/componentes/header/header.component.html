@@ -1,21 +1,21 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar color="light" style="--background: #ffffff;">
-    <div slot="start" class="logo-container">
-      <h2 style="margin: 0; padding-left: 15px; font-weight: 800; color: #1a1a1a;">
-        emplify<span style="color: #3880ff;">.</span>
-      </h2>
-    </div>
+  <ion-toolbar style="--background: transparent;">
+
+    <ion-title (click)="goInicio()" style="font-weight: 800; font-size: 1.5rem; letter-spacing: -1px; color: #1a1a1a;">
+      emplify<span style="color: #0071ad;">.</span>
+    </ion-title>
 
     <ion-buttons slot="end">
-      <ion-button color="dark">
-        <ion-icon name="chatbox-ellipses-outline"></ion-icon>
+
+      <ion-button (click)="goTickets()">
+        <ion-icon slot="icon-only" name="chatbox-ellipses-outline" color="dark"></ion-icon>
       </ion-button>
-      <ion-button color="dark">
-        <ion-icon name="person-circle-outline"></ion-icon>
+
+      <ion-button (click)="goPerfil()">
+        <ion-icon slot="icon-only" name="person-circle-outline" color="dark"></ion-icon>
       </ion-button>
-      <ion-button color="dark">
-        <ion-icon name="notifications-outline"></ion-icon>
-      </ion-button>
+
     </ion-buttons>
+
   </ion-toolbar>
 </ion-header>

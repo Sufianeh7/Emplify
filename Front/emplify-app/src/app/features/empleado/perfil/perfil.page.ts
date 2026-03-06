@@ -1,23 +1,29 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ToastController } from '@ionic/angular'; // <-- Importa ToastController
+import { IonicModule, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { HttpClient, HttpHeaders } from '@angular/common/http'; // <-- Importa HttpClient
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { addIcons } from 'ionicons';
-import { mailOutline, businessOutline, briefcaseOutline, logOutOutline, lockClosedOutline } from 'ionicons/icons'; // <-- Añade lockClosedOutline
+import {
+  mailOutline, businessOutline, briefcaseOutline, logOutOutline,
+  lockClosedOutline, closeOutline, personCircleOutline, locationOutline,
+  calendarOutline, idCardOutline, eyeOffOutline,
+  homeOutline, menuOutline
+} from 'ionicons/icons';
+import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
 
 @Component({
   selector: 'app-perfil',
   templateUrl: './perfil.page.html',
+  styleUrls: ['./perfil.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule, HeaderComponent]
 })
 export class PerfilPage {
 
   empleado: any = null;
 
-  // Variables para el cambio de contraseña
   passActual: string = '';
   passNueva: string = '';
   passConfirmar: string = '';
@@ -25,16 +31,46 @@ export class PerfilPage {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private toastController: ToastController // <-- Inyéctalo aquí
+    private toastController: ToastController
   ) {
-    addIcons({ mailOutline, businessOutline, briefcaseOutline, logOutOutline, lockClosedOutline });
+    addIcons({
+      mailOutline, businessOutline, briefcaseOutline, logOutOutline,
+      lockClosedOutline, closeOutline, personCircleOutline, locationOutline,
+      calendarOutline, idCardOutline, eyeOffOutline,
+      homeOutline, menuOutline
+    });
   }
 
   ionViewWillEnter() {
-    const datos = localStorage.getItem('empleadoLogueado');
-    if (datos) {
-      this.empleado = JSON.parse(datos);
+    this.cargarDatosPerfil();
+  }
+
+  // --- NUEVO: Traemos los datos frescos de la BBDD ---
+  cargarDatosPerfil() {
+    // 1. Cargamos rápido del localStorage para que no se vea la pantalla vacía de golpe
+    const datosLocal = localStorage.getItem('empleadoLogueado');
+    if (datosLocal) {
+      this.empleado = JSON.parse(datosLocal);
     }
+
+    // 2. Llamamos a la BD para traer la info actualizada (Manager, departamento, etc.)
+    const token = localStorage.getItem('token');
+    if (token) {
+      const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
+      this.http.get('http://localhost:8080/api/empleados/perfil', { headers })
+        .subscribe({
+          next: (res: any) => {
+            this.empleado = res; // Sobrescribimos con los datos frescos
+            // Opcional: Actualizamos el localStorage por si va a otras pantallas
+            localStorage.setItem('empleadoLogueado', JSON.stringify(res));
+          },
+          error: (err) => console.error('Error al cargar datos del perfil desde BD', err)
+        });
+    }
+  }
+
+  goTo(ruta: string) {
+    this.router.navigate([ruta]);
   }
 
   cerrarSesion() {
@@ -43,7 +79,6 @@ export class PerfilPage {
     this.router.navigate(['/home']);
   }
 
-  // Función para mostrar mensajes flotantes
   async mostrarMensaje(mensaje: string, color: string) {
     const toast = await this.toastController.create({
       message: mensaje,
@@ -55,7 +90,6 @@ export class PerfilPage {
   }
 
   cambiarPassword(modal: any) {
-    // 1. Validar que las contraseñas nuevas coincidan
     if (this.passNueva !== this.passConfirmar) {
       this.mostrarMensaje('Las contraseñas nuevas no coinciden', 'danger');
       return;
@@ -72,20 +106,14 @@ export class PerfilPage {
       nueva: this.passNueva
     };
 
-    // 2. Enviar petición al Backend
     this.http.put('http://localhost:8080/api/usuarios/cambiar-password', body, { headers })
       .subscribe({
         next: (res: any) => {
           this.mostrarMensaje('¡Contraseña actualizada con éxito!', 'success');
-          // Limpiar formulario y cerrar modal
           this.passActual = ''; this.passNueva = ''; this.passConfirmar = '';
           modal.dismiss();
-
-          // Opcional: Cerrar sesión para obligarle a entrar con la nueva
-          // this.cerrarSesion();
         },
         error: (err) => {
-          // Si el servidor devuelve error (ej. contraseña actual mal)
           this.mostrarMensaje(err.error.error || 'Error al cambiar la contraseña', 'danger');
         }
       });

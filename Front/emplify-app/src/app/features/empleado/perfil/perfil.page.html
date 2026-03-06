@@ -1,92 +1,123 @@
-<ion-header [translucent]="true">
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/inicio"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Mi Perfil</ion-title>
-  </ion-toolbar>
+<ion-header class="ion-no-border">
+  <app-header></app-header>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="app-background">
 
-  <div class="ion-text-center ion-margin-top ion-margin-bottom">
-    <ion-avatar style="width: 100px; height: 100px; margin: 0 auto;">
-      <img src="https://ionicframework.com/docs/img/demos/avatar.svg" />
-    </ion-avatar>
-    <h2 style="margin-top: 15px;"><b>{{ empleado?.usuario?.nombre }}</b></h2>
-    <p style="color: gray; margin-top: 5px;">{{ empleado?.puesto }}</p>
+  <div class="profile-hero">
+    <div class="avatar-container">
+      <img src="https://ionicframework.com/docs/img/demos/avatar.svg" alt="Avatar" />
+    </div>
+
+    <div class="main-info">
+      <h2>{{ empleado?.usuario?.nombre || 'Cargando...' }}</h2>
+      <p class="subtitle">{{ empleado?.puesto || 'Puesto no asignado' }}</p>
+      <p class="subtitle-dept">{{ empleado?.departamento || 'Sin departamento' }}</p>
+    </div>
   </div>
 
-  <ion-list inset="true" class="ion-margin-top">
+  <div class="dashboard-container">
 
-    <ion-item>
-      <ion-icon name="mail-outline" slot="start" color="medium"></ion-icon>
-      <ion-label>
-        <h3>Correo Electrónico</h3>
-        <p>{{ empleado?.usuario?.email }}</p>
-      </ion-label>
-    </ion-item>
+    <div class="flat-card full supervisor-section">
+      <div class="section-title-row">
+        <h3>Supervisor</h3>
+        <span class="badge-visibility">
+          <ion-icon name="eye-off-outline"></ion-icon> No público
+        </span>
+      </div>
 
-    <ion-item>
-      <ion-icon name="business-outline" slot="start" color="medium"></ion-icon>
-      <ion-label>
-        <h3>Empresa</h3>
-        <p>{{ empleado?.empresa?.nombre }}</p>
-      </ion-label>
-    </ion-item>
+      <div class="supervisor-info">
+        <div class="sup-avatar">
+          <img src="https://i.pravatar.cc/150?img=11" alt="Manager" />
+        </div>
+        <div class="sup-details">
+          <h4>{{ empleado?.manager?.usuario?.nombre || 'Pendiente de asignar' }}</h4>
+          <p>{{ empleado?.manager?.puesto || 'Puesto sin definir' }}</p>
+        </div>
+      </div>
+    </div>
 
-    <ion-item>
-      <ion-icon name="briefcase-outline" slot="start" color="medium"></ion-icon>
-      <ion-label>
-        <h3>Departamento</h3>
-        <p>{{ empleado?.departamento }}</p>
-      </ion-label>
-    </ion-item>
+    <div class="details-section">
+      <h3>Detalles del trabajo</h3>
 
-  </ion-list>
+      <div class="detail-list">
 
-  <ion-button expand="block" color="dark" class="ion-margin-top" id="modal-password">
-    <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
-    Cambiar Contraseña
-  </ion-button>
+        <div class="detail-item">
+          <label>Login / Correo</label>
+          <span>{{ empleado?.usuario?.email }}</span>
+        </div>
 
-  <ion-button expand="block" color="danger" class="ion-margin-top" (click)="cerrarSesion()">
-    <ion-icon name="log-out-outline" slot="start"></ion-icon>
-    Cerrar Sesión
-  </ion-button>
+        <div class="detail-item">
+          <label>ID de empleado</label>
+          <span>{{ empleado?.idEmpleado || 'Desconocido' }}</span>
+        </div>
 
-  <ion-modal trigger="modal-password" #modalPass>
+        <div class="detail-item">
+          <label>Empresa</label>
+          <span>{{ empleado?.empresa?.nombre || 'Sin empresa' }}</span>
+        </div>
+
+        <div class="detail-item">
+          <label>Ubicación</label>
+          <span>{{ empleado?.empresa?.direccion || 'Sede Principal' }}</span>
+        </div>
+
+        <div class="detail-item">
+          <label>Fecha de contratación</label>
+          <span>{{ (empleado?.fechaRegistro | date:'dd MMM yyyy') || 'Sin registrar' }}</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="actions-section">
+      <ion-button expand="block" class="btn-secundario" id="modal-password">
+        <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+        Cambiar Contraseña
+      </ion-button>
+
+      <ion-button expand="block" fill="clear" color="danger" class="btn-logout" (click)="cerrarSesion()">
+        <ion-icon name="log-out-outline" slot="start"></ion-icon>
+        Cerrar Sesión
+      </ion-button>
+    </div>
+
+  </div>
+
+  <ion-modal trigger="modal-password" #modalPass [initialBreakpoint]="0.8" [breakpoints]="[0, 0.8, 1]">
     <ng-template>
-      <ion-header>
-        <ion-toolbar color="dark">
-          <ion-buttons slot="start">
-            <ion-button (click)="modalPass.dismiss()">Cancelar</ion-button>
+      <ion-header class="ion-no-border">
+        <ion-toolbar style="--background: #f2f4f8;">
+          <ion-title style="font-weight: 700; color: #1a1a1a;">Seguridad</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="modalPass.dismiss()" color="dark">
+              <ion-icon name="close-outline" style="font-size: 1.5rem;"></ion-icon>
+            </ion-button>
           </ion-buttons>
-          <ion-title>Seguridad</ion-title>
         </ion-toolbar>
       </ion-header>
 
-      <ion-content class="ion-padding">
-        <p class="ion-margin-bottom">Introduce tu contraseña actual y la nueva para actualizar tus credenciales de acceso.</p>
+      <ion-content class="app-background ion-padding">
+        <p style="color: #565959; font-size: 0.95rem; margin-bottom: 20px;">
+          Introduce tu contraseña actual y la nueva para actualizar tus credenciales.
+        </p>
 
-        <ion-item fill="outline" class="ion-margin-bottom">
-          <ion-label position="floating">Contraseña Actual</ion-label>
-          <ion-input type="password" [(ngModel)]="passActual"></ion-input>
-        </ion-item>
+        <div class="form-container">
+          <ion-item lines="none" class="form-item">
+            <ion-input type="password" label="Contraseña Actual" label-placement="floating" [(ngModel)]="passActual"></ion-input>
+          </ion-item>
+          <ion-item lines="none" class="form-item">
+            <ion-input type="password" label="Nueva Contraseña" label-placement="floating" [(ngModel)]="passNueva"></ion-input>
+          </ion-item>
+          <ion-item lines="none" class="form-item">
+            <ion-input type="password" label="Repite la Nueva" label-placement="floating" [(ngModel)]="passConfirmar"></ion-input>
+          </ion-item>
+        </div>
 
-        <ion-item fill="outline" class="ion-margin-bottom">
-          <ion-label position="floating">Nueva Contraseña</ion-label>
-          <ion-input type="password" [(ngModel)]="passNueva"></ion-input>
-        </ion-item>
-
-        <ion-item fill="outline" class="ion-margin-bottom">
-          <ion-label position="floating">Repite la Nueva Contraseña</ion-label>
-          <ion-input type="password" [(ngModel)]="passConfirmar"></ion-input>
-        </ion-item>
-
-        <ion-button expand="block" color="primary" class="ion-margin-top"
+        <ion-button expand="block" class="btn-corporativo ion-margin-top" style="margin-top: 25px;"
           [disabled]="!passActual || !passNueva || !passConfirmar"
           (click)="cambiarPassword(modalPass)">
+          <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
           Guardar Contraseña
         </ion-button>
       </ion-content>
@@ -94,3 +125,22 @@
   </ion-modal>
 
 </ion-content>
+
+<ion-footer class="ion-no-border custom-footer">
+  <ion-tab-bar slot="bottom" class="custom-tab-bar">
+    <ion-tab-button (click)="goTo('/inicio')">
+      <ion-icon name="home-outline"></ion-icon>
+      <ion-label>Inicio</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button (click)="goTo('/cuadrante')">
+      <ion-icon name="calendar-outline"></ion-icon>
+      <ion-label>Programar</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button (click)="goTo('/mas')" class="tab-active">
+      <ion-icon name="menu-outline"></ion-icon>
+      <ion-label>Más</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-footer>

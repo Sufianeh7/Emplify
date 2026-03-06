@@ -1,91 +1,163 @@
-// Fondo general gris clarito
-ion-content.fondo-gris {
-  --background: #f2f4f8;
+.app-background {
+  --background: #f2f4f8; /* El fondo gris claro de Amazon */
 }
 
-// Ocultar sombras de la cabecera
-ion-header {
-  box-shadow: none;
-}
-
-/* --- ESTILOS DE NOTICIAS (Carrusel Horizontal) --- */
-.news-container {
-  width: 100%;
+/* =======================================
+   CARRUSEL DE NOTICIAS
+   ======================================= */
+.news-slider-container {
+  background: #ffffff;
+  padding: 15px 0 10px 0;
+  margin-bottom: 10px;
 }
 
 .news-scroll {
   display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  padding: 0 10px; // Espaciado a los lados
-  -webkit-overflow-scrolling: touch;
+  padding: 0 15px;
+  gap: 12px;
 
-  // Ocultar barra de scroll
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  /* Ocultar barra de scroll */
+  &::-webkit-scrollbar { display: none; }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .news-card {
-  min-width: 85%; // Que ocupe casi toda la pantalla pero asome la siguiente
-  scroll-snap-align: center;
-  margin: 0 5px;
+  min-width: 85%;
+  height: 160px;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  border: 1px solid #e0e0e0;
-  background: white;
+  scroll-snap-align: center;
+  position: relative;
+  padding: 20px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background-size: cover;
+  background-position: center;
 
-  .news-image {
-    height: 180px;
-    background-size: cover;
-    background-position: center;
-    position: relative;
+  &.blue-bg {
+    background: #0071ad; /* Azul corporativo */
+    justify-content: flex-start;
 
-    .news-badge {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 0.8em;
-      padding: 6px 10px;
-      border-radius: 6px;
+    .badge {
+      background: white;
+      color: #0071ad;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      align-self: flex-end;
+      margin-bottom: 15px;
     }
+
+    h2 { font-size: 1.6rem; font-weight: 800; margin: 0; line-height: 1.1; }
+    p { font-size: 0.9rem; opacity: 0.9; margin-top: 5px; }
   }
 
-  .news-content {
-    padding: 15px;
-
-    .news-title {
+  &.image-bg {
+    .like-icon {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 1.5rem;
+    }
+    .bottom-text {
       margin: 0;
-      font-size: 1.1em;
-      font-weight: 700;
-      color: #1a1a1a;
-      line-height: 1.3;
+      font-weight: 600;
+      font-size: 1.1rem;
     }
   }
 }
 
-/* --- ESTILOS DE ACCESOS RÁPIDOS (Tarjetas) --- */
-.quick-card {
-  margin: 5px 0;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
-  background: white;
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
 
-  .card-title {
-    font-size: 1.05em;
+  .dot {
+    width: 25px;
+    height: 4px;
+    background: #dcdcdc;
+    border-radius: 2px;
+
+    &.active { background: #565959; }
+  }
+}
+
+/* =======================================
+   TARJETAS DASHBOARD (Estilo Amazon)
+   ======================================= */
+.dashboard-container {
+  padding: 5px 15px 20px 15px;
+}
+
+.flat-card {
+  background: #ffffff;
+  border: 1px solid #d5d9d9;
+  border-radius: 8px; /* Bordes menos redondeados, más sobrios */
+  padding: 16px;
+  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer; /* Cambia el cursor para indicar que son clicables */
+
+  h3 {
+    margin: 0 0 4px 0;
+    font-size: 1.05rem;
     font-weight: 700;
-    color: #1a1a1a;
-    margin-bottom: 5px;
+    color: #0f1111;
   }
 
-  .card-subtitle {
-    font-size: 0.85em;
-    color: #666;
+  p {
     margin: 0;
+    font-size: 0.9rem;
+    color: #565959;
+    line-height: 1.3;
   }
+}
+
+/* --- ENLACES DE ACCIÓN (NUEVO) --- */
+.action-link {
+  margin-top: 12px;
+  color: #0071ad; /* Azul corporativo para indicar que se puede hacer clic */
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
 
   ion-icon {
-    font-size: 1.8em;
+    margin-right: 6px;
+    font-size: 1.2rem;
+  }
+}
+
+/* --- TARJETAS CON ICONO LATERAL --- */
+.with-icon {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 20px 16px;
+
+  .icon-box {
+    background: #f7f7f7;
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    ion-icon { font-size: 1.5rem; color: #565959; }
+  }
+
+  .card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 }

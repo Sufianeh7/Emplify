@@ -7,9 +7,9 @@ import { Router } from '@angular/router';
 
 import { addIcons } from 'ionicons';
 import {
-  sendOutline,
-  calendarOutline,
-  documentTextOutline,
+  sendOutline, calendarOutline, documentTextOutline, airplaneOutline,
+  medicalOutline, homeOutline, closeOutline, checkmarkCircleOutline,
+  timeOutline, closeCircleOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -22,32 +22,38 @@ import {
 export class SolicitudesPage implements OnInit {
   tiposSolicitud: any[] = [];
   misSolicitudes: any[] = [];
-  turnosCuadrante: any[] = []; // Ahora vendrá de la tabla Cuadrante
+  turnosCuadrante: any[] = [];
 
   // Variables para los contadores
   diasVacaciones: number = 0;
   diasAsuntos: number = 0;
 
+  // Variables del formulario
   tipoSeleccionado: number | null = null;
   fechaInicio: string = '';
   fechaFin: string = '';
   comentarios: string = '';
-
   hoyISO: string = new Date().toISOString();
+
+  // --- NUEVO: Control del Modal ---
+  isModalOpen = false;
 
   constructor(
     private http: HttpClient,
     private router: Router,
     private toastController: ToastController,
   ) {
-    addIcons({ sendOutline, calendarOutline, documentTextOutline });
+    addIcons({
+      sendOutline, calendarOutline, documentTextOutline, airplaneOutline,
+      medicalOutline, homeOutline, closeOutline, checkmarkCircleOutline,
+      timeOutline, closeCircleOutline
+    });
   }
 
   ngOnInit() {
     this.inicializarDatos();
   }
 
-  // Agrupamos cargas para mayor limpieza
   inicializarDatos() {
     this.cargarTipos();
     this.cargarCuadrante();
@@ -71,6 +77,16 @@ export class SolicitudesPage implements OnInit {
     }
   }
 
+  // --- CONTROLES DEL MODAL ---
+  nuevaSolicitud() {
+    this.isModalOpen = true;
+  }
+
+  cerrarModal() {
+    this.isModalOpen = false;
+    this.limpiarFormulario();
+  }
+
   // Validación visual del calendario
   isDiaLaboral = (dateString: string) => {
     const hoy = new Date();
@@ -79,21 +95,17 @@ export class SolicitudesPage implements OnInit {
     const fechaSeleccionada = new Date(dateString);
     fechaSeleccionada.setHours(0, 0, 0, 0);
 
-    // No permitir días pasados
     if (fechaSeleccionada < hoy) return false;
 
-    // Solo permitir días que existan en el cuadrante y no sean LIBRE ni VACACIONES
     const fechaISO = dateString.split('T')[0];
     return this.turnosCuadrante.some(
-      // CAMBIO 1: Cambiado 't.tipo' por 't.turno' para que coincida con la BD
       (t) => t.fecha === fechaISO && t.turno !== 'LIBRE' && t.turno !== 'VACACIONES',
     );
   };
 
-  // IMPORTANTE: Al cambiar fecha inicio, validamos la fecha fin
   onFechaInicioChange() {
     if (this.fechaFin && new Date(this.fechaFin) < new Date(this.fechaInicio)) {
-      this.fechaFin = ''; // Resetear si la fecha fin es incoherente
+      this.fechaFin = '';
     }
   }
 
@@ -104,10 +116,8 @@ export class SolicitudesPage implements OnInit {
     if (token && empleadoStr) {
       const empleado = JSON.parse(empleadoStr);
       const idEmpleado = empleado.idEmpleado;
-
       const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
 
-      // CAMBIO 2: Actualizado al endpoint seguro de la tabla Cuadrante
       this.http
         .get(`http://localhost:8080/api/cuadrante/empleado/${idEmpleado}`, { headers })
         .subscribe({
@@ -156,12 +166,11 @@ export class SolicitudesPage implements OnInit {
       .subscribe({
         next: () => {
           this.mostrarToast('Solicitud enviada con éxito', 'success');
-          this.limpiarFormulario();
+          this.cerrarModal(); // <-- NUEVO: Cerramos el modal al tener éxito
           this.cargarHistorial();
           this.cargarDatosEmpleado();
         },
         error: (err) => {
-          // Aquí capturamos el error 400 del Backend (solapamiento, días insuficientes, etc.)
           const msg = err.error?.error || 'Error al guardar la solicitud';
           this.mostrarToast(msg, 'danger');
         },

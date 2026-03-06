@@ -1,77 +1,48 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar color="light" style="--background: #ffffff;">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/" text="" color="dark"></ion-back-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content class="ion-padding" style="--background: #ffffff;">
-
-  <div class="logo-container ion-margin-bottom">
-    <h1 class="brand-logo">emplify<span class="dot">.</span></h1>
-  </div>
-
-  <div class="welcome-text">
-    <h2>Iniciar sesión</h2>
-  </div>
-
-  <div class="form-container">
-    <ion-item lines="none" class="custom-input">
-      <ion-label position="stacked">Introduce tu usuario o alias *</ion-label>
-      <ion-input type="text" placeholder=""></ion-input>
-    </ion-item>
-
-    <p class="forgot-link">¿Has olvidado tu alias?</p>
-
-    <ion-button expand="block" mode="ios" class="main-btn" (click)="login()">
-      Continuar
-    </ion-button>
-  </div>
-
-  <div class="separator">
-    <span>o</span>
-  </div>
-
-  <ion-list lines="none" class="options-list">
-    <ion-item button detail="true" class="option-card">
-      <ion-thumbnail slot="start">
-        <ion-icon name="bus-outline" color="primary"></ion-icon>
-      </ion-thumbnail>
-      <ion-label>
-        <h3>Entrego paquetes a los clientes</h3>
-      </ion-label>
-    </ion-item>
-
-    <ion-item button detail="true" class="option-card">
-      <ion-thumbnail slot="start">
-        <ion-icon name="people-outline" color="warning"></ion-icon>
-      </ion-thumbnail>
-      <ion-label>
-        <h3>Trabajaba en Emplify</h3>
-      </ion-label>
-    </ion-item>
-
-    <ion-item button detail="true" class="option-card">
-      <ion-thumbnail slot="start">
-        <ion-icon name="briefcase-outline" color="success"></ion-icon>
-      </ion-thumbnail>
-      <ion-label>
-        <h3>Quiero trabajar en Emplify</h3>
-      </ion-label>
-    </ion-item>
-  </ion-list>
-
-  <p class="help-text ion-text-center">¿No estás seguro?</p>
-
-</ion-content>
-
-<ion-footer class="ion-no-border">
-  <ion-toolbar color="light" style="--background: #ffffff;">
-    <div class="footer-links">
-      <span><ion-icon name="search-outline"></ion-icon> Encontrar trabajos</span>
-      <span class="dot-sep">•</span>
-      <span><ion-icon name="help-circle-outline"></ion-icon> Solicita ayuda</span>
+<ion-content class="login-content">
+  <div class="login-container">
+    <div class="brand-header ion-text-center">
+      <h1 class="logo">emplify<span class="dot">.</span></h1>
+      <p class="subtitle">Portal del Empleado</p>
     </div>
-  </ion-toolbar>
-</ion-footer>
+
+    <div class="form-wrapper">
+      <h2 class="form-title">Iniciar sesión</h2>
+
+      <ion-item lines="none" class="custom-input">
+        <ion-label position="stacked">Email</ion-label>
+        <ion-input
+          type="text"
+          placeholder="ejemplo@empresa.com"
+          [(ngModel)]="usuario"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item lines="none" class="custom-input">
+        <ion-label position="stacked">Contraseña</ion-label>
+        <ion-input
+          [type]="mostrarPassword ? 'text' : 'password'"
+          placeholder="••••••••"
+          [(ngModel)]="password"
+        >
+        </ion-input>
+        <ion-icon
+          slot="end"
+          [name]="mostrarPassword ? 'eye-off-outline' : 'eye-outline'"
+          class="eye-icon"
+          (click)="togglePassword()"
+        >
+        </ion-icon>
+      </ion-item>
+
+      <ion-button
+        expand="block"
+        class="login-btn"
+        (click)="login()"
+        [disabled]="cargando"
+      >
+        <ion-spinner name="crescent" *ngIf="cargando"></ion-spinner>
+        <span *ngIf="!cargando">Entrar</span>
+      </ion-button>
+    </div>
+  </div>
+</ion-content>
