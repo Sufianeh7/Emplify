@@ -4,6 +4,7 @@ import com.emplify.backend.modelos.Cuadrante;
 import com.emplify.backend.modelos.Empleado;
 import com.emplify.backend.repositorios.CuadranteRepo;
 import com.emplify.backend.repositorios.EmpleadoRepo;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -85,8 +86,12 @@ public class CuadranteControlador {
     }
 
     // 4. ASIGNACIÓN MASIVA DE TURNOS (Con Upsert)
+    @Transactional // <--- MUY IMPORTANTE PARA QUE LA BBDD GUARDE DE VERDAD
     @PostMapping("/asignar-masivo")
     public ResponseEntity<?> asignarTurnosMasivo(@RequestBody List<Cuadrante> nuevosTurnos, Principal principal) {
+
+        // DEBUG: Para ver en tu consola si llegan datos vacíos o llenos
+        System.out.println("🚀 Han llegado " + nuevosTurnos.size() + " turnos para guardar del frontend.");
 
         Optional<Empleado> autorOpt = empleadoRepo.findByUsuarioEmail(principal.getName());
         if (autorOpt.isEmpty()) {
@@ -102,7 +107,7 @@ public class CuadranteControlador {
             Optional<Empleado> receptorOpt = empleadoRepo.findById(turno.getEmpleado().getIdEmpleado());
 
             if (receptorOpt.isEmpty() || !receptorOpt.get().getEmpresa().getIdEmpresa().equals(idEmpresaAutor)) {
-                return ResponseEntity.status(403).body("{\"error\": \"Intento de asignación a un empleado no válido o de otra empresa. Operación abortada.\"}");
+                return ResponseEntity.status(403).body("{\"error\": \"Intento de asignación a empleado no válido.\"}");
             }
 
             Optional<Cuadrante> turnoExistente = cuadranteRepo.findByEmpleado_IdEmpleadoAndFecha(
@@ -112,6 +117,7 @@ public class CuadranteControlador {
 
             if (turnoExistente.isPresent()) {
                 Cuadrante actualizar = turnoExistente.get();
+                // OJO: Asegúrate de que en el modelo Java se llama "setTurno"
                 actualizar.setTurno(turno.getTurno());
                 turnosAprobados.add(actualizar);
             } else {
@@ -121,6 +127,10 @@ public class CuadranteControlador {
         }
 
         List<Cuadrante> guardados = cuadranteRepo.saveAll(turnosAprobados);
+
+        // DEBUG
+        System.out.println("✅ Se han guardado " + guardados.size() + " turnos en la BBDD.");
+
         return ResponseEntity.ok("{\"mensaje\": \"Se han procesado " + guardados.size() + " turnos correctamente.\"}");
     }
 
