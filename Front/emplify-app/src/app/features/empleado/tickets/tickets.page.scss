@@ -1,51 +1,94 @@
-/* Contenedor principal del chat */
-.chat-container {
-  display: flex;
-  flex-direction: column;
-  background-color: #f4f5f8;
-  height: 100%;
+.app-background { --background: #f2f4f8; }
+.chat-background { --background: #e5ded8; } /* Fondo tipo WhatsApp */
+
+.section-header {
+  padding: 25px 20px 40px 20px; color: white;
+  &.blue-bg { background: #0071ad; }
+  h2 { margin: 0; font-size: 1.6rem; font-weight: 800; }
+  p { margin: 5px 0 0 0; font-size: 0.95rem; opacity: 0.9; }
 }
 
-.messages-list {
-  display: flex;
-  flex-direction: column;
-  padding: 15px;
+.dashboard-container { padding: 5px 15px 20px 15px; margin-top: -20px; }
+
+/* SEGMENTOS */
+.segment-container {
+  background: #ffffff; padding: 5px; border-radius: 10px; margin-bottom: 15px;
+}
+.custom-segment {
+  background: #f2f4f8;
+  ion-segment-button { color: #565959; font-weight: 600; &::part(indicator-background) { background: #ffffff; } }
 }
 
-/* Estructura de la burbuja unificada */
-.message {
-  display: flex;
-  width: 100%;
-  margin-bottom: 12px;
-
-  .bubble {
-    padding: 10px 14px;
-    border-radius: 18px;
-    max-width: 80%;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-
-    p { margin: 0; font-size: 0.95em; line-height: 1.4; }
-    small { display: block; font-size: 0.75em; margin-bottom: 6px; font-weight: bold; opacity: 0.8;}
-    .time { display: block; font-size: 0.65em; text-align: right; margin-top: 5px; opacity: 0.6; }
+/* TARJETAS DE TICKETS */
+.flat-card {
+  background: #ffffff; border: 1px solid #d5d9d9; border-radius: 8px; padding: 16px; margin-bottom: 12px;
+}
+.ticket-card {
+  .ticket-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
+    .badge-estado {
+      font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase;
+      &.pendiente { background: #fff3e0; color: #e65100; }
+      &.abierto { background: #e3f2fd; color: #0071ad; }
+      &.cerrado, &.resuelto { background: #f2f4f8; color: #565959; }
+    }
+    .ticket-date { font-size: 0.8rem; color: #565959; }
+  }
+  .ticket-title { margin: 0 0 5px 0; font-size: 1.05rem; font-weight: 800; color: #0f1111; }
+  .ticket-preview { margin: 0; font-size: 0.9rem; color: #565959; }
+  .ticket-footer {
+    display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px solid #f2f4f8;
+    .ticket-id { font-size: 0.8rem; font-weight: 700; color: #888c8c; }
+    ion-icon { color: #0071ad; }
   }
 }
 
-/* MENSAJE ENVIADO POR MÍ (DERECHA - AZUL) */
-.message.out {
-  justify-content: flex-end;
-  .bubble {
-    background: var(--ion-color-primary, #3880ff);
-    color: white;
-    border-bottom-right-radius: 2px;
+.empty-state { padding: 40px 20px; ion-icon { font-size: 4rem; color: #d5d9d9; } }
+
+/* CHAT MODAL */
+.chat-container { display: flex; flex-direction: column; padding-bottom: 20px; }
+.message-wrapper {
+  display: flex; flex-direction: column; margin-bottom: 10px; max-width: 85%;
+
+  /* BURBUJA DEL EMPLEADO (AZUL CORPORATIVO) */
+  &.mine {
+    align-self: flex-end;
+    .message-bubble {
+      background: #0071ad;
+      color: #ffffff;
+      border-radius: 12px 0 12px 12px;
+      p { margin: 0; font-size: 0.95rem; color: #ffffff; word-wrap: break-word; }
+      .time { display: block; font-size: 0.65rem; color: rgba(255, 255, 255, 0.8); text-align: right; margin-top: 4px; }
+    }
+  }
+
+  /* BURBUJA DE RRHH (BLANCO/GRIS) */
+  &.theirs {
+    align-self: flex-start;
+    .message-bubble {
+      background: #ffffff;
+      border-radius: 0 12px 12px 12px;
+      .sender-name { display: block; font-size: 0.75rem; font-weight: 700; color: #0071ad; margin-bottom: 2px; }
+      p { margin: 0; font-size: 0.95rem; color: #1a1a1a; word-wrap: break-word; }
+      .time { display: block; font-size: 0.65rem; color: #888c8c; text-align: right; margin-top: 4px; }
+    }
+  }
+
+  .message-bubble {
+    padding: 8px 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); position: relative;
   }
 }
 
-/* MENSAJE RECIBIDO DEL OTRO (IZQUIERDA - BLANCO) */
-.message.in {
-  justify-content: flex-start;
-  .bubble {
-    background: #ffffff;
-    color: #000;
-    border-bottom-left-radius: 2px;
+/* ÁREA DE ESCRITURA */
+.chat-footer {
+  background: #f2f4f8; padding: 8px 15px;
+  .input-container {
+    display: flex; align-items: center; background: #ffffff; border-radius: 20px; padding: 2px 5px 2px 15px;
+    ion-button { color: #0071ad; margin: 0; }
   }
+  .closed-notice { text-align: center; font-size: 0.85rem; color: #565959; padding: 10px; font-weight: 500; font-style: italic;}
 }
+
+.fab-corporativo { --background: #0071ad; --color: white; }
+.custom-footer { background: #ffffff; border-top: 1px solid rgba(0,0,0,0.05); }
+.custom-tab-bar { --background: #ffffff; --border: none; padding-bottom: env(safe-area-inset-bottom); ion-tab-button { color: #565959; &.tab-active { color: #0071ad; } } }
