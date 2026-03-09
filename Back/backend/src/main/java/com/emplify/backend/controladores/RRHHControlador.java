@@ -31,19 +31,33 @@ public class RRHHControlador {
     private PasswordEncoder passwordEncoder;
 
     // ==========================================
+    // NUEVO: LISTAR TODOS LOS EMPLEADOS DE MI EMPRESA
+    // ==========================================
+    @GetMapping("/empleados")
+    public ResponseEntity<?> obtenerEmpleadosDeMiEmpresa(Principal principal) {
+        Optional<Empleado> rrhhOpt = empleadoRepo.findByUsuarioEmail(principal.getName());
+
+        if (rrhhOpt.isPresent()) {
+            Integer idEmpresa = rrhhOpt.get().getEmpresa().getIdEmpresa();
+            // Traemos a todos los empleados de la misma empresa para el directorio
+            List<Empleado> empleados = empleadoRepo.findByEmpresa_IdEmpresa(idEmpresa);
+            return ResponseEntity.ok(empleados);
+        }
+
+        return ResponseEntity.status(401).body("{\"error\": \"No autorizado\"}");
+    }
+
+    // ==========================================
     // OBTENER MÁNAGERS DE MI EMPRESA
     // ==========================================
     @GetMapping("/posibles-managers")
     public ResponseEntity<?> obtenerManagersDeMiEmpresa(Principal principal) {
-        // 1. Buscamos al usuario de RRHH que hace la petición
         Optional<Empleado> rrhhOpt = empleadoRepo.findByUsuarioEmail(principal.getName());
 
         if (rrhhOpt.isPresent()) {
-            Empresa miEmpresa = rrhhOpt.get().getEmpresa();
-
-            // 2. BUSCAMOS SOLO LOS QUE SEAN MANAGER EN SU EMPRESA
-            List<Empleado> managersEmpresa = empleadoRepo.findByEmpresa_IdEmpresaAndUsuario_Rol(miEmpresa.getIdEmpresa(), "MANAGER");
-
+            Integer idEmpresa = rrhhOpt.get().getEmpresa().getIdEmpresa();
+            // Buscamos solo los que tengan rol MANAGER en esta empresa
+            List<Empleado> managersEmpresa = empleadoRepo.findByEmpresa_IdEmpresaAndUsuario_Rol(idEmpresa, "MANAGER");
             return ResponseEntity.ok(managersEmpresa);
         }
 
@@ -57,47 +71,49 @@ public class RRHHControlador {
     @PostMapping("/alta-empleado")
     public ResponseEntity<?> darDeAltaEmpleadoEnMiEmpresa(@RequestBody Map<String, Object> datos, Principal principal) {
         try {
-            // 1. Buscamos al RRHH y obtenemos SU empresa
             Optional<Empleado> rrhhOpt = empleadoRepo.findByUsuarioEmail(principal.getName());
             if (rrhhOpt.isEmpty()) {
                 return ResponseEntity.status(401).body("{\"error\": \"Usuario de RRHH no encontrado\"}");
             }
             Empresa miEmpresa = rrhhOpt.get().getEmpresa();
 
-            // 2. Creamos el Usuario (Credenciales)
+            // 1. Validar si el email ya existe
+            if (usuarioRepo.findByEmail((String) datos.get("email")).isPresent()) {
+                return ResponseEntity.badRequest().body("{\"error\": \"El email ya está registrado\"}");
+            }
+
+            // 2. Creamos el Usuario
             Usuario nuevoUsuario = new Usuario();
             nuevoUsuario.setNombre((String) datos.get("nombre"));
             nuevoUsuario.setEmail((String) datos.get("email"));
-            nuevoUsuario.setRol((String) datos.get("rol")); // EMPLEADO o MANAGER
+            nuevoUsuario.setRol((String) datos.get("rol"));
             nuevoUsuario.setActivo(true);
-
-            String rawPassword = (String) datos.get("password");
-            nuevoUsuario.setPassword(passwordEncoder.encode(rawPassword));
+            nuevoUsuario.setPassword(passwordEncoder.encode((String) datos.get("password")));
 
             usuarioRepo.save(nuevoUsuario);
 
-            // 3. Creamos el Empleado y le asignamos AUTOMÁTICAMENTE la empresa del RRHH
+            // 3. Creamos el Empleado
             Empleado nuevoEmpleado = new Empleado();
             nuevoEmpleado.setUsuario(nuevoUsuario);
-            nuevoEmpleado.setEmpresa(miEmpresa); // <--- LA MAGIA ESTÁ AQUÍ
+            nuevoEmpleado.setEmpresa(miEmpresa);
             nuevoEmpleado.setDepartamento((String) datos.get("departamento"));
             nuevoEmpleado.setPuesto((String) datos.get("puesto"));
             nuevoEmpleado.setVacacionesDisponibles(22);
             nuevoEmpleado.setAsuntosPropiosDisponibles(6);
 
-            // 4. Asignar Mánager si viene en la petición
-            if (datos.get("idManager") != null) {
+            // 4. Asignar Mánager si viene el ID
+            if (datos.get("idManager") != null && !datos.get("idManager").toString().equals("null")) {
                 Integer idManager = Integer.parseInt(datos.get("idManager").toString());
                 empleadoRepo.findById(idManager).ifPresent(nuevoEmpleado::setManager);
             }
 
             empleadoRepo.save(nuevoEmpleado);
 
-            return ResponseEntity.ok("{\"mensaje\": \"Empleado creado en tu empresa con éxito\"}");
+            return ResponseEntity.ok("{\"mensaje\": \"Empleado creado con éxito\"}");
 
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().body("{\"error\": \"Error al dar de alta al empleado\"}");
+            return ResponseEntity.internalServerError().body("{\"error\": \"Error en el servidor\"}");
         }
     }
 }
