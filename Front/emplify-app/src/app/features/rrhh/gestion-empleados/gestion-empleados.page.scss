@@ -1,0 +1,58 @@
+.app-background { --background: #f2f4f8; }
+
+.section-header {
+  padding: 25px 20px 40px 20px; color: white;
+  &.blue-bg { background: #0071ad; }
+  h2 { margin: 0; font-size: 1.6rem; font-weight: 800; }
+  p { margin: 5px 0 0 0; font-size: 0.95rem; opacity: 0.9; }
+}
+
+.dashboard-container { padding: 5px 15px 20px 15px; margin-top: -20px; }
+
+/* SEARCHBAR */
+.custom-searchbar {
+  --background: #ffffff; --border-radius: 10px; --box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 0; margin-bottom: 15px;
+}
+
+/* CARDS */
+.flat-card { background: #ffffff; border: 1px solid #d5d9d9; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+
+.employee-card {
+  .employee-header {
+    display: flex; align-items: center; margin-bottom: 15px;
+
+    .avatar-circle {
+      width: 45px; height: 45px; background: #e3f2fd; color: #0071ad; border-radius: 50%;
+      display: flex; justify-content: center; align-items: center; font-size: 1.2rem; font-weight: 800; margin-right: 15px;
+    }
+
+    .employee-info {
+      flex: 1;
+      .employee-name { margin: 0 0 2px 0; font-size: 1.1rem; font-weight: 800; color: #0f1111; }
+      .employee-role { margin: 0; font-size: 0.85rem; color: #565959; }
+    }
+
+    .badge-rol {
+      font-size: 0.65rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; text-transform: uppercase;
+      &.empleado { background: #f2f4f8; color: #565959; }
+      &.manager { background: #e3f2fd; color: #0071ad; }
+      &.rrhh { background: #fff3e0; color: #e65100; }
+    }
+  }
+
+  .employee-details {
+    border-top: 1px solid #f2f4f8; padding-top: 12px; display: flex; flex-direction: column; gap: 8px;
+    .detail-item {
+      display: flex; align-items: center; font-size: 0.85rem; color: #565959;
+      ion-icon { margin-right: 8px; font-size: 1.1rem; color: #0071ad; }
+    }
+  }
+}
+
+.empty-state { padding: 40px 20px; ion-icon { font-size: 4rem; color: #d5d9d9; } }
+
+/* FORMULARIO */
+.form-container { background: #ffffff; border-radius: 8px; padding: 10px 15px; border: 1px solid #d5d9d9; }
+.form-item { --padding-start: 0; --inner-padding-end: 0; border-bottom: 1px solid #f2f4f8; &:last-child { border-bottom: none; } }
+.btn-corporativo { --background: #0071ad; --color: white; --border-radius: 8px; font-weight: 700; height: 48px; }
+.fab-corporativo { --background: #0071ad; --color: white; }
