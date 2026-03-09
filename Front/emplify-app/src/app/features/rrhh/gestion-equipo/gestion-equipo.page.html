@@ -1,81 +1,111 @@
-<ion-header [translucent]="true">
-  <ion-toolbar color="success">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/inicio"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Gestión de Equipo</ion-title>
-  </ion-toolbar>
+<ion-header class="ion-no-border">
+  <app-header></app-header>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="app-background">
 
-  <h2 class="ion-padding-start" style="font-size: 1.2rem; font-weight: bold; margin-bottom: 0;">Peticiones Pendientes</h2>
-
-  <div *ngIf="solicitudes.length === 0" class="ion-text-center ion-padding" style="margin-top: 20px; margin-bottom: 20px;">
-    <ion-icon name="calendar-outline" style="font-size: 64px; color: #ccc;"></ion-icon>
-    <h4 style="color: gray;">¡Todo al día!</h4>
-    <p style="color: gray;">No hay peticiones pendientes en tu equipo.</p>
+  <div class="section-header blue-bg">
+    <h2>Mi Equipo</h2>
+    <p>Gestiona las ausencias de tus empleados a cargo</p>
   </div>
 
-  <ion-card *ngFor="let sol of solicitudes" class="ion-margin-bottom">
-    <ion-item lines="none">
-      <ion-avatar slot="start">
-        <img src="https://ionicframework.com/docs/img/demos/avatar.svg" alt="avatar" />
-      </ion-avatar>
-      <ion-label>
-        <h2 style="font-weight: bold;">{{ sol.empleado?.usuario?.nombre || sol.empleado?.usuario?.email }}</h2>
-        <p>{{ sol.empleado?.puesto || 'Empleado' }}</p>
-      </ion-label>
-      <ion-badge slot="end" color="light">{{ sol.tipoSolicitud?.nombre }}</ion-badge>
-    </ion-item>
+  <div class="dashboard-container">
 
-    <ion-card-content>
-      <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-        <span><strong>Desde:</strong> {{ sol.fechaInicio | date:'dd/MM/yyyy' }}</span>
-        <span><strong>Hasta:</strong> {{ sol.fechaFin | date:'dd/MM/yyyy' }}</span>
+    <div class="segment-container">
+      <ion-segment [(ngModel)]="segmentoActual" mode="ios" class="custom-segment">
+        <ion-segment-button value="peticiones">
+          <ion-label>Peticiones <ion-badge color="danger" *ngIf="solicitudes.length > 0">{{ solicitudes.length }}</ion-badge></ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="directorio">
+          <ion-label>Directorio</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <div *ngIf="segmentoActual === 'peticiones'">
+
+      <div *ngIf="solicitudes.length === 0" class="flat-card full text-center empty-state">
+        <ion-icon name="checkmark-circle-outline" style="color: #4caf50;"></ion-icon>
+        <h3>¡Todo al día!</h3>
+        <p>No tienes peticiones pendientes de revisar.</p>
       </div>
 
-      <div *ngIf="sol.comentarios" style="background: #f4f4f4; padding: 10px; border-radius: 8px; font-style: italic;">
-        "{{ sol.comentarios }}"
+      <div class="flat-card full request-card" *ngFor="let sol of solicitudes">
+
+        <div class="request-header">
+          <div class="employee-info">
+            <div class="avatar-circle small">
+              {{ getInicial(sol.empleado?.usuario?.nombre || sol.empleado?.usuario?.email) }}
+            </div>
+            <div>
+              <h3 class="name">{{ sol.empleado?.usuario?.nombre || sol.empleado?.usuario?.email }}</h3>
+              <p class="role">{{ sol.empleado?.puesto || 'Empleado' }}</p>
+            </div>
+          </div>
+          <span class="badge-tipo">{{ sol.tipoSolicitud?.nombre }}</span>
+        </div>
+
+        <div class="request-dates">
+          <div class="date-box">
+            <span class="label">Desde</span>
+            <span class="value">{{ sol.fechaInicio | date:'dd MMM yyyy' }}</span>
+          </div>
+          <div class="date-divider"><ion-icon name="calendar-outline"></ion-icon></div>
+          <div class="date-box">
+            <span class="label">Hasta</span>
+            <span class="value">{{ sol.fechaFin | date:'dd MMM yyyy' }}</span>
+          </div>
+        </div>
+
+        <div class="request-comment" *ngIf="sol.comentarios">
+          "{{ sol.comentarios }}"
+        </div>
+
+        <div class="request-actions">
+          <ion-button fill="clear" color="danger" class="btn-action" (click)="cambiarEstado(sol.idSolicitud, 'RECHAZADA')">
+            <ion-icon name="close-outline" slot="start"></ion-icon> Rechazar
+          </ion-button>
+          <div class="vertical-divider"></div>
+          <ion-button fill="clear" color="success" class="btn-action" (click)="cambiarEstado(sol.idSolicitud, 'APROBADA')">
+            <ion-icon name="checkmark-outline" slot="start"></ion-icon> Aprobar
+          </ion-button>
+        </div>
+
       </div>
-    </ion-card-content>
+    </div>
 
-    <ion-row class="ion-no-padding">
-      <ion-col size="6">
-        <ion-button expand="block" fill="clear" color="danger" (click)="cambiarEstado(sol.idSolicitud, 'RECHAZADA')">
-          <ion-icon name="close-outline" slot="start"></ion-icon>
-          Rechazar
-        </ion-button>
-      </ion-col>
-      <ion-col size="6">
-        <ion-button expand="block" fill="clear" color="success" (click)="cambiarEstado(sol.idSolicitud, 'APROBADA')">
-          <ion-icon name="checkmark-outline" slot="start"></ion-icon>
-          Aprobar
-        </ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-card>
+    <div *ngIf="segmentoActual === 'directorio'">
 
-  <h2 class="ion-padding-start" style="font-size: 1.2rem; font-weight: bold; margin-top: 30px;">Saldos del Equipo</h2>
-
-  <ion-list inset="true" class="ion-margin-top" style="border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-    <ion-item *ngFor="let empleado of miEquipo" lines="full">
-      <ion-icon name="person-circle-outline" slot="start" color="medium" style="font-size: 2.5em;"></ion-icon>
-
-      <ion-label>
-        <h2 style="font-weight: bold;">{{ empleado.usuario?.nombre || empleado.usuario?.email }}</h2>
-        <p>{{ empleado.puesto || 'Miembro del equipo' }}</p>
-      </ion-label>
-
-      <div slot="end" style="display: flex; flex-direction: column; gap: 5px; align-items: flex-end;">
-        <ion-badge color="primary">Vac: {{ empleado.vacacionesDisponibles }}</ion-badge>
-        <ion-badge color="tertiary">Asuntos: {{ empleado.asuntosPropiosDisponibles }}</ion-badge>
+      <div *ngIf="miEquipo.length === 0" class="flat-card full text-center empty-state">
+        <ion-icon name="person-circle-outline"></ion-icon>
+        <h3>Sin equipo</h3>
+        <p>No tienes empleados asignados a tu cargo.</p>
       </div>
-    </ion-item>
-  </ion-list>
 
-  <div *ngIf="miEquipo.length === 0" class="ion-text-center ion-padding" style="margin-top: 10px;">
-    <p style="color: gray;">No tienes empleados asignados a tu cargo.</p>
+      <div class="flat-card full team-card" *ngFor="let empleado of miEquipo">
+        <div class="team-header">
+          <div class="avatar-circle">
+            {{ getInicial(empleado.usuario?.nombre || empleado.usuario?.email) }}
+          </div>
+          <div class="team-info">
+            <h3 class="name">{{ empleado.usuario?.nombre || empleado.usuario?.email }}</h3>
+            <p class="role">{{ empleado.puesto || 'Miembro del equipo' }}</p>
+          </div>
+        </div>
+
+        <div class="balances-container">
+          <div class="balance-item vac">
+            <span class="count">{{ empleado.vacacionesDisponibles }}</span>
+            <span class="label">Vacaciones</span>
+          </div>
+          <div class="balance-item ap">
+            <span class="count">{{ empleado.asuntosPropiosDisponibles }}</span>
+            <span class="label">Asuntos Propios</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
   </div>
-
 </ion-content>

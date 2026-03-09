@@ -50,7 +50,7 @@
 
   </div>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" style="margin-bottom: 60px;">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" style="margin-bottom: 20px;">
     <ion-fab-button class="fab-corporativo" id="modal-nuevo-ticket">
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
@@ -139,20 +139,3 @@
   </ion-modal>
 
 </ion-content>
-
-<ion-footer class="ion-no-border custom-footer">
-  <ion-tab-bar slot="bottom" class="custom-tab-bar">
-    <ion-tab-button (click)="goTo('/inicio')">
-      <ion-icon name="home-outline"></ion-icon>
-      <ion-label>Inicio</ion-label>
-    </ion-tab-button>
-    <ion-tab-button (click)="goTo('/cuadrante')">
-      <ion-icon name="calendar-outline"></ion-icon>
-      <ion-label>Programar</ion-label>
-    </ion-tab-button>
-    <ion-tab-button (click)="goTo('/mas')" class="tab-active">
-      <ion-icon name="menu-outline"></ion-icon>
-      <ion-label>Más</ion-label>
-    </ion-tab-button>
-  </ion-tab-bar>
-</ion-footer>

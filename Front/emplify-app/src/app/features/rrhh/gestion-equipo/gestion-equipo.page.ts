@@ -3,28 +3,48 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
 import { addIcons } from 'ionicons';
-import { checkmarkOutline, closeOutline, calendarOutline, personCircleOutline } from 'ionicons/icons';
+import {
+  checkmarkOutline, closeOutline, calendarOutline,
+  personCircleOutline, homeOutline, menuOutline,
+  checkmarkCircleOutline, closeCircleOutline
+} from 'ionicons/icons';
 
 @Component({
-  selector: 'app-equipo',
+  selector: 'app-mi-equipo',
   templateUrl: './gestion-equipo.page.html',
+  styleUrls: ['./gestion-equipo.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule, HeaderComponent]
 })
 export class GestionEquipoPage {
 
+  segmentoActual: string = 'peticiones';
   solicitudes: any[] = [];
-  miEquipo: any[] = []; // NUEVO: Array para guardar a los empleados y sus saldos
+  miEquipo: any[] = [];
 
-  constructor(private http: HttpClient, private toastController: ToastController) {
-    // Añadido el icono de persona para la lista de equipo
-    addIcons({ checkmarkOutline, closeOutline, calendarOutline, personCircleOutline });
+  constructor(
+    private http: HttpClient,
+    private toastController: ToastController,
+    private router: Router
+  ) {
+    addIcons({
+      checkmarkOutline, closeOutline, calendarOutline,
+      personCircleOutline, homeOutline, menuOutline,
+      checkmarkCircleOutline, closeCircleOutline
+    });
   }
 
   ionViewWillEnter() {
     this.cargarSolicitudes();
-    this.cargarEquipo(); // NUEVO: Cargamos los saldos al entrar a la vista
+    this.cargarEquipo();
+  }
+
+  getInicial(nombre: string): string {
+    if (!nombre) return '?';
+    return nombre.charAt(0).toUpperCase();
   }
 
   cargarSolicitudes() {
@@ -34,11 +54,10 @@ export class GestionEquipoPage {
     this.http.get('http://localhost:8080/api/solicitudes/equipo/pendientes', { headers })
       .subscribe({
         next: (res: any) => this.solicitudes = res,
-        error: (err) => console.error('Error al cargar peticiones del equipo', err)
+        error: (err) => console.error('Error al cargar peticiones', err)
       });
   }
 
-  // NUEVO: Método para obtener los empleados a cargo y sus días disponibles
   cargarEquipo() {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
@@ -46,7 +65,7 @@ export class GestionEquipoPage {
     this.http.get('http://localhost:8080/api/empleados/mi-equipo', { headers })
       .subscribe({
         next: (res: any) => this.miEquipo = res,
-        error: (err) => console.error('Error al cargar datos del equipo', err)
+        error: (err) => console.error('Error al cargar equipo', err)
       });
   }
 
@@ -62,30 +81,31 @@ export class GestionEquipoPage {
     this.http.put(`http://localhost:8080/api/solicitudes/${idSolicitud}/estado`, body, { headers })
       .subscribe({
         next: async () => {
-          const toast = await this.toastController.create({
-            message: `Solicitud ${nuevoEstado.toLowerCase()} con éxito`,
-            duration: 2000,
-            color: nuevoEstado === 'APROBADA' ? 'success' : 'danger',
-            position: 'bottom'
-          });
-          toast.present();
-          this.cargarSolicitudes(); // Recargamos las peticiones pendientes
+          this.mostrarToast(`Solicitud ${nuevoEstado.toLowerCase()} con éxito`, nuevoEstado === 'APROBADA' ? 'success' : 'danger');
+          this.cargarSolicitudes();
 
-          // Si aprobamos, recargamos el equipo para que se actualicen los días restados
           if (nuevoEstado === 'APROBADA') {
             this.cargarEquipo();
           }
         },
         error: (err) => {
-          // Mejoramos el manejo de errores por si el backend rechaza por falta de días
           const msg = err.error?.error || 'Error al cambiar estado';
-          this.toastController.create({
-            message: msg,
-            duration: 3000,
-            color: 'danger',
-            position: 'bottom'
-          }).then(t => t.present());
+          this.mostrarToast(msg, 'danger');
         }
       });
+  }
+
+  async mostrarToast(mensaje: string, color: string) {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: 3000,
+      color: color,
+      position: 'bottom'
+    });
+    toast.present();
+  }
+
+  goTo(ruta: string) {
+    this.router.navigate([ruta]);
   }
 }

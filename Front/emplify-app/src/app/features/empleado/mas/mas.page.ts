@@ -9,7 +9,8 @@ import {
   homeOutline, calendarOutline, menuOutline, chevronForwardOutline,
   personCircleOutline, airplaneOutline, megaphoneOutline,
   chatbubblesOutline, peopleOutline, settingsOutline,
-  briefcaseOutline, shieldCheckmarkOutline
+  briefcaseOutline, shieldCheckmarkOutline,
+  headsetOutline
 } from 'ionicons/icons';
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
 
@@ -34,7 +35,7 @@ export class MasPage implements OnInit {
       homeOutline, calendarOutline, menuOutline, chevronForwardOutline,
       personCircleOutline, airplaneOutline, megaphoneOutline,
       chatbubblesOutline, peopleOutline, settingsOutline,
-      briefcaseOutline, shieldCheckmarkOutline
+      briefcaseOutline, shieldCheckmarkOutline, headsetOutline
     });
   }
 

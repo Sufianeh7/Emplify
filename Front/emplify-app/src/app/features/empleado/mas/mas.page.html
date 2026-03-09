@@ -51,9 +51,23 @@
 
       <div class="menu-card admin-card">
 
+        <div class="menu-item ion-activatable ripple-parent" *ngIf="esManager || esAdmin" (click)="goTo('/gestion-equipo')">
+          <ion-icon name="briefcase-outline" class="item-icon"></ion-icon>
+          <span>Mi Equipo</span>
+          <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+          <ion-ripple-effect></ion-ripple-effect>
+        </div>
+
         <div class="menu-item ion-activatable ripple-parent" *ngIf="esRRHH || esAdmin" (click)="goTo('/gestion-empleados')">
           <ion-icon name="people-outline" class="item-icon"></ion-icon>
           <span>Gestión de Empleados</span>
+          <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+          <ion-ripple-effect></ion-ripple-effect>
+        </div>
+
+        <div class="menu-item ion-activatable ripple-parent" *ngIf="esRRHH || esAdmin" (click)="goTo('/soporte-tickets')">
+          <ion-icon name="headset-outline" class="item-icon"></ion-icon>
+          <span>Bandeja de Soporte</span>
           <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
           <ion-ripple-effect></ion-ripple-effect>
         </div>

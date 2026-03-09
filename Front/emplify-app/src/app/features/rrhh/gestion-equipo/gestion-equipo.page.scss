@@ -1,0 +1,77 @@
+.app-background { --background: #f2f4f8; }
+
+.section-header {
+  padding: 25px 20px 40px 20px; color: white;
+  &.blue-bg { background: #0071ad; }
+  h2 { margin: 0; font-size: 1.6rem; font-weight: 800; }
+  p { margin: 5px 0 0 0; font-size: 0.95rem; opacity: 0.9; }
+}
+
+.dashboard-container { padding: 5px 15px 20px 15px; margin-top: -20px; }
+
+/* SEGMENTOS */
+.segment-container { background: #ffffff; padding: 5px; border-radius: 10px; margin-bottom: 15px; }
+.custom-segment {
+  background: #f2f4f8;
+  ion-segment-button { color: #565959; font-weight: 600; &::part(indicator-background) { background: #ffffff; } }
+  ion-badge { margin-left: 5px; font-size: 0.7rem; }
+}
+
+.flat-card { background: #ffffff; border: 1px solid #d5d9d9; border-radius: 8px; padding: 0; margin-bottom: 15px; overflow: hidden; }
+.empty-state { padding: 40px 20px; ion-icon { font-size: 4rem; color: #d5d9d9; } }
+
+/* AVATARES */
+.avatar-circle {
+  width: 45px; height: 45px; background: #e3f2fd; color: #0071ad; border-radius: 50%;
+  display: flex; justify-content: center; align-items: center; font-size: 1.2rem; font-weight: 800;
+  &.small { width: 35px; height: 35px; font-size: 1rem; margin-right: 12px; }
+}
+
+/* TARJETAS DE PETICIÓN */
+.request-card {
+  .request-header {
+    display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #f2f4f8;
+    .employee-info {
+      display: flex; align-items: center;
+      .name { margin: 0; font-size: 1.05rem; font-weight: 800; color: #0f1111; }
+      .role { margin: 0; font-size: 0.8rem; color: #565959; }
+    }
+    .badge-tipo { font-size: 0.65rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; background: #fff3e0; color: #e65100; text-transform: uppercase; }
+  }
+
+  .request-dates {
+    display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #fafafa;
+    .date-box { display: flex; flex-direction: column; .label { font-size: 0.7rem; color: #565959; text-transform: uppercase; font-weight: 700; } .value { font-size: 0.95rem; font-weight: 600; color: #1a1a1a; } }
+    .date-divider { color: #0071ad; font-size: 1.5rem; }
+  }
+
+  .request-comment { padding: 0 15px 15px 15px; background: #fafafa; font-size: 0.85rem; color: #565959; font-style: italic; }
+
+  .request-actions {
+    display: flex; border-top: 1px solid #f2f4f8;
+    .btn-action { flex: 1; margin: 0; --border-radius: 0; height: 45px; font-weight: 700; }
+    .vertical-divider { width: 1px; background: #f2f4f8; }
+  }
+}
+
+/* TARJETAS DE EQUIPO (DIRECTORIO) */
+.team-card {
+  padding: 15px;
+  .team-header {
+    display: flex; align-items: center; margin-bottom: 15px;
+    .team-info { margin-left: 15px; .name { margin: 0; font-size: 1.1rem; font-weight: 800; color: #0f1111; } .role { margin: 0; font-size: 0.85rem; color: #565959; } }
+  }
+  .balances-container {
+    display: flex; gap: 10px;
+    .balance-item {
+      flex: 1; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      .count { font-size: 1.2rem; font-weight: 800; }
+      .label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; margin-top: 4px; }
+      &.vac { background: #e3f2fd; color: #0071ad; }
+      &.ap { background: #f2f4f8; color: #565959; }
+    }
+  }
+}
+
+.custom-footer { background: #ffffff; border-top: 1px solid rgba(0,0,0,0.05); }
+.custom-tab-bar { --background: #ffffff; --border: none; padding-bottom: env(safe-area-inset-bottom); ion-tab-button { color: #565959; &.tab-active { color: #0071ad; } } }
