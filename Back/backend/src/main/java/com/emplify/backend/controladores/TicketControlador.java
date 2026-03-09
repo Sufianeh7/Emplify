@@ -9,6 +9,8 @@ import com.emplify.backend.repositorios.TicketMensajeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+// IMPORTAMOS LA MAGIA DE WEBSOCKETS
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -18,7 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tickets")
-@CrossOrigin(origins = "http://localhost:8100") // Aseguramos que Ionic pueda comunicarse
+@CrossOrigin(origins = "http://localhost:8100")
 public class TicketControlador {
 
     @Autowired
@@ -29,6 +31,10 @@ public class TicketControlador {
 
     @Autowired
     private TicketMensajeRepo mensajeRepo;
+
+    // Herramienta para emitir eventos en tiempo real
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     // 1. Obtener SOLO los tickets del usuario logueado
     @GetMapping("/mis-tickets")
@@ -64,21 +70,20 @@ public class TicketControlador {
         return ResponseEntity.status(401).body("No autorizado");
     }
 
-    // 3. Obtener TODOS los tickets DE MI EMPRESA (Vista RRHH Blindada) <--- AQUÍ ESTÁ LA MAGIA
+    // 3. Obtener TODOS los tickets DE MI EMPRESA (Vista RRHH)
     @GetMapping("/todos")
     public ResponseEntity<?> obtenerTodosLosTickets(Principal principal) {
         Optional<Empleado> rrhhOpt = empleadoRepo.findByUsuarioEmail(principal.getName());
 
         if(rrhhOpt.isPresent()) {
             Integer idEmpresa = rrhhOpt.get().getEmpresa().getIdEmpresa();
-            // Filtramos los tickets para que solo salgan los de SU empresa
             List<Ticket> ticketsEmpresa = ticketRepo.findByEmpleado_Empresa_IdEmpresaOrderByFechaCreacionDesc(idEmpresa);
             return ResponseEntity.ok(ticketsEmpresa);
         }
         return ResponseEntity.status(401).body("{\"error\": \"No autorizado\"}");
     }
 
-    // 4. Enviar un mensaje al chat del ticket
+    // 4. Enviar un mensaje al chat del ticket (¡AHORA CON WEBSOCKETS!)
     @PostMapping("/{id}/enviar-mensaje")
     public ResponseEntity<?> enviarMensaje(@PathVariable Integer id, @RequestBody Map<String, String> body, Principal principal) {
         Optional<Ticket> ticketOpt = ticketRepo.findById(id);
@@ -92,9 +97,19 @@ public class TicketControlador {
             nuevoMsg.setContenido(body.get("contenido"));
             nuevoMsg.setTicket(ticketOpt.get());
             nuevoMsg.setAutor(autor);
+            // Asegúrate de guardar la fecha para que el frontend la muestre bien
+            nuevoMsg.setFechaEnvio(LocalDateTime.now());
 
-            mensajeRepo.save(nuevoMsg);
-            return ResponseEntity.ok("{\"mensaje\": \"Mensaje enviado\"}");
+            TicketMensaje mensajeGuardado = mensajeRepo.save(nuevoMsg);
+
+            // ==========================================
+            // MAGIA WEBSOCKET: Avisamos a los que estén en el chat
+            // ==========================================
+            messagingTemplate.convertAndSend("/topic/ticket/" + id, mensajeGuardado);
+
+            // Devolvemos el mensaje completo (no solo un string) para que el que lo envía
+            // también pueda pintarlo directamente en su pantalla con todos los datos.
+            return ResponseEntity.ok(mensajeGuardado);
         }
         return ResponseEntity.status(404).build();
     }
