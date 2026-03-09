@@ -3,15 +3,21 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 import { addIcons } from 'ionicons';
-import { chatbubblesOutline, chatbubbleOutline, add, sendOutline } from 'ionicons/icons';
+import {
+  chatbubblesOutline, chatbubbleOutline, add, sendOutline,
+  closeOutline, homeOutline, calendarOutline, menuOutline, megaphoneOutline
+} from 'ionicons/icons';
+import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
 
 @Component({
   selector: 'app-voz-empleado',
   templateUrl: './voz-empleado.page.html',
+  styleUrls: ['./voz-empleado.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule, HeaderComponent]
 })
 export class VozEmpleadoPage implements OnInit {
 
@@ -19,78 +25,81 @@ export class VozEmpleadoPage implements OnInit {
   idEmpresa: number = 0;
   idEmpleado: number = 0;
 
-  nuevoTitulo: string='';
-  nuevoContenido: string='';
+  // NUEVO: Variable para guardar el nombre del usuario logueado
+  nombreUsuarioActual: string = '';
 
-  constructor(private http: HttpClient) {
-    addIcons({chatbubbleOutline, chatbubblesOutline, add, sendOutline})
+  nuevoTitulo: string = '';
+  nuevoContenido: string = '';
+
+  constructor(private http: HttpClient, private router: Router) {
+    addIcons({
+      chatbubbleOutline, chatbubblesOutline, add, sendOutline,
+      closeOutline, homeOutline, calendarOutline, menuOutline, megaphoneOutline
+    });
   }
 
   ngOnInit() {
     const datos = localStorage.getItem('empleadoLogueado');
     if (datos) {
       const empleado = JSON.parse(datos);
-      // Guardamos IDs para las relaciones del modelo
       this.idEmpresa = empleado.empresa.idEmpresa;
       this.idEmpleado = empleado.idEmpleado;
+
+      // NUEVO: Guardamos el nombre del usuario al entrar a la página
+      this.nombreUsuarioActual = empleado.usuario?.nombre || 'Compañero/a';
+
       this.cargarMuro();
     }
   }
 
-cargarMuro() {
+  cargarMuro() {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
     this.http.get(`http://localhost:8080/api/voz-empleado/empresa/${this.idEmpresa}`, { headers })
       .subscribe((res: any) => {
-        // Añadimos propiedades extra a cada post para controlar su propio cajón de comentarios
         this.publicaciones = res.map((pub: any) => ({
           ...pub,
-          mostrarComentarios: false, // Controla si el acordeón está abierto
-          comentarios: [],           // Guardará la lista de comentarios
-          nuevoTexto: ''             // Lo que el usuario está escribiendo
+          mostrarComentarios: false,
+          comentarios: [],
+          nuevoTexto: ''
         }));
       });
   }
 
-publicar(modal: any) {
+  publicar(modal: any) {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
       'Authorization': 'Basic ' + token,
       'Content-Type': 'application/json'
     });
 
-    // Construimos el objeto respetando el modelo de Java
     const body = {
       titulo: this.nuevoTitulo,
       contenido: this.nuevoContenido,
-      empleado: { idEmpleado: this.idEmpleado }, // Relación ManyToOne
-      empresa: { idEmpresa: this.idEmpresa }     // Relación ManyToOne
+      empleado: { idEmpleado: this.idEmpleado },
+      empresa: { idEmpresa: this.idEmpresa }
     };
 
     this.http.post('http://localhost:8080/api/voz-empleado/publicar', body, { headers })
       .subscribe({
         next: (res) => {
-          console.log('Publicado!', res);
-          this.cargarMuro(); // Recargamos para ver nuestra publicación arriba
-          this.nuevoTitulo = ''; // Limpiamos formulario
+          this.cargarMuro();
+          this.nuevoTitulo = '';
           this.nuevoContenido = '';
-          modal.dismiss(); // Cerramos la ventana
+          modal.dismiss();
         },
         error: (err) => console.error('Error al publicar', err)
       });
   }
 
-// 1. Abre o cierra la zona de comentarios
   toggleComentarios(pub: any) {
     pub.mostrarComentarios = !pub.mostrarComentarios;
-    // Si lo abrimos y aún no tiene comentarios cargados, los pedimos al servidor
     if (pub.mostrarComentarios && pub.comentarios.length === 0) {
       this.cargarComentarios(pub);
     }
   }
 
-  // 2. Trae los comentarios de la base de datos
   cargarComentarios(pub: any) {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
@@ -101,7 +110,6 @@ publicar(modal: any) {
       });
   }
 
-  // 3. Envía el comentario nuevo
   enviarComentario(pub: any) {
     if (!pub.nuevoTexto || pub.nuevoTexto.trim() === '') return;
 
@@ -120,10 +128,20 @@ publicar(modal: any) {
     this.http.post('http://localhost:8080/api/comentarios/nuevo', body, { headers })
       .subscribe({
         next: (res: any) => {
-          pub.comentarios.push(res); // Añadimos el comentario a la lista visualmente
-          pub.nuevoTexto = '';       // Vaciamos el cajón de texto
+          // --- NUEVO: Magia para inyectar el nombre sin recargar ---
+          res.empleado = {
+            ...res.empleado,
+            usuario: { nombre: this.nombreUsuarioActual }
+          };
+
+          pub.comentarios.push(res);
+          pub.nuevoTexto = '';
         },
         error: (err) => console.error('Error al comentar', err)
       });
+  }
+
+  goTo(ruta: string) {
+    this.router.navigate([ruta]);
   }
 }
