@@ -1,0 +1,58 @@
+.app-background { --background: #f2f4f8; }
+
+.section-header {
+  padding: 25px 20px 40px 20px; color: white;
+  &.blue-bg { background: #0071ad; }
+  h2 { margin: 0; font-size: 1.6rem; font-weight: 800; }
+  p { margin: 5px 0 0 0; font-size: 0.95rem; opacity: 0.9; }
+}
+
+.dashboard-container { padding: 5px 15px 20px 15px; margin-top: -20px; }
+
+/* SEGMENTOS */
+.segment-container { background: #ffffff; padding: 5px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+.custom-segment {
+  background: #f2f4f8;
+  ion-segment-button { color: #565959; font-weight: 600; &::part(indicator-background) { background: #ffffff; } }
+}
+
+/* TARJETAS */
+.flat-card { background: #ffffff; border: 1px solid #d5d9d9; border-radius: 12px; padding: 16px; margin-bottom: 15px; overflow: hidden; }
+.ion-no-padding { padding: 0 !important; }
+
+/* CALENDARIO */
+.calendar-wrapper {
+  ion-datetime { --background: #ffffff; width: 100%; border-radius: 12px; }
+}
+
+/* DETALLE DEL TURNO */
+.shift-card {
+  .shift-header {
+    display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f2f4f8; padding-bottom: 12px; margin-bottom: 15px;
+    .shift-date { font-size: 1.05rem; font-weight: 800; color: #1a1a1a; }
+
+    .badge-turno {
+      font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase;
+      &.mañana { background: #e3f2fd; color: #0071ad; }
+      &.tarde { background: #fff3e0; color: #e65100; }
+      &.noche { background: #ede7f6; color: #5e35b1; }
+      &.libre, &.vacaciones { background: #e8f5e9; color: #2e7d32; }
+    }
+  }
+
+  .shift-content {
+    display: flex; align-items: center;
+    .icon-box {
+      width: 45px; height: 45px; border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; margin-right: 15px;
+      &.morning { background: #e3f2fd; color: #0071ad; }
+      &.afternoon { background: #fff3e0; color: #e65100; }
+      &.night { background: #ede7f6; color: #5e35b1; }
+      &.free { background: #e8f5e9; color: #2e7d32; }
+    }
+
+    .time-info {
+      h4 { margin: 0 0 4px 0; font-size: 1rem; font-weight: 700; color: #1a1a1a; }
+      p { margin: 0; font-size: 0.95rem; color: #565959; font-weight: 500; }
+    }
+  }
+}

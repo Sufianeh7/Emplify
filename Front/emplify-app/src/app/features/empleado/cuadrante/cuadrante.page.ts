@@ -3,13 +3,16 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router'; // <-- NUEVO: Para leer los queryParams
+import { ActivatedRoute } from '@angular/router';
 
 import { addIcons } from 'ionicons';
 import {
   timeOutline, happyOutline, ellipse, chatboxEllipsesOutline,
   personCircleOutline, notificationsOutline, airplaneOutline,
-  sendOutline, calendarOutline, documentTextOutline
+  sendOutline, calendarOutline, documentTextOutline,
+  partlySunnyOutline,
+  sunnyOutline,
+  moonOutline
 } from 'ionicons/icons';
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
 import { SolicitudesPage } from '../solicitudes/solicitudes.page';
@@ -23,7 +26,7 @@ import { SolicitudesPage } from '../solicitudes/solicitudes.page';
 })
 export class CuadrantePage implements OnInit {
 
-  vistaActual: string = 'horario'; // Controla el ion-segment
+  vistaActual: string = 'horario';
 
   // --- DATOS DEL CUADRANTE ---
   turnos: any[] = [];
@@ -45,17 +48,16 @@ export class CuadrantePage implements OnInit {
   constructor(
     private http: HttpClient,
     private toastController: ToastController,
-    private route: ActivatedRoute // <-- NUEVO: Inyectamos el ActivatedRoute
+    private route: ActivatedRoute
   ) {
     addIcons({
       timeOutline, happyOutline, ellipse, chatboxEllipsesOutline,
       personCircleOutline, notificationsOutline, airplaneOutline,
-      sendOutline, calendarOutline, documentTextOutline
+      sendOutline, calendarOutline, documentTextOutline, partlySunnyOutline, sunnyOutline, moonOutline
     });
   }
 
   ngOnInit() {
-    // --- NUEVO: Escuchamos la URL para ver qué pestaña debemos abrir ---
     this.route.queryParams.subscribe(params => {
       if (params['tab']) {
         this.vistaActual = params['tab'];
@@ -95,23 +97,15 @@ export class CuadrantePage implements OnInit {
   }
 
   procesarTurnosParaCalendario() {
-    this.diasDestacados = this.turnos.map(turno => ({
-      date: turno.fecha,
-      textColor: '#ffffff',
-      backgroundColor: this.obtenerColorPorTurno(turno.turno)
-    }));
-  }
-
-  obtenerColorPorTurno(tipoTurno: string): string {
-    if (!tipoTurno) return '#3880ff';
-    switch(tipoTurno.toUpperCase()) {
-      case 'MAÑANA': return '#2dd36f';
-      case 'TARDE': return '#ffc409';
-      case 'NOCHE': return '#5260ff';
-      case 'LIBRE': return '#92949c';
-      case 'VACACIONES': return '#eb445a';
-      default: return '#3880ff';
-    }
+    // ACTUALIZADO: Quitamos los colores chillones. Ponemos un halo azul sutil a los días con turno
+    // y dejamos los días libres normales.
+    this.diasDestacados = this.turnos
+      .filter(t => t.turno !== 'LIBRE' && t.turno !== 'VACACIONES') // Solo marcamos los días laborables
+      .map(turno => ({
+        date: turno.fecha,
+        textColor: '#0071ad', // Texto en azul corporativo
+        backgroundColor: 'rgba(0, 113, 173, 0.1)' // Fondo transparente al 10%
+      }));
   }
 
   diaSeleccionado(event: any) {
