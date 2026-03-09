@@ -8,11 +8,11 @@ import { checkmarkOutline, closeOutline, calendarOutline, personCircleOutline } 
 
 @Component({
   selector: 'app-equipo',
-  templateUrl: './equipo.page.html',
+  templateUrl: './gestion-equipo.page.html',
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule]
 })
-export class EquipoPage {
+export class GestionEquipoPage {
 
   solicitudes: any[] = [];
   miEquipo: any[] = []; // NUEVO: Array para guardar a los empleados y sus saldos

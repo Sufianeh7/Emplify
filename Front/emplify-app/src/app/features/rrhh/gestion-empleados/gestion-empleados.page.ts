@@ -8,11 +8,11 @@ import { personAddOutline, saveOutline, peopleOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-rrhh',
-  templateUrl: './rrhh.page.html',
+  templateUrl: './gestion-empleados.page.html',
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule]
 })
-export class RrhhPage implements OnInit {
+export class GestionEmpleadosPage implements OnInit {
 
   posiblesManagers: any[] = [];
 

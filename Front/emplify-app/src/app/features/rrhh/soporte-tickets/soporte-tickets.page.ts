@@ -19,12 +19,12 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-gestion-rrhh',
-  templateUrl: './gestion-rrhh.page.html',
-  styleUrls: ['./gestion-rrhh.page.scss'],
+  templateUrl: './soporte-tickets.page.html',
+  styleUrls: ['./soporte-tickets.page.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule],
 })
-export class GestionRRHHPage implements OnInit {
+export class SoporteTicketsPage implements OnInit {
   nuevoMensaje: string = '';
   ticketSeleccionado: any = null;
 
