@@ -106,4 +106,35 @@ public class AdminControlador {
             return ResponseEntity.internalServerError().body("{\"error\": \"Error al dar de alta al empleado\"}");
         }
     }
+
+    // ==========================================
+    // NUEVO: LISTADO GLOBAL DE EMPLEADOS
+    // ==========================================
+    @GetMapping("/empleados")
+    public ResponseEntity<List<Empleado>> obtenerTodosLosEmpleados() {
+        // En un SaaS real podríamos paginar esto, pero para empezar findAll() está perfecto
+        List<Empleado> todosLosEmpleados = empleadoRepo.findAll();
+        return ResponseEntity.ok(todosLosEmpleados);
+    }
+
+    // ==========================================
+    // NUEVO: ESTADÍSTICAS PARA EL DASHBOARD
+    // ==========================================
+    @GetMapping("/stats")
+    public ResponseEntity<?> obtenerEstadisticas() {
+        try {
+            long totalEmpresas = empresaRepo.count();
+            long totalEmpleados = empleadoRepo.count();
+            // Si tienes un ticketRepo, podrías contar los tickets también. De momento mandamos estos dos.
+
+            Map<String, Object> stats = Map.of(
+                    "totalEmpresas", totalEmpresas,
+                    "totalEmpleados", totalEmpleados
+            );
+
+            return ResponseEntity.ok(stats);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("{\"error\": \"Error al calcular estadísticas\"}");
+        }
+    }
 }
