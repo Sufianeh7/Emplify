@@ -1,0 +1,57 @@
+.app-background { --background: #f2f4f8; }
+
+.section-header {
+  padding: 25px 20px 40px 20px; color: white;
+  &.blue-bg { background: #0071ad; }
+  h2 { margin: 0; font-size: 1.6rem; font-weight: 800; }
+  p { margin: 5px 0 0 0; font-size: 0.95rem; opacity: 0.9; }
+}
+
+.dashboard-container { padding: 5px 15px 20px 15px; margin-top: -20px; }
+
+/* SEGMENTOS */
+.segment-container { background: #ffffff; padding: 5px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+.custom-segment {
+  background: #f2f4f8;
+  ion-segment-button { color: #565959; font-weight: 600; &::part(indicator-background) { background: #ffffff; } }
+}
+
+/* TARJETAS */
+.flat-card { background: #ffffff; border: 1px solid #d5d9d9; border-radius: 12px; padding: 16px; margin-bottom: 15px; }
+.card-title {
+  font-size: 1.05rem; font-weight: 800; color: #1a1a1a; margin: 0 0 15px 0; display: flex; align-items: center;
+  ion-icon { color: #0071ad; font-size: 1.4rem; margin-right: 8px; }
+}
+
+/* FORMULARIOS */
+.form-container { background: #f8f9fa; border-radius: 8px; border: 1px solid #e7e9e9; overflow: hidden; }
+.form-item { --padding-start: 10px; --inner-padding-end: 10px; --background: transparent; border-bottom: 1px solid #e7e9e9; }
+.form-item:last-child { border-bottom: none; }
+.btn-corporativo { --background: #0071ad; --color: white; --border-radius: 8px; font-weight: 700; height: 48px; }
+
+/* GRID ESTADÍSTICAS DASHBOARD */
+.stats-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;
+  .stat-card {
+    background: #ffffff; border: 1px solid #d5d9d9; border-radius: 12px; padding: 20px; text-align: center;
+    .stat-icon { font-size: 2.5rem; color: #0071ad; margin-bottom: 10px; }
+    h3 { margin: 0; font-size: 2.2rem; font-weight: 800; color: #1a1a1a; }
+    p { margin: 5px 0 0 0; font-size: 0.85rem; color: #565959; font-weight: 600; text-transform: uppercase; }
+  }
+}
+
+/* LISTAS Y AVATARES */
+.clean-list { background: transparent; padding: 0; }
+.company-avatar {
+  color: white; font-weight: 800; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; border-radius: 8px;
+}
+.empty-state { padding: 20px; text-align: center; color: #888c8c; font-style: italic; font-size: 0.9rem; }
+
+/* ETIQUETAS DE ROL */
+.badge-rol {
+  font-size: 0.7rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px;
+  &.admin { background: #ffebee; color: #c62828; } /* Rojo para admin */
+  &.rrhh { background: #fff3e0; color: #e65100; } /* Naranja para RRHH */
+  &.manager { background: #ede7f6; color: #5e35b1; } /* Morado para Mánager */
+  &.empleado { background: #e3f2fd; color: #0071ad; } /* Azul para Empleado */
+}
