@@ -41,7 +41,7 @@
   }
 
   .shift-content {
-    display: flex; align-items: center;
+    display: flex; align-items: center; margin-bottom: 15px;
     .icon-box {
       width: 45px; height: 45px; border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; margin-right: 15px;
       &.morning { background: #e3f2fd; color: #0071ad; }
@@ -53,6 +53,39 @@
     .time-info {
       h4 { margin: 0 0 4px 0; font-size: 1rem; font-weight: 700; color: #1a1a1a; }
       p { margin: 0; font-size: 0.95rem; color: #565959; font-weight: 500; }
+    }
+  }
+}
+
+/* FICHAJES EN EL DETALLE DEL TURNO */
+.fichajes-section {
+  border-top: 1px solid #f2f4f8;
+  margin-top: 10px; /* <-- Aumentado para separar de la info del turno */
+  padding-top: 15px;
+
+  .fichajes-title { font-size: 0.9rem; font-weight: 700; color: #565959; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .fichaje-item {
+    background: #f8f9fa; border-radius: 8px; padding: 10px; margin-bottom: 8px;
+    .fichaje-row {
+      display: flex; align-items: center; font-size: 0.95rem; margin-bottom: 5px;
+      ion-icon { margin-right: 8px; font-size: 1.2rem; }
+      &.entrada ion-icon { color: #0071ad; }
+      &.salida ion-icon { color: #e65100; }
+    }
+  }
+
+  /* NUEVO: Estilo para cuando no hay registros */
+  .empty-fichajes {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px 10px;
+    text-align: center;
+    p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #888c8c;
+      font-style: italic;
     }
   }
 }

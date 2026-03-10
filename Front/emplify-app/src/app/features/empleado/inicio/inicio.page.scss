@@ -19,7 +19,9 @@
   gap: 12px;
 
   /* Ocultar barra de scroll */
-  &::-webkit-scrollbar { display: none; }
+  &::-webkit-scrollbar {
+    display: none;
+  }
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
@@ -53,8 +55,17 @@
       margin-bottom: 15px;
     }
 
-    h2 { font-size: 1.6rem; font-weight: 800; margin: 0; line-height: 1.1; }
-    p { font-size: 0.9rem; opacity: 0.9; margin-top: 5px; }
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin: 0;
+      line-height: 1.1;
+    }
+    p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      margin-top: 5px;
+    }
   }
 
   &.image-bg {
@@ -84,7 +95,9 @@
     background: #dcdcdc;
     border-radius: 2px;
 
-    &.active { background: #565959; }
+    &.active {
+      background: #565959;
+    }
   }
 }
 
@@ -151,7 +164,10 @@
     align-items: center;
     justify-content: center;
 
-    ion-icon { font-size: 1.5rem; color: #565959; }
+    ion-icon {
+      font-size: 1.5rem;
+      color: #565959;
+    }
   }
 
   .card-content {
@@ -159,5 +175,72 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+  }
+}
+
+/* FICHAJE Y CRONÓMETRO */
+.cronometro-container {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 15px;
+  border: 1px solid #e7e9e9;
+
+  .tiempo {
+    display: block;
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #0071ad;
+    font-variant-numeric: tabular-nums; /* Evita que los números salten */
+    margin-top: 5px;
+  }
+
+  .hora-entrada {
+    margin: 5px 0 0 0;
+    font-size: 0.85rem;
+    color: #565959;
+    font-weight: 600;
+  }
+
+  .spin-icon {
+    font-size: 1.5rem;
+    color: #0071ad; /* <-- Cambiado al azul corporativo */
+    animation: pulse 2s infinite;
+  }
+}
+
+.btn-fichar {
+  height: 50px;
+  font-weight: 700;
+  --border-radius: 8px;
+  font-size: 1.05rem;
+  margin-top: 15px;
+}
+
+/* Estilos corporativos para los botones */
+.btn-entrada {
+  --background: #0071ad;
+  --color: #ffffff;
+}
+
+.btn-salida {
+  --border-color: #0071ad;
+  --border-width: 2px;
+  --color: #0071ad;
+  --background-activated: rgba(0, 113, 173, 0.1);
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
 }

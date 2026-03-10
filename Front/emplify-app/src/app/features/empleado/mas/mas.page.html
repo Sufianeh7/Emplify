@@ -65,6 +65,13 @@
           <ion-ripple-effect></ion-ripple-effect>
         </div>
 
+        <div class="menu-item ion-activatable ripple-parent" *ngIf="esRRHH || esAdmin" (click)="goTo('/control-fichajes')">
+          <ion-icon name="time-outline" class="item-icon"></ion-icon>
+          <span>Control de Fichajes</span>
+          <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+          <ion-ripple-effect></ion-ripple-effect>
+        </div>
+
         <div class="menu-item ion-activatable ripple-parent" *ngIf="esRRHH || esAdmin" (click)="goTo('/soporte-tickets')">
           <ion-icon name="headset-outline" class="item-icon"></ion-icon>
           <span>Bandeja de Soporte</span>

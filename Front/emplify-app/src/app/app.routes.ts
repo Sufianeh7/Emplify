@@ -23,12 +23,16 @@ export const routes: Routes = [
       {
         path: 'inicio',
         loadComponent: () =>
-          import('./features/empleado/inicio/inicio.page').then((m) => m.InicioPage),
+          import('./features/empleado/inicio/inicio.page').then(
+            (m) => m.InicioPage,
+          ),
       },
       {
         path: 'cuadrante',
         loadComponent: () =>
-          import('./features/empleado/cuadrante/cuadrante.page').then((m) => m.CuadrantePage),
+          import('./features/empleado/cuadrante/cuadrante.page').then(
+            (m) => m.CuadrantePage,
+          ),
       },
       {
         path: 'mas',
@@ -39,43 +43,66 @@ export const routes: Routes = [
       {
         path: 'solicitudes',
         loadComponent: () =>
-          import('./features/empleado/solicitudes/solicitudes.page').then((m) => m.SolicitudesPage),
+          import('./features/empleado/solicitudes/solicitudes.page').then(
+            (m) => m.SolicitudesPage,
+          ),
       },
       {
         path: 'voz-empleado',
         loadComponent: () =>
-          import('./features/empleado/voz-empleado/voz-empleado.page').then((m) => m.VozEmpleadoPage),
+          import('./features/empleado/voz-empleado/voz-empleado.page').then(
+            (m) => m.VozEmpleadoPage,
+          ),
       },
       {
         path: 'tickets',
         loadComponent: () =>
-          import('./features/empleado/tickets/tickets.page').then((m) => m.TicketsPage),
+          import('./features/empleado/tickets/tickets.page').then(
+            (m) => m.TicketsPage,
+          ),
       },
       {
         path: 'perfil',
         loadComponent: () =>
-          import('./features/empleado/perfil/perfil.page').then((m) => m.PerfilPage),
+          import('./features/empleado/perfil/perfil.page').then(
+            (m) => m.PerfilPage,
+          ),
       },
       // --- PÁGINAS DE GESTIÓN---
       {
         path: 'gestion-equipo',
         loadComponent: () =>
-          import('./features/rrhh/gestion-equipo/gestion-equipo.page').then((m) => m.GestionEquipoPage),
+          import('./features/rrhh/gestion-equipo/gestion-equipo.page').then(
+            (m) => m.GestionEquipoPage,
+          ),
       },
       {
         path: 'gestion-empleados',
         loadComponent: () =>
-          import('./features/rrhh/gestion-empleados/gestion-empleados.page').then((m) => m.GestionEmpleadosPage),
+          import('./features/rrhh/gestion-empleados/gestion-empleados.page').then(
+            (m) => m.GestionEmpleadosPage,
+          ),
       },
       {
         path: 'soporte-tickets',
         loadComponent: () =>
-          import('./features/rrhh/soporte-tickets/soporte-tickets.page').then((m) => m.SoporteTicketsPage),
+          import('./features/rrhh/soporte-tickets/soporte-tickets.page').then(
+            (m) => m.SoporteTicketsPage,
+          ),
+      },
+      {
+        path: 'control-fichajes',
+        loadComponent: () =>
+          import('./features/rrhh/control-fichajes/control-fichajes.page').then(
+            (m) => m.ControlFichajesPage,
+          ),
       },
       {
         path: 'cuadrantes',
         loadComponent: () =>
-          import('./features/rrhh/cuadrantes/cuadrantes.page').then((m) => m.CuadrantesPage),
+          import('./features/rrhh/cuadrantes/cuadrantes.page').then(
+            (m) => m.CuadrantesPage,
+          ),
       },
       {
         path: 'admin',

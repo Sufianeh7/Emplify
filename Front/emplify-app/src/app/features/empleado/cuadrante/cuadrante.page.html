@@ -3,14 +3,12 @@
 </ion-header>
 
 <ion-content class="app-background">
-
   <div class="section-header blue-bg">
     <h2>Mi Calendario</h2>
     <p>Consulta tus turnos y gestiona tu tiempo libre</p>
   </div>
 
   <div class="dashboard-container">
-
     <div class="segment-container">
       <ion-segment [(ngModel)]="vistaActual" mode="ios" class="custom-segment">
         <ion-segment-button value="horario">
@@ -23,28 +21,33 @@
     </div>
 
     <div *ngIf="vistaActual === 'horario'">
-
       <div class="flat-card full calendar-wrapper ion-no-padding">
         <ion-datetime
           presentation="date"
           [highlightedDates]="diasDestacados"
           (ionChange)="diaSeleccionado($event)"
           size="cover"
-          color="primary">
+          color="primary"
+        >
         </ion-datetime>
       </div>
 
       <div class="flat-card full shift-card" *ngIf="turnoElegido">
         <div class="shift-header">
           <span class="shift-date">{{ fechaElegidaNormal }}</span>
-          <span class="badge-turno" [ngClass]="turnoElegido?.turno?.toLowerCase() || 'libre'">
+          <span
+            class="badge-turno"
+            [ngClass]="turnoElegido?.turno?.toLowerCase() || 'libre'"
+          >
             {{ turnoElegido?.turno || 'SIN ASIGNAR' }}
           </span>
         </div>
 
         <div class="shift-content">
           <ng-container *ngIf="turnoElegido?.turno === 'MAÑANA'">
-            <div class="icon-box morning"><ion-icon name="partly-sunny-outline"></ion-icon></div>
+            <div class="icon-box morning">
+              <ion-icon name="partly-sunny-outline"></ion-icon>
+            </div>
             <div class="time-info">
               <h4>Horario de Mañana</h4>
               <p>08:00 - 16:00</p>
@@ -52,7 +55,9 @@
           </ng-container>
 
           <ng-container *ngIf="turnoElegido?.turno === 'TARDE'">
-            <div class="icon-box afternoon"><ion-icon name="sunny-outline"></ion-icon></div>
+            <div class="icon-box afternoon">
+              <ion-icon name="sunny-outline"></ion-icon>
+            </div>
             <div class="time-info">
               <h4>Horario de Tarde</h4>
               <p>16:00 - 00:00</p>
@@ -60,29 +65,79 @@
           </ng-container>
 
           <ng-container *ngIf="turnoElegido?.turno === 'NOCHE'">
-            <div class="icon-box night"><ion-icon name="moon-outline"></ion-icon></div>
+            <div class="icon-box night">
+              <ion-icon name="moon-outline"></ion-icon>
+            </div>
             <div class="time-info">
               <h4>Horario de Noche</h4>
               <p>00:00 - 08:00</p>
             </div>
           </ng-container>
 
-          <ng-container *ngIf="turnoElegido?.turno === 'LIBRE' || turnoElegido?.turno === 'VACACIONES'">
-            <div class="icon-box free"><ion-icon name="happy-outline"></ion-icon></div>
+          <ng-container
+            *ngIf="turnoElegido?.turno === 'LIBRE' || turnoElegido?.turno === 'VACACIONES'"
+          >
+            <div class="icon-box free">
+              <ion-icon name="happy-outline"></ion-icon>
+            </div>
             <div class="time-info">
               <h4>¡Día Libre!</h4>
               <p>Disfruta de tu descanso.</p>
             </div>
           </ng-container>
         </div>
-      </div>
 
+        <div
+          class="flat-card full shift-card"
+          *ngIf="turnoElegido || fichajesDelDiaElegido.length > 0"
+        >
+          <div class="fichajes-section">
+            <h4 class="fichajes-title">Registros de Fichaje</h4>
+
+            <ng-container *ngIf="fichajesDelDiaElegido.length > 0">
+              <div
+                class="fichaje-item"
+                *ngFor="let fichaje of fichajesDelDiaElegido"
+              >
+                <div class="fichaje-row entrada">
+                  <ion-icon name="log-in-outline"></ion-icon>
+                  <span
+                    >Entrada:
+                    <strong
+                      >{{ fichaje.horaEntrada | date:'HH:mm' }}</strong
+                    ></span
+                  >
+                </div>
+                <div class="fichaje-row salida">
+                  <ion-icon name="log-out-outline"></ion-icon>
+                  <span *ngIf="fichaje.horaSalida"
+                    >Salida:
+                    <strong
+                      >{{ fichaje.horaSalida | date:'HH:mm' }}</strong
+                    ></span
+                  >
+                  <span
+                    *ngIf="!fichaje.horaSalida"
+                    style="color: #e65100; font-style: italic"
+                    >Sin salida registrada</span
+                  >
+                </div>
+              </div>
+            </ng-container>
+
+            <div
+              *ngIf="fichajesDelDiaElegido.length === 0"
+              class="empty-fichajes"
+            >
+              <p>No hay registros para este día.</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div *ngIf="vistaActual === 'ausencias'">
       <app-solicitudes></app-solicitudes>
     </div>
-
   </div>
-
 </ion-content>

@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ToastController } from '@ionic/angular'; // <-- NUEVO: Añadido ToastController
 import { RouterModule, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -10,7 +10,8 @@ import {
   calendarOutline, airplaneOutline, megaphoneOutline, ticketOutline,
   personCircleOutline, peopleOutline, briefcaseOutline, settingsOutline,
   logOutOutline, chatboxEllipsesOutline, notificationsCircleOutline,
-  timeOutline, bulbOutline, informationCircleOutline, heartOutline
+  timeOutline, bulbOutline, informationCircleOutline, heartOutline,
+  playCircleOutline, stopCircleOutline // <-- NUEVO: Iconos de fichaje
 } from 'ionicons/icons';
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
 
@@ -21,28 +22,38 @@ import { HeaderComponent } from 'src/app/shared/componentes/header/header.compon
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule, RouterModule, HeaderComponent],
 })
-export class InicioPage implements OnInit {
+export class InicioPage implements OnInit, OnDestroy {
   nombreUsuario: string = '';
   nombreEmpresa: string = '';
 
-  // Lo inicializamos a nulo. Si el backend trae datos, lo llenaremos.
   proximoTurno: any = null;
   ultimaPublicacion: any = null;
   noticias: any[] = [];
-
-  // --- NUEVO: Variable para controlar el puntito activo del carrusel ---
   indiceSlideActual: number = 0;
 
   esManager: boolean = false;
   esRRHH: boolean = false;
   esAdmin: boolean = false;
 
-  constructor(private router: Router, private http: HttpClient) {
+  // --- NUEVO: VARIABLES DE FICHAJE ---
+  idEmpleadoLogueado: number = 0;
+  trabajando: boolean = false;
+  fichajesHoy: any[] = [];
+  horaEntradaActual: Date | null = null;
+  tiempoActualTrabajando: string = '00:00:00';
+  private timerInterval: any;
+
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private toastController: ToastController // <-- Inyectado para mostrar mensajes
+  ) {
     addIcons({
       calendarOutline, airplaneOutline, megaphoneOutline, ticketOutline,
       personCircleOutline, peopleOutline, briefcaseOutline, settingsOutline,
       logOutOutline, chatboxEllipsesOutline, notificationsCircleOutline,
-      timeOutline, bulbOutline, informationCircleOutline, heartOutline
+      timeOutline, bulbOutline, informationCircleOutline, heartOutline,
+      playCircleOutline, stopCircleOutline
     });
   }
 
@@ -55,82 +66,62 @@ export class InicioPage implements OnInit {
       const empleado = JSON.parse(datosGuardados);
       this.nombreUsuario = empleado?.usuario?.nombre || empleado?.usuario?.email || 'Compañero/a';
       this.nombreEmpresa = empleado?.empresa?.nombre || 'tu empresa';
+      this.idEmpleadoLogueado = empleado?.idEmpleado;
 
       const rol = empleado.usuario?.rol;
       this.esManager = (rol === 'MANAGER');
       this.esRRHH = (rol === 'RRHH' || rol === 'ADMIN');
       this.esAdmin = (rol === 'ADMIN');
 
-      // --- LLAMADAS A LA BD PARA TRAER DATOS REALES ---
       const idEmpresa = empleado?.empresa?.idEmpresa;
-      const idEmpleado = empleado?.idEmpleado; // Extraemos también el ID del empleado
 
       if (idEmpresa) {
         this.cargarUltimaPublicacion(idEmpresa);
-        this.cargarNoticias(idEmpresa); // Llamada al carrusel
+        this.cargarNoticias(idEmpresa);
       }
 
-      if (idEmpleado) {
-        this.cargarProximoTurno(idEmpleado); // Llamada al turno
+      if (this.idEmpleadoLogueado) {
+        this.cargarProximoTurno(this.idEmpleadoLogueado);
+        this.cargarEstadoFichaje(); // <-- LLAMADA INICIAL AL FICHAJE
       }
     }
   }
 
+  ngOnDestroy() {
+    this.detenerTemporizador();
+  }
+
   // ==========================================
-  // --- CONTROL DEL CARRUSEL ---
+  // --- CONTROL DEL CARRUSEL Y OTRAS APIS ---
   // ==========================================
   onScrollNoticias(event: any) {
     const contenedor = event.target;
-    // La tarjeta ocupa un 85% del ancho, así que calculamos en base a eso
     const anchoTarjeta = contenedor.clientWidth * 0.85;
-    // Actualizamos el índice de la tarjeta actual según la posición del scroll
     this.indiceSlideActual = Math.round(contenedor.scrollLeft / anchoTarjeta);
   }
 
-  // ==========================================
-  // --- LLAMADAS A LA API ---
-  // ==========================================
-
-  // 1. CARGAR NOTICIAS DEL CARRUSEL
   cargarNoticias(idEmpresa: number) {
     const token = localStorage.getItem('token');
-    if (!token) return;
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
-
     this.http.get<any[]>(`http://localhost:8080/api/noticias/empresa/${idEmpresa}`, { headers }).subscribe({
-      next: (data) => {
-        this.noticias = data;
-      },
-      error: (err) => {
-        console.warn('Aviso: No se pudieron cargar las noticias.', err.message);
-      }
+      next: (data) => this.noticias = data,
+      error: () => console.warn('No se pudieron cargar las noticias.')
     });
   }
 
-  // 2. CARGAR VOZ DEL EMPLEADO
   cargarUltimaPublicacion(idEmpresa: number) {
     const token = localStorage.getItem('token');
-    if (!token) return;
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
-
     this.http.get<any[]>(`http://localhost:8080/api/voz-empleado/empresa/${idEmpresa}`, { headers }).subscribe({
       next: (publicaciones) => {
-        if (publicaciones && publicaciones.length > 0) {
-          this.ultimaPublicacion = publicaciones[0];
-        }
-      },
-      error: (err) => {
-        console.warn('Aviso al cargar la voz del empleado:', err.message);
+        if (publicaciones && publicaciones.length > 0) this.ultimaPublicacion = publicaciones[0];
       }
     });
   }
 
-  // 3. CARGAR EL PRÓXIMO TURNO
   cargarProximoTurno(idEmpleado: number) {
     const token = localStorage.getItem('token');
-    if (!token) return;
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
-
     this.http.get<any>(`http://localhost:8080/api/cuadrante/proximo/${idEmpleado}`, { headers }).subscribe({
       next: (turnoBackend) => {
         if (turnoBackend) {
@@ -139,31 +130,101 @@ export class InicioPage implements OnInit {
             horario: `${turnoBackend.horaInicio || '00:00'} - ${turnoBackend.horaFin || '00:00'}`
           };
         }
-      },
-      error: (err) => {
-        console.warn('Aviso: No se pudo cargar el próximo turno (o no hay turnos programados).', err.message);
       }
     });
   }
 
-  cerrarSesion() {
-    localStorage.clear();
-    if (document.activeElement) (document.activeElement as HTMLElement).blur();
-    this.router.navigate(['/home']);
+  // ==========================================
+  // --- LÓGICA DE FICHAJE (NUEVO) ---
+  // ==========================================
+  cargarEstadoFichaje() {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
+
+    this.http.get<any>(`http://localhost:8080/api/fichajes/estado/${this.idEmpleadoLogueado}`, { headers }).subscribe({
+      next: (res) => {
+        this.fichajesHoy = res.fichajes || [];
+        this.trabajando = res.trabajando;
+
+        if (this.trabajando && res.horaEntradaActual) {
+          this.horaEntradaActual = new Date(res.horaEntradaActual);
+          this.iniciarTemporizador();
+        } else {
+          this.detenerTemporizador();
+          this.horaEntradaActual = null;
+        }
+      },
+      error: (err) => console.error('Error cargando fichajes', err)
+    });
+  }
+
+  ficharEntrada() {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
+
+    this.http.post(`http://localhost:8080/api/fichajes/entrada/${this.idEmpleadoLogueado}`, {}, { headers }).subscribe({
+      next: () => {
+        this.mostrarToast('Entrada registrada con éxito', 'success');
+        this.cargarEstadoFichaje(); // Recargamos para ver el cronómetro
+      },
+      error: (err) => this.mostrarToast(err.error?.error || 'Error al fichar entrada', 'danger')
+    });
+  }
+
+  ficharSalida() {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
+
+    this.http.put(`http://localhost:8080/api/fichajes/salida/${this.idEmpleadoLogueado}`, {}, { headers }).subscribe({
+      next: () => {
+        this.mostrarToast('Salida registrada con éxito', 'success');
+        this.cargarEstadoFichaje(); // Recargamos para parar el cronómetro
+      },
+      error: (err) => this.mostrarToast(err.error?.error || 'Error al fichar salida', 'danger')
+    });
+  }
+
+  iniciarTemporizador() {
+    this.detenerTemporizador(); // Limpiamos si hubiera uno previo
+    this.actualizarCronometro(); // Llamada inmediata
+    this.timerInterval = setInterval(() => {
+      this.actualizarCronometro();
+    }, 1000); // Se actualiza cada segundo
+  }
+
+  detenerTemporizador() {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+    }
+  }
+
+  actualizarCronometro() {
+    if (!this.horaEntradaActual) return;
+    const ahora = new Date();
+    const difMs = ahora.getTime() - this.horaEntradaActual.getTime();
+
+    // Convertir milisegundos a HH:mm:ss
+    const horas = Math.floor(difMs / (1000 * 60 * 60));
+    const minutos = Math.floor((difMs % (1000 * 60 * 60)) / (1000 * 60));
+    const segundos = Math.floor((difMs % (1000 * 60)) / 1000);
+
+    const pad = (num: number) => num.toString().padStart(2, '0');
+    this.tiempoActualTrabajando = `${pad(horas)}:${pad(minutos)}:${pad(segundos)}`;
+  }
+
+  async mostrarToast(mensaje: string, color: string) {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: 3000,
+      color: color,
+      position: 'bottom'
+    });
+    toast.present();
   }
 
   // --- NAVEGACIÓN ---
-// --- NAVEGACIÓN ---
-  goCuadrante() {
-    // Vamos al cuadrante y le decimos que abra la pestaña de horario
-    this.router.navigate(['/cuadrante'], { queryParams: { tab: 'horario' } });
-  }
-
-  goSolicitudes() {
-    // Vamos al cuadrante, pero le decimos que auto-seleccione las ausencias
-    this.router.navigate(['/cuadrante'], { queryParams: { tab: 'ausencias' } });
-  }
-
+  goCuadrante() { this.router.navigate(['/cuadrante'], { queryParams: { tab: 'horario' } }); }
+  goSolicitudes() { this.router.navigate(['/cuadrante'], { queryParams: { tab: 'ausencias' } }); }
   goVozEmpleado() { this.router.navigate(['/voz-empleado']); }
   goTickets() { this.router.navigate(['/tickets']); }
   goPerfil() { this.router.navigate(['/perfil']); }
