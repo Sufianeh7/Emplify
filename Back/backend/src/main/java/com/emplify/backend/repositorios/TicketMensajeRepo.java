@@ -7,6 +7,7 @@ import java.util.List;
 
 @Repository
 public interface TicketMensajeRepo extends JpaRepository<TicketMensaje, Integer> {
-    // Busca todos los mensajes de un ticket específico ordenados por fecha
+
+    // Busca el historial completo de chat de un ticket, ordenado del más antiguo al más nuevo
     List<TicketMensaje> findByTicket_IdTicketOrderByFechaEnvioAsc(Integer idTicket);
 }

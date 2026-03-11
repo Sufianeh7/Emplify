@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface ComentarioRepo extends JpaRepository<Comentario, Integer> {
-    // Busca los comentarios de un post y los ordena por fecha
+
+    // Busca los comentarios de una publicación y los ordena cronológicamente
     List<Comentario> findByVozEmpleado_IdPublicacionOrderByFechaCreacionAsc(Integer idPublicacion);
 }

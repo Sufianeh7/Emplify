@@ -1,11 +1,15 @@
 package com.emplify.backend.modelos;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Entidad que gestiona las incidencias o peticiones de soporte a RRHH.
+ */
 @Entity
-@Table(name = "tickets_rrhh")
+@Table(name = "ticket")
 public class Ticket {
 
     @Id
@@ -13,30 +17,29 @@ public class Ticket {
     @Column(name = "id_ticket")
     private Integer idTicket;
 
-    @Column(nullable = false)
+    @Column(name = "titulo", nullable = false, length = 150)
     private String titulo;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(name = "descripcion", columnDefinition = "TEXT", nullable = false)
     private String descripcion;
 
-    @Column(nullable = false)
+    @Column(name = "estado", nullable = false, length = 50)
     private String estado; // "PENDIENTE", "EN PROCESO", "RESUELTO"
 
-    @Column(name = "fecha_creacion")
+    @Column(name = "fecha_creacion", nullable = false)
     private LocalDateTime fechaCreacion;
 
-    // Relación: Muchos tickets pertenecen a UN empleado
-    @ManyToOne
+    // LAZY: Protege la carga del empleado
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_empleado", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "manager", "empresa", "usuario"})
     private Empleado empleado;
 
-    // Añadir esto dentro de la clase Ticket.java
+    // LAZY: Carga diferida de mensajes.
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @OrderBy("fechaEnvio ASC")
+    @JsonIgnoreProperties("ticket")
     private List<TicketMensaje> mensajes;
-
-    // Y su respectivo Getter
-    public List<TicketMensaje> getMensajes() { return mensajes; }
 
     public Ticket() {}
 
@@ -58,4 +61,7 @@ public class Ticket {
 
     public Empleado getEmpleado() { return empleado; }
     public void setEmpleado(Empleado empleado) { this.empleado = empleado; }
+
+    public List<TicketMensaje> getMensajes() { return mensajes; }
+    public void setMensajes(List<TicketMensaje> mensajes) { this.mensajes = mensajes; }
 }

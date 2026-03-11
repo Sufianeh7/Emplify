@@ -7,9 +7,9 @@ import com.emplify.backend.repositorios.EmpleadoRepo;
 import com.emplify.backend.repositorios.TicketRepo;
 import com.emplify.backend.repositorios.TicketMensajeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-// IMPORTAMOS LA MAGIA DE WEBSOCKETS
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.security.Principal;
@@ -32,99 +32,114 @@ public class TicketControlador {
     @Autowired
     private TicketMensajeRepo mensajeRepo;
 
-    // Herramienta para emitir eventos en tiempo real
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    // 1. Obtener SOLO los tickets del usuario logueado
+    // Obtiene los tickets del usuario logueado
     @GetMapping("/mis-tickets")
     public ResponseEntity<?> obtenerMisTickets(Principal principal) {
-        Optional<Empleado> emp = empleadoRepo.findByUsuarioEmail(principal.getName());
+        Optional<Empleado> empOpt = empleadoRepo.findByUsuarioEmail(principal.getName());
 
-        if(emp.isPresent()) {
-            List<Ticket> misTickets = ticketRepo.findByEmpleado_IdEmpleadoOrderByFechaCreacionDesc(emp.get().getIdEmpleado());
+        if (empOpt.isPresent()) {
+            List<Ticket> misTickets = ticketRepo.findByEmpleado_IdEmpleadoOrderByFechaCreacionDesc(empOpt.get().getIdEmpleado());
             return ResponseEntity.ok(misTickets);
         }
-        return ResponseEntity.status(401).body("No autorizado");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"error\": \"No autorizado\"}");
     }
 
+    // Obtiene un ticket por ID
     @GetMapping("/{id}")
-    public ResponseEntity<Ticket> obtenerTicketPorId(@PathVariable Integer id) {
+    public ResponseEntity<?> obtenerTicketPorId(@PathVariable Integer id) {
         return ticketRepo.findById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    // 2. Crear un nuevo ticket
+    // Crea un nuevo ticket
     @PostMapping("/nuevo")
     public ResponseEntity<?> crearTicket(@RequestBody Ticket ticket, Principal principal) {
-        Optional<Empleado> emp = empleadoRepo.findByUsuarioEmail(principal.getName());
+        // Validaciones previas
+        if (ticket.getTitulo() == null || ticket.getTitulo().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("{\"error\": \"El título es obligatorio\"}");
+        }
+        if (ticket.getDescripcion() == null || ticket.getDescripcion().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("{\"error\": \"La descripción es obligatoria\"}");
+        }
 
-        if(emp.isPresent()) {
-            ticket.setEmpleado(emp.get());
+        Optional<Empleado> empOpt = empleadoRepo.findByUsuarioEmail(principal.getName());
+
+        if (empOpt.isPresent()) {
+            ticket.setEmpleado(empOpt.get());
             ticket.setFechaCreacion(LocalDateTime.now());
             ticket.setEstado("PENDIENTE");
 
-            return ResponseEntity.ok(ticketRepo.save(ticket));
+            Ticket guardado = ticketRepo.save(ticket);
+            return ResponseEntity.status(HttpStatus.CREATED).body(guardado);
         }
-        return ResponseEntity.status(401).body("No autorizado");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"error\": \"No autorizado\"}");
     }
 
-    // 3. Obtener TODOS los tickets DE MI EMPRESA (Vista RRHH)
+    // Obtiene todos los tickets de la empresa
     @GetMapping("/todos")
     public ResponseEntity<?> obtenerTodosLosTickets(Principal principal) {
         Optional<Empleado> rrhhOpt = empleadoRepo.findByUsuarioEmail(principal.getName());
 
-        if(rrhhOpt.isPresent()) {
+        if (rrhhOpt.isPresent()) {
             Integer idEmpresa = rrhhOpt.get().getEmpresa().getIdEmpresa();
             List<Ticket> ticketsEmpresa = ticketRepo.findByEmpleado_Empresa_IdEmpresaOrderByFechaCreacionDesc(idEmpresa);
             return ResponseEntity.ok(ticketsEmpresa);
         }
-        return ResponseEntity.status(401).body("{\"error\": \"No autorizado\"}");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"error\": \"No autorizado\"}");
     }
 
-    // 4. Enviar un mensaje al chat del ticket (¡AHORA CON WEBSOCKETS!)
+    // Chat WebSockets: Enviar mensaje a un ticket
     @PostMapping("/{id}/enviar-mensaje")
     public ResponseEntity<?> enviarMensaje(@PathVariable Integer id, @RequestBody Map<String, String> body, Principal principal) {
         Optional<Ticket> ticketOpt = ticketRepo.findById(id);
 
         if (ticketOpt.isPresent()) {
-            Empleado autor = empleadoRepo.findByUsuarioEmail(principal.getName()).orElse(null);
+            Optional<Empleado> autorOpt = empleadoRepo.findByUsuarioEmail(principal.getName());
 
-            if (autor == null) return ResponseEntity.status(401).build();
+            if (autorOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
+            if (!body.containsKey("contenido") || body.get("contenido").trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("{\"error\": \"El mensaje no puede estar vacío\"}");
+            }
 
             TicketMensaje nuevoMsg = new TicketMensaje();
             nuevoMsg.setContenido(body.get("contenido"));
             nuevoMsg.setTicket(ticketOpt.get());
-            nuevoMsg.setAutor(autor);
-            // Asegúrate de guardar la fecha para que el frontend la muestre bien
+            nuevoMsg.setAutor(autorOpt.get());
             nuevoMsg.setFechaEnvio(LocalDateTime.now());
 
             TicketMensaje mensajeGuardado = mensajeRepo.save(nuevoMsg);
 
-            // ==========================================
-            // MAGIA WEBSOCKET: Avisamos a los que estén en el chat
-            // ==========================================
+            // Emitimos al canal WebSocket
             messagingTemplate.convertAndSend("/topic/ticket/" + id, mensajeGuardado);
 
-            // Devolvemos el mensaje completo (no solo un string) para que el que lo envía
-            // también pueda pintarlo directamente en su pantalla con todos los datos.
-            return ResponseEntity.ok(mensajeGuardado);
+            return ResponseEntity.status(HttpStatus.CREATED).body(mensajeGuardado);
         }
-        return ResponseEntity.status(404).build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\": \"Ticket no encontrado\"}");
     }
 
-    // 5. Responder a un ticket / Cambiar estado
+    // Cambia el estado del ticket (RRHH)
     @PutMapping("/{id}/responder")
     public ResponseEntity<?> responderTicket(@PathVariable Integer id, @RequestBody Map<String, String> body) {
         Optional<Ticket> ticketOpt = ticketRepo.findById(id);
 
         if (ticketOpt.isPresent()) {
+            if (!body.containsKey("estado")) {
+                return ResponseEntity.badRequest().body("{\"error\": \"Se requiere el nuevo estado\"}");
+            }
+
             Ticket ticket = ticketOpt.get();
             ticket.setEstado(body.get("estado"));
             ticketRepo.save(ticket);
-            return ResponseEntity.ok("{\"mensaje\": \"Ticket actualizado con éxito\"}");
+
+            return ResponseEntity.ok("{\"mensaje\": \"Estado del ticket actualizado a " + body.get("estado") + "\"}");
         }
-        return ResponseEntity.status(404).body("{\"error\": \"Ticket no encontrado\"}");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\": \"Ticket no encontrado\"}");
     }
 }

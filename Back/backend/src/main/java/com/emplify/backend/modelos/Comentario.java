@@ -1,10 +1,14 @@
 package com.emplify.backend.modelos;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * Entidad que representa las respuestas de los empleados a las publicaciones del muro.
+ */
 @Entity
-@Table(name = "comentarios")
+@Table(name = "comentario")
 public class Comentario {
 
     @Id
@@ -12,20 +16,22 @@ public class Comentario {
     @Column(name = "id_comentario")
     private Integer idComentario;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(name = "contenido", columnDefinition = "TEXT", nullable = false)
     private String contenido;
 
-    @Column(name = "fecha_creacion")
+    @Column(name = "fecha_creacion", nullable = false)
     private LocalDateTime fechaCreacion;
 
-    // Relación: Muchos comentarios pertenecen a UNA publicación
-    @ManyToOne
+    // LAZY: Al cargar los comentarios, no carga el post entero una y otra vez
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_publicacion", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "empleado", "empresa", "contenido"})
     private VozEmpleado vozEmpleado;
 
-    // Relación: Muchos comentarios son escritos por UN empleado
-    @ManyToOne
+    // LAZY: Solo necesita saber quién lo escribió, sin cargar todo su historial laboral
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_empleado", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "manager", "empresa", "usuario"})
     private Empleado empleado;
 
     public Comentario() {}
