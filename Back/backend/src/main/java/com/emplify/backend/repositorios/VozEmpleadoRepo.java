@@ -7,6 +7,7 @@ import java.util.List;
 
 @Repository
 public interface VozEmpleadoRepo extends JpaRepository<VozEmpleado, Integer> {
-    // Busca publicaciones de la empresa y que sean visibles, ordenadas por fecha reciente
+
+    // Busca publicaciones activas de una empresa concreta, ordenadas cronológicamente
     List<VozEmpleado> findByEmpresa_IdEmpresaAndVisibleTrueOrderByFechaCreacionDesc(Integer idEmpresa);
 }

@@ -2,6 +2,9 @@ package com.emplify.backend.modelos;
 
 import jakarta.persistence.*;
 
+/**
+ * Entidad que define los motivos por los que un empleado puede solicitar una ausencia.
+ */
 @Entity
 @Table(name = "tipo_solicitud")
 public class TipoSolicitud {
@@ -11,13 +14,20 @@ public class TipoSolicitud {
     @Column(name = "id_tipo")
     private Integer idTipo;
 
-    @Column(name = "nombre", nullable = false)
+    // El nombre es obligatorio y único
+    @Column(name = "nombre", nullable = false, unique = true, length = 100)
     private String nombre; // Ej: "VACACIONES", "ASUNTOS_PROPIOS", "BAJA_MEDICA"
 
+    // Los días base por defecto
     @Column(name = "dias_anuales")
-    private Integer diasAnuales; // Los días base por defecto
+    private Integer diasAnuales;
 
-    public TipoSolicitud() {
+    public TipoSolicitud() {}
+
+    // Constructor
+    public TipoSolicitud(String nombre, Integer diasAnuales) {
+        this.nombre = nombre;
+        this.diasAnuales = diasAnuales;
     }
 
     // --- GETTERS Y SETTERS ---
