@@ -7,8 +7,9 @@ import com.emplify.backend.repositorios.EmpleadoRepo;
 import com.emplify.backend.repositorios.EmpresaRepo;
 import com.emplify.backend.repositorios.UsuarioRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder; // <-- AÑADIDO
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,19 +32,26 @@ public class AdminControlador {
     private UsuarioRepo usuarioRepo;
 
     @Autowired
-    private PasswordEncoder passwordEncoder; // <-- INYECTADO AQUÍ
+    private PasswordEncoder passwordEncoder;
 
     // ==========================================
     // GESTIÓN DE EMPRESAS
     // ==========================================
-
     @PostMapping("/empresas")
     public ResponseEntity<?> crearEmpresa(@RequestBody Empresa empresa) {
+        if (empresa.getNombre() == null || empresa.getNombre().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("{\"error\": \"El nombre de la empresa es obligatorio\"}");
+        }
+
+        if (empresaRepo.findByNombre(empresa.getNombre()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"error\": \"Ya existe una empresa con ese nombre\"}");
+        }
+
         try {
             Empresa nuevaEmpresa = empresaRepo.save(empresa);
-            return ResponseEntity.ok(nuevaEmpresa);
+            return ResponseEntity.status(HttpStatus.CREATED).body(nuevaEmpresa);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("{\"error\": \"Error al crear la empresa. ¿Quizás el nombre ya existe?\"}");
+            return ResponseEntity.internalServerError().body("{\"error\": \"Error interno al crear la empresa\"}");
         }
     }
 
@@ -55,81 +63,85 @@ public class AdminControlador {
     // ==========================================
     // GESTIÓN DE USUARIOS/EMPLEADOS
     // ==========================================
-
-    @Transactional // Usamos transaccional porque guardamos en dos tablas distintas
+    @Transactional // Asegura que si falla el Empleado, el Usuario tampoco se guarde
     @PostMapping("/alta-empleado")
     public ResponseEntity<?> darDeAltaEmpleado(@RequestBody Map<String, Object> datos) {
         try {
-            // 1. Extraemos y validamos la Empresa
+            // Validaciones previas de seguridad
+            if (!datos.containsKey("idEmpresa") || !datos.containsKey("email") || !datos.containsKey("password")) {
+                return ResponseEntity.badRequest().body("{\"error\": \"Faltan datos obligatorios (Empresa, Email o Password)\"}");
+            }
+
+            String email = datos.get("email").toString();
+            if (usuarioRepo.existsByEmail(email)) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"error\": \"El email ya está registrado en el sistema\"}");
+            }
+
             Integer idEmpresa = Integer.parseInt(datos.get("idEmpresa").toString());
             Optional<Empresa> empresaOpt = empresaRepo.findById(idEmpresa);
+
             if (empresaOpt.isEmpty()) {
                 return ResponseEntity.badRequest().body("{\"error\": \"La empresa especificada no existe\"}");
             }
 
-            // 2. Creamos el Usuario (Credenciales)
+            // Crea el usuario (Credenciales)
             Usuario nuevoUsuario = new Usuario();
-            nuevoUsuario.setNombre((String) datos.get("nombre"));
-            nuevoUsuario.setEmail((String) datos.get("email"));
-            nuevoUsuario.setRol((String) datos.get("rol")); // Ej: "EMPLEADO", "RRHH"
+            nuevoUsuario.setNombre((String) datos.getOrDefault("nombre", ""));
+            nuevoUsuario.setEmail(email);
+            nuevoUsuario.setRol((String) datos.getOrDefault("rol", "EMPLEADO"));
             nuevoUsuario.setActivo(true);
 
-            // ---> ENCRIPTACIÓN DE CONTRASEÑA APLICADA AQUÍ <---
+            // Encripta la contraseña de forma segura
             String rawPassword = (String) datos.get("password");
             nuevoUsuario.setPassword(passwordEncoder.encode(rawPassword));
 
             usuarioRepo.save(nuevoUsuario);
 
-            // 3. Creamos el Empleado y lo vinculamos al Usuario y a la Empresa
+            // Crea el empleado y lo vincula a una empresa
             Empleado nuevoEmpleado = new Empleado();
             nuevoEmpleado.setUsuario(nuevoUsuario);
             nuevoEmpleado.setEmpresa(empresaOpt.get());
-            nuevoEmpleado.setDepartamento((String) datos.get("departamento"));
-            nuevoEmpleado.setPuesto((String) datos.get("puesto"));
+            nuevoEmpleado.setDepartamento((String) datos.getOrDefault("departamento", ""));
+            nuevoEmpleado.setPuesto((String) datos.getOrDefault("puesto", ""));
 
-            // Valores por defecto (ya los tienes en tu modelo, pero los forzamos por si acaso)
+            // Días base por defecto
             nuevoEmpleado.setVacacionesDisponibles(22);
             nuevoEmpleado.setAsuntosPropiosDisponibles(6);
 
-            // 4. (Opcional) Asignar Mánager si viene en la petición
-            if (datos.get("idManager") != null) {
-                Integer idManager = Integer.parseInt(datos.get("idManager").toString());
-                empleadoRepo.findById(idManager).ifPresent(nuevoEmpleado::setManager);
+            // Asigna un mánager si viene en la petición
+            if (datos.containsKey("idManager") && datos.get("idManager") != null) {
+                try {
+                    Integer idManager = Integer.parseInt(datos.get("idManager").toString());
+                    empleadoRepo.findById(idManager).ifPresent(nuevoEmpleado::setManager);
+                } catch (NumberFormatException ignored) {
+                    // Si mandan un ID inválido, lo ignoramos y se queda sin mánager
+                }
             }
 
             empleadoRepo.save(nuevoEmpleado);
 
-            return ResponseEntity.ok("{\"mensaje\": \"Empleado creado y asignado a la empresa correctamente\"}");
+            return ResponseEntity.status(HttpStatus.CREATED).body("{\"mensaje\": \"Empleado creado y asignado a la empresa correctamente\"}");
 
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body("{\"error\": \"Error al dar de alta al empleado\"}");
+            // Quitamos el e.printStackTrace() para no ensuciar logs de producción
+            return ResponseEntity.internalServerError().body("{\"error\": \"Error grave al dar de alta al empleado\"}");
         }
     }
 
     // ==========================================
-    // NUEVO: LISTADO GLOBAL DE EMPLEADOS
+    // LISTADOS Y DASHBOARD
     // ==========================================
     @GetMapping("/empleados")
     public ResponseEntity<List<Empleado>> obtenerTodosLosEmpleados() {
-        // En un SaaS real podríamos paginar esto, pero para empezar findAll() está perfecto
-        List<Empleado> todosLosEmpleados = empleadoRepo.findAll();
-        return ResponseEntity.ok(todosLosEmpleados);
+        return ResponseEntity.ok(empleadoRepo.findAll());
     }
 
-    // ==========================================
-    // NUEVO: ESTADÍSTICAS PARA EL DASHBOARD
-    // ==========================================
     @GetMapping("/stats")
     public ResponseEntity<?> obtenerEstadisticas() {
         try {
-            long totalEmpresas = empresaRepo.count();
-            long totalEmpleados = empleadoRepo.count();
-            // Si tienes un ticketRepo, podrías contar los tickets también. De momento mandamos estos dos.
-
             Map<String, Object> stats = Map.of(
-                    "totalEmpresas", totalEmpresas,
-                    "totalEmpleados", totalEmpleados
+                    "totalEmpresas", empresaRepo.count(),
+                    "totalEmpleados", empleadoRepo.count()
             );
 
             return ResponseEntity.ok(stats);
