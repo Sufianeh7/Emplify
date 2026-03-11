@@ -3,10 +3,9 @@
 </ion-header>
 
 <ion-content class="app-background">
-
   <div class="dashboard-container">
 
-    <div class="flat-card profile-link-card ion-activatable ripple-parent" (click)="goTo('/perfil')">
+    <div class="flat-card profile-link-card ion-activatable ripple-parent" (click)="goPerfil()">
       <div class="profile-info-wrapper">
         <div class="avatar-mini">
           <img src="https://ionicframework.com/docs/img/demos/avatar.svg" alt="Avatar" />
@@ -22,28 +21,26 @@
     </div>
 
     <div class="menu-card">
-
-      <div class="menu-item ion-activatable ripple-parent" (click)="goToAusencias()">
+      <div class="menu-item ion-activatable ripple-parent" (click)="goAusencias()">
         <ion-icon name="airplane-outline" class="item-icon" style="color: #0071ad;"></ion-icon>
         <span>Tiempo libre y permisos</span>
         <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
         <ion-ripple-effect></ion-ripple-effect>
       </div>
 
-      <div class="menu-item ion-activatable ripple-parent" (click)="goTo('/voz-empleado')">
+      <div class="menu-item ion-activatable ripple-parent" (click)="goVozEmpleado()">
         <ion-icon name="megaphone-outline" class="item-icon" style="color: #e67e22;"></ion-icon>
         <span>Voz del Empleado</span>
         <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
         <ion-ripple-effect></ion-ripple-effect>
       </div>
 
-      <div class="menu-item ion-activatable ripple-parent" (click)="goTo('/tickets')">
+      <div class="menu-item ion-activatable ripple-parent" (click)="goTickets()">
         <ion-icon name="chatbubbles-outline" class="item-icon" style="color: #27ae60;"></ion-icon>
         <span>Ayuda y asistencia (Tickets)</span>
         <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
         <ion-ripple-effect></ion-ripple-effect>
       </div>
-
     </div>
 
     <ng-container *ngIf="esRRHH || esManager || esAdmin">
@@ -51,49 +48,49 @@
 
       <div class="menu-card admin-card">
 
-        <div class="menu-item ion-activatable ripple-parent" *ngIf="esManager || esAdmin" (click)="goTo('/gestion-equipo')">
+        <div class="menu-item ion-activatable ripple-parent" *ngIf="esManager || esAdmin" (click)="goGestionEquipo()">
           <ion-icon name="briefcase-outline" class="item-icon"></ion-icon>
           <span>Mi Equipo</span>
           <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
           <ion-ripple-effect></ion-ripple-effect>
         </div>
 
-        <div class="menu-item ion-activatable ripple-parent" *ngIf="esRRHH || esAdmin" (click)="goTo('/gestion-empleados')">
+        <div class="menu-item ion-activatable ripple-parent" *ngIf="esRRHH || esAdmin" (click)="goGestionEmpleados()">
           <ion-icon name="people-outline" class="item-icon"></ion-icon>
           <span>Gestión de Empleados</span>
           <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
           <ion-ripple-effect></ion-ripple-effect>
         </div>
 
-        <div class="menu-item ion-activatable ripple-parent" *ngIf="esRRHH || esAdmin" (click)="goTo('/gestion-noticias')">
+        <div class="menu-item ion-activatable ripple-parent" *ngIf="esRRHH || esAdmin" (click)="goGestionNoticias()">
           <ion-icon name="megaphone-outline" class="item-icon"></ion-icon>
           <span>Comunicación Interna</span>
           <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
           <ion-ripple-effect></ion-ripple-effect>
         </div>
 
-        <div class="menu-item ion-activatable ripple-parent" *ngIf="esRRHH || esAdmin" (click)="goTo('/control-fichajes')">
+        <div class="menu-item ion-activatable ripple-parent" *ngIf="esRRHH || esAdmin" (click)="goControlFichajes()">
           <ion-icon name="time-outline" class="item-icon"></ion-icon>
           <span>Control de Fichajes</span>
           <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
           <ion-ripple-effect></ion-ripple-effect>
         </div>
 
-        <div class="menu-item ion-activatable ripple-parent" *ngIf="esRRHH || esAdmin" (click)="goTo('/soporte-tickets')">
+        <div class="menu-item ion-activatable ripple-parent" *ngIf="esRRHH || esAdmin" (click)="goSoporteTickets()">
           <ion-icon name="headset-outline" class="item-icon"></ion-icon>
           <span>Bandeja de Soporte</span>
           <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
           <ion-ripple-effect></ion-ripple-effect>
         </div>
 
-        <div class="menu-item ion-activatable ripple-parent" *ngIf="esManager || esRRHH || esAdmin" (click)="goTo('/cuadrantes')">
+        <div class="menu-item ion-activatable ripple-parent" *ngIf="esManager || esRRHH || esAdmin" (click)="goGestionCuadrantes()">
           <ion-icon name="calendar-outline" class="item-icon"></ion-icon>
           <span>Gestión de Cuadrantes</span>
           <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
           <ion-ripple-effect></ion-ripple-effect>
         </div>
 
-        <div class="menu-item ion-activatable ripple-parent" *ngIf="esAdmin" (click)="goTo('/admin')">
+        <div class="menu-item ion-activatable ripple-parent" *ngIf="esAdmin" (click)="goAdmin()">
           <ion-icon name="shield-checkmark-outline" class="item-icon"></ion-icon>
           <span>Panel de Administración</span>
           <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
@@ -104,5 +101,4 @@
     </ng-container>
 
   </div>
-
 </ion-content>

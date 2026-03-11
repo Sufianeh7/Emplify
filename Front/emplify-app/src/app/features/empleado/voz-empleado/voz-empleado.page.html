@@ -34,17 +34,18 @@
         <p>{{ pub.contenido }}</p>
       </div>
 
-      <div class="post-actions">
-        <button class="btn-comentarios" (click)="toggleComentarios(pub)">
+      <div class="post-actions ion-activatable ripple-parent" (click)="toggleComentarios(pub)">
+        <span class="btn-comentarios">
           <ion-icon name="chatbubble-outline"></ion-icon>
-          {{ pub.mostrarComentarios ? 'Ocultar hilos' : 'Ver / Escribir comentarios' }}
-        </button>
+          {{ pub.mostrarComentarios ? 'Ocultar hilo de comentarios' : 'Ver / Escribir comentarios' }}
+        </span>
+        <ion-ripple-effect></ion-ripple-effect>
       </div>
 
       <div class="comments-section" *ngIf="pub.mostrarComentarios">
 
         <div class="comments-list">
-          <p *ngIf="pub.comentarios.length === 0" class="no-comments">Aún no hay respuestas.</p>
+          <p *ngIf="pub.comentarios.length === 0" class="no-comments">Aún no hay respuestas. ¡Rompe el hielo!</p>
 
           <div class="comment-bubble" *ngFor="let com of pub.comentarios">
             <span class="comment-author">{{ com.empleado?.usuario?.nombre || 'Usuario' }}</span>
@@ -55,8 +56,10 @@
 
         <div class="comment-input-box">
           <ion-input [(ngModel)]="pub.nuevoTexto" placeholder="Escribe una respuesta..."></ion-input>
-          <ion-button fill="clear" (click)="enviarComentario(pub)" [disabled]="!pub.nuevoTexto">
-            <ion-icon name="send-outline"></ion-icon>
+
+          <ion-button fill="clear" (click)="enviarComentario(pub)" [disabled]="!pub.nuevoTexto || pub.cargandoComentario">
+            <ion-spinner name="dots" *ngIf="pub.cargandoComentario"></ion-spinner>
+            <ion-icon name="send-outline" *ngIf="!pub.cargandoComentario"></ion-icon>
           </ion-button>
         </div>
 
@@ -85,7 +88,6 @@
       </ion-header>
 
       <ion-content class="app-background ion-padding">
-
         <div class="form-container">
           <ion-item lines="none" class="form-item">
             <ion-input label="Asunto o Título" label-placement="floating" [(ngModel)]="nuevoTitulo" placeholder="Ej: Sugerencia comedor"></ion-input>
@@ -100,7 +102,6 @@
           <ion-icon slot="start" name="megaphone-outline"></ion-icon>
           Publicar en el muro
         </ion-button>
-
       </ion-content>
     </ng-template>
   </ion-modal>

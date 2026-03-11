@@ -8,41 +8,48 @@
     <div class="form-wrapper">
       <h2 class="form-title">Iniciar sesión</h2>
 
-      <ion-item lines="none" class="custom-input">
-        <ion-label position="stacked">Email</ion-label>
-        <ion-input
-          type="text"
-          placeholder="ejemplo@empresa.com"
-          [(ngModel)]="usuario"
-        ></ion-input>
-      </ion-item>
+      <form (ngSubmit)="login()">
 
-      <ion-item lines="none" class="custom-input">
-        <ion-label position="stacked">Contraseña</ion-label>
-        <ion-input
-          [type]="mostrarPassword ? 'text' : 'password'"
-          placeholder="••••••••"
-          [(ngModel)]="password"
-        >
-        </ion-input>
-        <ion-icon
-          slot="end"
-          [name]="mostrarPassword ? 'eye-off-outline' : 'eye-outline'"
-          class="eye-icon"
-          (click)="togglePassword()"
-        >
-        </ion-icon>
-      </ion-item>
+        <ion-item lines="none" class="custom-input">
+          <ion-label position="stacked">Email</ion-label>
+          <ion-input
+            type="email"
+            placeholder="ejemplo@empresa.com"
+            [(ngModel)]="usuario"
+            name="usuario"
+            required
+          ></ion-input>
+        </ion-item>
 
-      <ion-button
-        expand="block"
-        class="login-btn"
-        (click)="login()"
-        [disabled]="cargando"
-      >
-        <ion-spinner name="crescent" *ngIf="cargando"></ion-spinner>
-        <span *ngIf="!cargando">Entrar</span>
-      </ion-button>
+        <ion-item lines="none" class="custom-input">
+          <ion-label position="stacked">Contraseña</ion-label>
+          <ion-input
+            [type]="mostrarPassword ? 'text' : 'password'"
+            placeholder="••••••••"
+            [(ngModel)]="password"
+            name="password"
+            required
+          ></ion-input>
+
+          <ion-icon
+            slot="end"
+            [name]="mostrarPassword ? 'eye-off-outline' : 'eye-outline'"
+            class="eye-icon"
+            (click)="togglePassword()"
+          ></ion-icon>
+        </ion-item>
+
+        <ion-button
+          type="submit"
+          expand="block"
+          class="login-btn"
+          [disabled]="cargando"
+        >
+          <ion-spinner name="crescent" *ngIf="cargando"></ion-spinner>
+          <span *ngIf="!cargando">Entrar</span>
+        </ion-button>
+
+      </form>
     </div>
   </div>
 </ion-content>

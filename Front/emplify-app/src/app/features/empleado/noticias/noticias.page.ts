@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -13,17 +13,20 @@ import { chevronDownOutline, chevronUpOutline, newspaperOutline } from 'ionicons
   standalone: true,
   imports: [IonicModule, CommonModule, HeaderComponent]
 })
-export class NoticiasPage implements OnInit {
+export class NoticiasPage {
+
   noticias: any[] = [];
 
   constructor(private http: HttpClient) {
     addIcons({ chevronDownOutline, chevronUpOutline, newspaperOutline });
   }
 
-  ngOnInit() {
+  // Se ejecuta SIEMPRE que se entra en la vista (refresca los datos)
+  ionViewWillEnter() {
     this.cargarNoticias();
   }
 
+  // Descarga las noticias de la empresa logueada
   cargarNoticias() {
     const empleado = JSON.parse(localStorage.getItem('empleadoLogueado') || '{}');
     const idEmpresa = empleado?.empresa?.idEmpresa;
@@ -31,14 +34,19 @@ export class NoticiasPage implements OnInit {
 
     if (idEmpresa && token) {
       const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
+
       this.http.get<any[]>(`http://localhost:8080/api/noticias/empresa/${idEmpresa}`, { headers })
-        .subscribe(res => {
-          // Añadimos una propiedad extra 'expandida' para controlar la vista en el HTML
-          this.noticias = res.map(n => ({ ...n, expandida: false }));
+        .subscribe({
+          next: (res) => {
+            // Añadimos 'expandida' en false por defecto para controlar el acordeón del HTML
+            this.noticias = res.map(n => ({ ...n, expandida: false }));
+          },
+          error: (err) => console.error('Error al cargar noticias corporativas:', err)
         });
     }
   }
 
+  // Alterna el estado de abrir/cerrar de una noticia concreta
   toggleNoticia(noticia: any) {
     noticia.expandida = !noticia.expandida;
   }

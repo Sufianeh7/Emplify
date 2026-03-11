@@ -9,12 +9,17 @@
   </div>
 
   <div class="dashboard-container">
+
     <div *ngIf="noticias.length === 0" class="flat-card full text-center" style="padding: 40px 20px;">
       <ion-icon name="newspaper-outline" style="font-size: 3rem; color: #d5d9d9;"></ion-icon>
       <p style="color: #888c8c; font-style: italic; margin-top: 10px;">No hay noticias publicadas.</p>
     </div>
 
-    <div class="flat-card full article-card" *ngFor="let noticia of noticias" (click)="toggleNoticia(noticia)">
+    <div
+      class="flat-card full article-card ion-activatable ripple-parent"
+      *ngFor="let noticia of noticias"
+      (click)="toggleNoticia(noticia)"
+    >
 
       <div class="article-image" *ngIf="noticia.imagenUrl" [ngStyle]="{'background-image': 'url(' + noticia.imagenUrl + ')'}"></div>
 
@@ -32,6 +37,8 @@
         <p class="full-text">{{ noticia.contenido || 'Sin contenido adicional.' }}</p>
       </div>
 
+      <ion-ripple-effect></ion-ripple-effect>
     </div>
+
   </div>
 </ion-content>

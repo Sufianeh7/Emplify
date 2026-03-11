@@ -56,7 +56,7 @@
   }
 }
 
-/* --- LISTAS DE MENÚ (Estilo Amazon) --- */
+/* --- LISTAS DE MENÚ --- */
 .menu-card {
   background: #ffffff;
   border: 1px solid #d5d9d9;
@@ -105,29 +105,6 @@
 
 .admin-card {
   .item-icon {
-    color: #565959; /* Un color más sobrio para herramientas de gestión */
-  }
-}
-
-/* --- BARRA DE PESTAÑAS (TABS) --- */
-.custom-footer {
-  background: #ffffff;
-  border-top: 1px solid rgba(0,0,0,0.05);
-}
-
-.custom-tab-bar {
-  --background: #ffffff;
-  --border: none;
-  padding-bottom: env(safe-area-inset-bottom);
-
-  ion-tab-button {
     color: #565959;
-
-    ion-icon { font-size: 1.4rem; margin-bottom: 4px; }
-    ion-label { font-size: 0.7rem; font-weight: 600; }
-
-    &.tab-active {
-      color: #0071ad;
-    }
   }
 }

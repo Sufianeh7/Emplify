@@ -6,10 +6,9 @@ import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { addIcons } from 'ionicons';
 import {
-  mailOutline, businessOutline, briefcaseOutline, logOutOutline,
-  lockClosedOutline, closeOutline, personCircleOutline, locationOutline,
-  calendarOutline, idCardOutline, eyeOffOutline,
-  homeOutline, menuOutline
+  mailOutline, briefcaseOutline, logOutOutline, lockClosedOutline,
+  closeOutline, personCircleOutline, locationOutline, calendarOutline,
+  eyeOffOutline
 } from 'ionicons/icons';
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
 
@@ -24,6 +23,7 @@ export class PerfilPage {
 
   empleado: any = null;
 
+  // Modelo del formulario de contraseña
   passActual: string = '';
   passNueva: string = '';
   passConfirmar: string = '';
@@ -34,51 +34,49 @@ export class PerfilPage {
     private toastController: ToastController
   ) {
     addIcons({
-      mailOutline, businessOutline, briefcaseOutline, logOutOutline,
-      lockClosedOutline, closeOutline, personCircleOutline, locationOutline,
-      calendarOutline, idCardOutline, eyeOffOutline,
-      homeOutline, menuOutline
+      mailOutline, briefcaseOutline, logOutOutline, lockClosedOutline,
+      closeOutline, personCircleOutline, locationOutline, calendarOutline,
+      eyeOffOutline
     });
   }
 
+  // Se ejecuta SIEMPRE que entramos a la vista
   ionViewWillEnter() {
     this.cargarDatosPerfil();
   }
 
-  // --- NUEVO: Traemos los datos frescos de la BBDD ---
+  // Trae la información más reciente de la BBDD (Mánager actual, departamento...)
   cargarDatosPerfil() {
-    // 1. Cargamos rápido del localStorage para que no se vea la pantalla vacía de golpe
+    // 1. Cargamos rápido del localStorage para pintar la vista al instante
     const datosLocal = localStorage.getItem('empleadoLogueado');
     if (datosLocal) {
       this.empleado = JSON.parse(datosLocal);
     }
 
-    // 2. Llamamos a la BD para traer la info actualizada (Manager, departamento, etc.)
+    // 2. Hacemos la petición para actualizar los datos
     const token = localStorage.getItem('token');
     if (token) {
       const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
       this.http.get('http://localhost:8080/api/empleados/perfil', { headers })
         .subscribe({
           next: (res: any) => {
-            this.empleado = res; // Sobrescribimos con los datos frescos
-            // Opcional: Actualizamos el localStorage por si va a otras pantallas
-            localStorage.setItem('empleadoLogueado', JSON.stringify(res));
+            this.empleado = res;
+            localStorage.setItem('empleadoLogueado', JSON.stringify(res)); // Mantenemos el local sincronizado
           },
-          error: (err) => console.error('Error al cargar datos del perfil desde BD', err)
+          error: (err) => console.error('Error al actualizar datos del perfil desde BD', err)
         });
     }
   }
 
-  goTo(ruta: string) {
-    this.router.navigate([ruta]);
-  }
-
+  // Método de cierre de sesión seguro
   cerrarSesion() {
     localStorage.clear();
+    // Forzamos que se quite el foco del botón si estamos en móvil
     if (document.activeElement) (document.activeElement as HTMLElement).blur();
     this.router.navigate(['/home']);
   }
 
+  // Utilidad de notificaciones
   async mostrarMensaje(mensaje: string, color: string) {
     const toast = await this.toastController.create({
       message: mensaje,
@@ -89,6 +87,7 @@ export class PerfilPage {
     toast.present();
   }
 
+  // Proceso de cambio de credenciales
   cambiarPassword(modal: any) {
     if (this.passNueva !== this.passConfirmar) {
       this.mostrarMensaje('Las contraseñas nuevas no coinciden', 'danger');
@@ -108,13 +107,16 @@ export class PerfilPage {
 
     this.http.put('http://localhost:8080/api/usuarios/cambiar-password', body, { headers })
       .subscribe({
-        next: (res: any) => {
+        next: () => {
           this.mostrarMensaje('¡Contraseña actualizada con éxito!', 'success');
-          this.passActual = ''; this.passNueva = ''; this.passConfirmar = '';
+          // Reseteamos el formulario y cerramos el modal
+          this.passActual = '';
+          this.passNueva = '';
+          this.passConfirmar = '';
           modal.dismiss();
         },
         error: (err) => {
-          this.mostrarMensaje(err.error.error || 'Error al cambiar la contraseña', 'danger');
+          this.mostrarMensaje(err.error?.error || 'Error al cambiar la contraseña', 'danger');
         }
       });
   }

@@ -1,19 +1,16 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
-import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { addIcons } from 'ionicons';
 import {
-  addOutline, chatbubblesOutline, closeOutline, sendOutline,
-  homeOutline, calendarOutline, menuOutline, chevronForwardOutline,
-  alertCircleOutline, checkmarkCircleOutline
+  addOutline, chatbubblesOutline, closeOutline, sendOutline, chevronForwardOutline
 } from 'ionicons/icons';
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
 
-// Librerías WebSocket
+// WebSockets
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
@@ -24,57 +21,51 @@ import SockJS from 'sockjs-client';
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule, HeaderComponent]
 })
-export class TicketsPage implements OnInit, OnDestroy {
+export class TicketsPage implements OnDestroy {
 
   @ViewChild('contentChat') contentChat: any;
 
   tickets: any[] = [];
   filtroActual: string = 'abiertos';
 
-  // Variables para CREAR ticket
+  // Creación de Ticket
   nuevoTitulo: string = '';
   nuevaDescripcion: string = '';
 
-  // Variables para el CHAT
+  // Control del Chat
   ticketSeleccionado: any = null;
   isChatOpen = false;
   mensajesChat: any[] = [];
   nuevoMensaje: string = '';
 
   idEmpleado: number = 0;
-
-  // Cliente WebSocket
   private stompClient: Client | null = null;
 
   constructor(
     private http: HttpClient,
-    private router: Router,
     private toastController: ToastController
   ) {
     addIcons({
-      addOutline, chatbubblesOutline, closeOutline, sendOutline,
-      homeOutline, calendarOutline, menuOutline, chevronForwardOutline,
-      alertCircleOutline, checkmarkCircleOutline
+      addOutline, chatbubblesOutline, closeOutline, sendOutline, chevronForwardOutline
     });
   }
 
-  ngOnInit() {
+  // Refresca la vista siempre que entramos
+  ionViewWillEnter() {
     const datos = localStorage.getItem('empleadoLogueado');
     if (datos) {
       const empleado = JSON.parse(datos);
       this.idEmpleado = empleado.idEmpleado;
     }
-  }
-
-  ionViewWillEnter() {
     this.cargarTickets();
   }
 
+  // Al salir de la vista, destruimos el socket
   ngOnDestroy() {
     this.desconectarWebSocket();
   }
 
-  // --- 1. CARGA DE TICKETS ---
+  // --- 1. LÓGICA DE TICKETS ---
   cargarTickets() {
     const token = localStorage.getItem('token');
     if (!token) return;
@@ -87,14 +78,13 @@ export class TicketsPage implements OnInit, OnDestroy {
       });
   }
 
-  // NUEVA FUNCIÓN: Comprueba si un ticket está cerrado o resuelto
   esTicketCerrado(estado: string): boolean {
     if (!estado) return false;
     const est = estado.toUpperCase();
     return est === 'CERRADO' || est === 'RESUELTO';
   }
 
-  // ACTUALIZADO PARA USAR LA NUEVA FUNCIÓN
+  // Getter dinámico para los segmentos del HTML
   get ticketsFiltrados() {
     if (this.filtroActual === 'abiertos') {
       return this.tickets.filter(t => !this.esTicketCerrado(t.estado));
@@ -103,7 +93,6 @@ export class TicketsPage implements OnInit, OnDestroy {
     }
   }
 
-  // --- 2. CREACIÓN DE TICKETS ---
   crearTicket(modal: any) {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
@@ -129,14 +118,15 @@ export class TicketsPage implements OnInit, OnDestroy {
       });
   }
 
-  // --- 3. LÓGICA DEL CHAT Y WEBSOCKETS ---
+  // --- 2. LÓGICA DEL CHAT Y WEBSOCKETS ---
   abrirChat(ticket: any) {
     this.ticketSeleccionado = ticket;
     this.isChatOpen = true;
 
-    // Cargar historial
+    // Cargar historial previo de la BBDD
     this.mensajesChat = ticket.mensajes || [];
 
+    // Conectar el socket y hacer scroll automático
     this.conectarWebSocket(ticket.idTicket);
     setTimeout(() => this.scrollToBottom(), 300);
   }
@@ -145,17 +135,18 @@ export class TicketsPage implements OnInit, OnDestroy {
     this.isChatOpen = false;
     this.ticketSeleccionado = null;
     this.desconectarWebSocket();
-    this.cargarTickets(); // Recargamos para actualizar la vista previa en la lista
+    this.cargarTickets(); // Recargamos para actualizar estado en el listado
   }
 
   conectarWebSocket(idTicket: number) {
     this.stompClient = new Client({
       webSocketFactory: () => new SockJS('http://localhost:8080/ws-endpoint'),
-      reconnectDelay: 5000,
+      reconnectDelay: 5000, // Reintento si se cae la red
     });
 
-    this.stompClient.onConnect = (frame) => {
-      console.log('Conectado al Ticket: ' + idTicket);
+    this.stompClient.onConnect = () => {
+      console.log('Conectado al canal del Ticket: ' + idTicket);
+
       this.stompClient?.subscribe(`/topic/ticket/${idTicket}`, (mensaje) => {
         const mensajeRecibido = JSON.parse(mensaje.body);
         this.mensajesChat.push(mensajeRecibido);
@@ -169,6 +160,7 @@ export class TicketsPage implements OnInit, OnDestroy {
   desconectarWebSocket() {
     if (this.stompClient !== null) {
       this.stompClient.deactivate();
+      console.log('Desconectado del WebSocket');
     }
   }
 
@@ -186,9 +178,9 @@ export class TicketsPage implements OnInit, OnDestroy {
     this.http.post(`http://localhost:8080/api/tickets/${this.ticketSeleccionado.idTicket}/enviar-mensaje`, body, { headers })
       .subscribe({
         next: () => {
-          this.nuevoMensaje = ''; // El mensaje llegará por WebSocket
+          this.nuevoMensaje = ''; // Limpiamos la caja. El mensaje se pintará cuando el WebSocket avise.
         },
-        error: (err) => console.error('Error enviando', err)
+        error: (err) => console.error('Error enviando mensaje', err)
       });
   }
 
@@ -198,17 +190,8 @@ export class TicketsPage implements OnInit, OnDestroy {
     }
   }
 
-  goTo(ruta: string) {
-    this.router.navigate([ruta]);
-  }
-
   async mostrarToast(mensaje: string, color: string) {
-    const toast = await this.toastController.create({
-      message: mensaje,
-      duration: 2000,
-      color: color,
-      position: 'bottom'
-    });
+    const toast = await this.toastController.create({ message: mensaje, duration: 2000, color, position: 'bottom' });
     toast.present();
   }
 }

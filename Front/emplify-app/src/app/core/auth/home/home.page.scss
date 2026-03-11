@@ -1,11 +1,11 @@
 .login-content {
-  --background: #f4f6f9; /* Fondo gris muy clarito para que la tarjeta destaque */
+  --background: #f4f6f9;
 }
 
 .login-container {
-  display: block; /* Quitamos el flex para evitar el salto */
+  display: block;
   padding: 0 20px;
-  margin-top: 15vh; /* Lo empujamos hacia abajo un 15% del tamaño de la pantalla */
+  margin-top: 15vh;
 }
 
 /* --- LOGO --- */
@@ -35,7 +35,7 @@
   background: #ffffff;
   padding: 30px 20px;
   border-radius: 20px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04); // Sombra súper suave
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
   border: 1px solid rgba(0,0,0,0.02);
 
   .form-title {
@@ -57,7 +57,6 @@
   border: 1px solid transparent;
   transition: all 0.3s ease;
 
-  /* Borde azul cuando el usuario está escribiendo */
   &:focus-within {
     border: 1px solid #3880ff;
     --background: #ffffff;
@@ -89,22 +88,7 @@
   }
 }
 
-/* --- ENLACES Y BOTONES --- */
-.options-row {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 25px;
-  margin-top: 5px;
-
-  .forgot-link {
-    color: #3880ff;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
-  }
-}
-
+/* --- BOTÓN --- */
 .login-btn {
   --background: #3880ff;
   --border-radius: 12px;
@@ -113,5 +97,5 @@
   font-weight: 700;
   font-size: 1.1rem;
   margin: 0;
-  text-transform: none; // Quita las mayúsculas automáticas
+  text-transform: none;
 }

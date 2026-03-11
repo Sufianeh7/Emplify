@@ -3,13 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
 
 import { addIcons } from 'ionicons';
 import {
-  sendOutline, calendarOutline, documentTextOutline, airplaneOutline,
-  medicalOutline, homeOutline, closeOutline, checkmarkCircleOutline,
-  timeOutline, closeCircleOutline
+  sendOutline, calendarOutline, documentTextOutline,
+  closeOutline, checkmarkCircleOutline, timeOutline,
+  closeCircleOutline, chatboxEllipsesOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -20,54 +19,54 @@ import {
   imports: [IonicModule, CommonModule, FormsModule],
 })
 export class SolicitudesPage implements OnInit {
+
+  // Listados de datos
   tiposSolicitud: any[] = [];
   misSolicitudes: any[] = [];
-  turnosCuadrante: any[] = [];
 
-  // Variables para los contadores
+  // Contadores de días disponibles
   diasVacaciones: number = 0;
   diasAsuntos: number = 0;
 
-  // Variables del formulario
+  // Modelo del formulario
   tipoSeleccionado: number | null = null;
   fechaInicio: string = '';
   fechaFin: string = '';
   comentarios: string = '';
-  hoyISO: string = new Date().toISOString();
+  hoyISO: string = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD nativo
 
-  // --- NUEVO: Control del Modal ---
+  // Control de la ventana emergente (Modal)
   isModalOpen = false;
 
   constructor(
     private http: HttpClient,
-    private router: Router,
     private toastController: ToastController,
   ) {
     addIcons({
-      sendOutline, calendarOutline, documentTextOutline, airplaneOutline,
-      medicalOutline, homeOutline, closeOutline, checkmarkCircleOutline,
-      timeOutline, closeCircleOutline
+      sendOutline, calendarOutline, documentTextOutline,
+      closeOutline, checkmarkCircleOutline, timeOutline,
+      closeCircleOutline, chatboxEllipsesOutline
     });
   }
 
+  // Se ejecuta al montar el componente
   ngOnInit() {
     this.inicializarDatos();
   }
 
+  // Orquesta la descarga de datos inicial
   inicializarDatos() {
     this.cargarTipos();
-    this.cargarCuadrante();
     this.cargarHistorial();
     this.cargarDatosEmpleado();
   }
 
+  // Obtiene el saldo de días de vacaciones y asuntos propios
   cargarDatosEmpleado() {
     const token = localStorage.getItem('token');
     if (token) {
       const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
-      this.http
-        .get('http://localhost:8080/api/empleados/perfil', { headers })
-        .subscribe({
+      this.http.get('http://localhost:8080/api/empleados/perfil', { headers }).subscribe({
           next: (res: any) => {
             this.diasVacaciones = res.vacacionesDisponibles;
             this.diasAsuntos = res.asuntosPropiosDisponibles;
@@ -77,69 +76,49 @@ export class SolicitudesPage implements OnInit {
     }
   }
 
-  // --- CONTROLES DEL MODAL ---
+  // Abre el modal para crear nueva solicitud
   nuevaSolicitud() {
     this.isModalOpen = true;
   }
 
+  // Cierra el modal y resetea los campos
   cerrarModal() {
     this.isModalOpen = false;
     this.limpiarFormulario();
   }
 
-  // Validación visual del calendario
-  isDiaLaboral = (dateString: string) => {
-    const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0);
-
-    const fechaSeleccionada = new Date(dateString);
-    fechaSeleccionada.setHours(0, 0, 0, 0);
-
-    if (fechaSeleccionada < hoy) return false;
-
-    const fechaISO = dateString.split('T')[0];
-    return this.turnosCuadrante.some(
-      (t) => t.fecha === fechaISO && t.turno !== 'LIBRE' && t.turno !== 'VACACIONES',
-    );
-  };
-
+  // Evita que la fecha final sea anterior a la inicial
   onFechaInicioChange() {
     if (this.fechaFin && new Date(this.fechaFin) < new Date(this.fechaInicio)) {
       this.fechaFin = '';
     }
   }
 
-  cargarCuadrante() {
-    const token = localStorage.getItem('token');
-    const empleadoStr = localStorage.getItem('empleadoLogueado');
-
-    if (token && empleadoStr) {
-      const empleado = JSON.parse(empleadoStr);
-      const idEmpleado = empleado.idEmpleado;
-      const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
-
-      this.http
-        .get(`http://localhost:8080/api/cuadrante/empleado/${idEmpleado}`, { headers })
-        .subscribe({
-          next: (res: any) => (this.turnosCuadrante = res),
-          error: (err) => console.error('Error al cargar cuadrante', err),
-        });
-    }
-  }
-
+  // Descarga el catálogo de motivos (Vacaciones, Baja Médica, etc.)
   cargarTipos() {
     const token = localStorage.getItem('token');
     if (token) {
       const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
-      this.http
-        .get('http://localhost:8080/api/solicitudes/tipos', { headers })
-        .subscribe({
+      this.http.get('http://localhost:8080/api/solicitudes/tipos', { headers }).subscribe({
           next: (res: any) => (this.tiposSolicitud = res),
           error: (err) => console.error('Error al cargar tipos', err),
         });
     }
   }
 
+  // Descarga las peticiones pasadas del empleado
+  cargarHistorial() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
+      this.http.get(`http://localhost:8080/api/solicitudes/mis-solicitudes`, { headers }).subscribe({
+          next: (res: any) => (this.misSolicitudes = res),
+          error: (err) => console.error('Error al cargar historial', err),
+        });
+    }
+  }
+
+  // Manda los datos al backend para registrar la petición
   async enviarSolicitud() {
     if (!this.tipoSeleccionado || !this.fechaInicio || !this.fechaFin) {
       this.mostrarToast('Por favor, rellena todos los campos', 'warning');
@@ -151,8 +130,8 @@ export class SolicitudesPage implements OnInit {
 
     const body = {
       idTipo: this.tipoSeleccionado,
-      fechaInicio: this.fechaInicio.split('T')[0],
-      fechaFin: this.fechaFin.split('T')[0],
+      fechaInicio: this.fechaInicio,
+      fechaFin: this.fechaFin,
       comentarios: this.comentarios,
     };
 
@@ -161,14 +140,12 @@ export class SolicitudesPage implements OnInit {
       'Content-Type': 'application/json',
     });
 
-    this.http
-      .post('http://localhost:8080/api/solicitudes/nueva', body, { headers })
-      .subscribe({
+    this.http.post('http://localhost:8080/api/solicitudes/nueva', body, { headers }).subscribe({
         next: () => {
           this.mostrarToast('Solicitud enviada con éxito', 'success');
-          this.cerrarModal(); // <-- NUEVO: Cerramos el modal al tener éxito
-          this.cargarHistorial();
-          this.cargarDatosEmpleado();
+          this.cerrarModal();
+          this.cargarHistorial(); // Refresca la lista
+          this.cargarDatosEmpleado(); // Refresca el saldo
         },
         error: (err) => {
           const msg = err.error?.error || 'Error al guardar la solicitud';
@@ -177,19 +154,7 @@ export class SolicitudesPage implements OnInit {
       });
   }
 
-  cargarHistorial() {
-    const token = localStorage.getItem('token');
-    if (token) {
-      const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
-      this.http
-        .get(`http://localhost:8080/api/solicitudes/mis-solicitudes`, { headers })
-        .subscribe({
-          next: (res: any) => (this.misSolicitudes = res),
-          error: (err) => console.error('Error al cargar historial', err),
-        });
-    }
-  }
-
+  // Deja los inputs en blanco
   limpiarFormulario() {
     this.tipoSeleccionado = null;
     this.fechaInicio = '';
@@ -197,6 +162,7 @@ export class SolicitudesPage implements OnInit {
     this.comentarios = '';
   }
 
+  // Muestra una notificación
   async mostrarToast(mensaje: string, color: string) {
     const toast = await this.toastController.create({
       message: mensaje,

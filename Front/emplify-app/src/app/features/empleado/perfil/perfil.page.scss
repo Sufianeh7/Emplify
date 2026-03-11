@@ -13,12 +13,11 @@
 
 /* --- HERO: GRADIENTE OSCURECIDO Y TEXTO BLANCO --- */
 .profile-hero {
-  /* Gradiente que empieza en blanco (cabecera) y termina en un azul cian profundo */
-  background: linear-gradient(to bottom, #ffffff 0%, #005a8d 100%); /* Azul cian profundo */
+  background: linear-gradient(to bottom, #ffffff 0%, #005a8d 100%);
   padding: 10px 20px 40px 20px;
   text-align: center;
-  margin-bottom: 20px; /* Separación de la siguiente tarjeta */
-  position: relative; /* Para el avatar superpuesto */
+  margin-bottom: 20px;
+  position: relative;
   z-index: 1;
 
   .avatar-container {
@@ -27,7 +26,7 @@
     margin: 0 auto 15px auto;
     border-radius: 50%;
     padding: 3px;
-    background: rgba(255, 255, 255, 0.2); /* Efecto cristalino */
+    background: rgba(255, 255, 255, 0.2);
     border: 2px solid rgba(255, 255, 255, 0.8);
 
     img {
@@ -39,7 +38,6 @@
   }
 
   .main-info {
-    /* Nombre y Puesto en BLANCO para resaltar sobre el azul oscuro */
     h2 { margin: 0 0 5px 0; font-size: 1.6rem; font-weight: 800; color: #ffffff; }
     .subtitle { color: rgba(255, 255, 255, 0.9); font-size: 1rem; margin: 0 0 4px 0; font-weight: 500; }
 
@@ -92,8 +90,11 @@
     .sup-avatar {
       width: 50px;
       height: 50px;
-      border-radius: 8px; /* Cuadrado con bordes redondeados */
+      border-radius: 8px;
       overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       img { width: 100%; height: 100%; object-fit: cover; }
     }
 
@@ -171,28 +172,4 @@
   --box-shadow: none;
   font-weight: 700;
   height: 48px;
-}
-
-/* --- BARRA DE PESTAÑAS (TABS) --- */
-.custom-footer {
-  background: #ffffff;
-  border-top: 1px solid rgba(0,0,0,0.05);
-}
-
-.custom-tab-bar {
-  --background: #ffffff;
-  --border: none;
-  padding-bottom: env(safe-area-inset-bottom);
-
-  ion-tab-button {
-    color: #565959;
-
-    ion-icon { font-size: 1.4rem; margin-bottom: 4px; }
-    ion-label { font-size: 0.7rem; font-weight: 600; }
-
-    /* Estado seleccionado: Icono Azul */
-    &.tab-active {
-      color: #0071ad;
-    }
-  }
 }

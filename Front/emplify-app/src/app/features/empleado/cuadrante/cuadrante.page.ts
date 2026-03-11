@@ -7,12 +7,10 @@ import { ActivatedRoute } from '@angular/router';
 
 import { addIcons } from 'ionicons';
 import {
-  timeOutline, happyOutline, ellipse, chatboxEllipsesOutline,
-  personCircleOutline, notificationsOutline, airplaneOutline,
-  sendOutline, calendarOutline, documentTextOutline,
-  partlySunnyOutline, sunnyOutline, moonOutline,
-  logInOutline, logOutOutline // <-- Añadimos iconos para entrada/salida
+  partlySunnyOutline, sunnyOutline, moonOutline, happyOutline,
+  logInOutline, logOutOutline
 } from 'ionicons/icons';
+
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
 import { SolicitudesPage } from '../solicitudes/solicitudes.page';
 
@@ -34,19 +32,8 @@ export class CuadrantePage implements OnInit {
   fechaElegidaNormal: string = '';
 
   // --- DATOS DE FICHAJE ---
-  fichajesTotales: any[] = []; // Todos los fichajes del empleado
-  fichajesDelDiaElegido: any[] = []; // Los que coinciden con el día tocado
-
-  // --- DATOS DE SOLICITUDES ---
-  tiposSolicitud: any[] = [];
-  misSolicitudes: any[] = [];
-  diasVacaciones: number = 0;
-  diasAsuntos: number = 0;
-  tipoSeleccionado: number | null = null;
-  fechaInicio: string = '';
-  fechaFin: string = '';
-  comentarios: string = '';
-  hoyISO: string = new Date().toISOString();
+  fichajesTotales: any[] = [];
+  fichajesDelDiaElegido: any[] = [];
 
   constructor(
     private http: HttpClient,
@@ -54,13 +41,12 @@ export class CuadrantePage implements OnInit {
     private route: ActivatedRoute
   ) {
     addIcons({
-      timeOutline, happyOutline, ellipse, chatboxEllipsesOutline,
-      personCircleOutline, notificationsOutline, airplaneOutline,
-      sendOutline, calendarOutline, documentTextOutline, partlySunnyOutline,
-      sunnyOutline, moonOutline, logInOutline, logOutOutline
+      partlySunnyOutline, sunnyOutline, moonOutline, happyOutline,
+      logInOutline, logOutOutline
     });
   }
 
+  // Inicializa el componente y lee los parámetros de la URL para abrir la pestaña correcta
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       if (params['tab']) {
@@ -70,17 +56,13 @@ export class CuadrantePage implements OnInit {
     this.inicializarDatos();
   }
 
+  // Llama a las funciones encargadas de traer los datos del backend
   inicializarDatos() {
-    this.cargarDatosEmpleado();
     this.cargarCuadrante();
-    this.cargarHistorialFichajes(); // <-- NUEVA LLAMADA
-    this.cargarTipos();
-    this.cargarHistorial();
+    this.cargarHistorialFichajes();
   }
 
-  // ==========================================
-  // LÓGICA DEL CUADRANTE (CALENDARIO)
-  // ==========================================
+  // Obtiene todos los turnos del empleado desde la API
   cargarCuadrante() {
     const token = localStorage.getItem('token');
     const empleadoStr = localStorage.getItem('empleadoLogueado');
@@ -100,6 +82,7 @@ export class CuadrantePage implements OnInit {
     }
   }
 
+  // Pinta los puntitos azules en el calendario para los días que tienen turno de trabajo
   procesarTurnosParaCalendario() {
     this.diasDestacados = this.turnos
       .filter(t => t.turno !== 'LIBRE' && t.turno !== 'VACACIONES')
@@ -110,9 +93,7 @@ export class CuadrantePage implements OnInit {
       }));
   }
 
-  // ==========================================
-  // LÓGICA DE FICHAJES (NUEVO)
-  // ==========================================
+  // Descarga todo el histórico de fichajes del empleado
   cargarHistorialFichajes() {
     const token = localStorage.getItem('token');
     const empleadoStr = localStorage.getItem('empleadoLogueado');
@@ -125,7 +106,6 @@ export class CuadrantePage implements OnInit {
         .subscribe({
           next: (res: any) => {
             this.fichajesTotales = res;
-            // Si hay un día seleccionado, refrescamos sus fichajes
             if (this.fechaElegidaNormal) {
               this.filtrarFichajesPorDia(this.fechaElegidaNormal);
             }
@@ -135,41 +115,28 @@ export class CuadrantePage implements OnInit {
     }
   }
 
+  // Se ejecuta al tocar un día en el calendario para mostrar su turno y fichajes
   diaSeleccionado(event: any) {
     if (!event.detail.value) return;
+
+    // Extraemos solo la fecha (YYYY-MM-DD)
     const valorPulsado = Array.isArray(event.detail.value) ? event.detail.value[0] : event.detail.value;
     const fechaTocada = valorPulsado.split('T')[0];
+
+    // Buscamos si hay turno para ese día
     const turnoEncontrado = this.turnos.find(t => t.fecha === fechaTocada);
 
     this.fechaElegidaNormal = fechaTocada;
+    this.turnoElegido = turnoEncontrado || null;
 
-    if (turnoEncontrado) {
-      this.turnoElegido = turnoEncontrado;
-    } else {
-      this.turnoElegido = null;
-    }
-
-    // Siempre buscamos los fichajes del día, tenga turno asignado o no
     this.filtrarFichajesPorDia(fechaTocada);
   }
 
+  // Filtra de la lista total de fichajes solo los que coinciden con el día seleccionado
   filtrarFichajesPorDia(fechaSeleccionada: string) {
     this.fichajesDelDiaElegido = this.fichajesTotales.filter(f => {
-      // Extraemos la parte "YYYY-MM-DD" del fichaje
       const fechaFichaje = f.horaEntrada.split('T')[0];
       return fechaFichaje === fechaSeleccionada;
     });
   }
-
-  // ==========================================
-  // LÓGICA DE SOLICITUDES (AUSENCIAS) -> Igual que antes
-  // ==========================================
-  cargarDatosEmpleado() { /* ... igual ... */ }
-  cargarTipos() { /* ... igual ... */ }
-  cargarHistorial() { /* ... igual ... */ }
-  isDiaLaboral = (dateString: string) => { /* ... igual ... */ return false;};
-  onFechaInicioChange() { /* ... igual ... */ }
-  async enviarSolicitud() { /* ... igual ... */ }
-  limpiarFormulario() { /* ... igual ... */ }
-  async mostrarToast(mensaje: string, color: string) { /* ... igual ... */ }
 }

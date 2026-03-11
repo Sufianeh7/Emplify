@@ -28,7 +28,8 @@
 
       <div class="supervisor-info">
         <div class="sup-avatar">
-          <img src="https://i.pravatar.cc/150?img=11" alt="Manager" />
+          <img *ngIf="empleado?.manager" src="https://i.pravatar.cc/150?img=11" alt="Manager" />
+          <ion-icon *ngIf="!empleado?.manager" name="person-circle-outline" style="font-size: 50px; color: #d5d9d9;"></ion-icon>
         </div>
         <div class="sup-details">
           <h4>{{ empleado?.manager?.usuario?.nombre || 'Pendiente de asignar' }}</h4>
