@@ -3,6 +3,7 @@ package com.emplify.backend.controladores;
 import com.emplify.backend.modelos.Empleado;
 import com.emplify.backend.repositorios.EmpleadoRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,56 +19,65 @@ public class EmpleadoControlador {
     @Autowired
     private EmpleadoRepo empleadoRepo;
 
-    // 1. Obtener la lista de TODOS los empleados (Para RRHH)
+    // Obtiene todos los empleados
     @GetMapping("/todos")
     public ResponseEntity<List<Empleado>> obtenerTodos() {
         return ResponseEntity.ok(empleadoRepo.findAll());
     }
 
-    // 2. ACTUALIZADO: Endpoint para el perfil (Coincide con Ionic)
+    // Endpoint principal de carga inicial en la app
     @GetMapping("/perfil")
     public ResponseEntity<?> obtenerMisDatos(Principal principal) {
         if (principal == null) {
-            return ResponseEntity.status(401).body("{\"error\": \"No autorizado\"}");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"error\": \"Usuario no autenticado\"}");
         }
 
-        // Buscamos al empleado filtrando por el email del usuario autenticado
-        return empleadoRepo.findByUsuarioEmail(principal.getName())
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(404).body(null));
+        Optional<Empleado> empleadoOpt = empleadoRepo.findByUsuarioEmail(principal.getName());
+
+        if (empleadoOpt.isPresent()) {
+            return ResponseEntity.ok(empleadoOpt.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\": \"Perfil de empleado no encontrado\"}");
+        }
     }
 
-    // 3. POST: Crear un nuevo empleado
+    // Crea un empleado
     @PostMapping
     public ResponseEntity<Empleado> crearEmpleado(@RequestBody Empleado empleado){
-        return ResponseEntity.ok(empleadoRepo.save(empleado));
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(empleadoRepo.save(empleado));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
-    // 4. OPCIONAL: Obtener un empleado por ID (Útil para edición)
+    // Obtiene un empleado por ID
     @GetMapping("/{id}")
-    public ResponseEntity<Empleado> obtenerPorId(@PathVariable Integer id) {
-        return empleadoRepo.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> obtenerPorId(@PathVariable Integer id) {
+        Optional<Empleado> empleadoOpt = empleadoRepo.findById(id);
+
+        if (empleadoOpt.isPresent()) {
+            return ResponseEntity.ok(empleadoOpt.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\": \"Empleado no encontrado\"}");
+        }
     }
 
-    // 5. NUEVO: Obtener el equipo a cargo del mánager autenticado
+    // Obtiene los empleados asignados al mánager actualmente logueado
     @GetMapping("/mi-equipo")
     public ResponseEntity<?> obtenerMiEquipo(Principal principal) {
         if (principal == null) {
-            return ResponseEntity.status(401).body("{\"error\": \"No autorizado\"}");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"error\": \"Usuario no autenticado\"}");
         }
 
-        // Primero encontramos quién es el mánager que está haciendo la petición
         Optional<Empleado> managerOpt = empleadoRepo.findByUsuarioEmail(principal.getName());
 
         if (managerOpt.isPresent()) {
             Integer idManager = managerOpt.get().getIdEmpleado();
-            // Luego buscamos a todos los empleados que lo tienen asignado como mánager
             List<Empleado> equipo = empleadoRepo.findByManager_IdEmpleado(idManager);
             return ResponseEntity.ok(equipo);
         }
 
-        return ResponseEntity.status(404).body("{\"error\": \"Mánager no encontrado\"}");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\": \"Perfil de Mánager no encontrado\"}");
     }
 }
