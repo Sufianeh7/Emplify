@@ -28,6 +28,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'noticias',
+        loadComponent: () =>
+          import('./features/empleado/noticias/noticias.page').then(
+            (m) => m.NoticiasPage,
+          ),
+      },
+      {
         path: 'cuadrante',
         loadComponent: () =>
           import('./features/empleado/cuadrante/cuadrante.page').then(
@@ -95,6 +102,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/rrhh/control-fichajes/control-fichajes.page').then(
             (m) => m.ControlFichajesPage,
+          ),
+      },
+      {
+        path: 'gestion-noticias',
+        loadComponent: () =>
+          import('./features/rrhh/gestion-noticias/gestion-noticias.page').then(
+            (m) => m.GestionNoticiasPage,
           ),
       },
       {

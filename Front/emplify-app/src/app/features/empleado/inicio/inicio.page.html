@@ -12,6 +12,7 @@
       <div
         *ngFor="let noticia of noticias"
         class="news-card"
+        (click)="goNoticias()"
         [ngClass]="noticia.tipoFondo === 'image-bg' ? 'image-bg' : 'blue-bg'"
         [ngStyle]="{'background-image': noticia.tipoFondo === 'image-bg' && noticia.imagenUrl ? 'linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.7)), url(' + noticia.imagenUrl + ')' : 'none'}"
       >

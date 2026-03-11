@@ -232,4 +232,5 @@ export class InicioPage implements OnInit, OnDestroy {
   goGestionRRHH() { this.router.navigate(['/gestion-rrhh']); }
   goGestionCuadrantes() { this.router.navigate(['/cuadrantes']); }
   goAdmin() { this.router.navigate(['/admin']); }
+  goNoticias() { this.router.navigate(['/noticias']); }
 }

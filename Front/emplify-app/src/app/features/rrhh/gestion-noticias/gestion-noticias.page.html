@@ -1,0 +1,75 @@
+<ion-header class="ion-no-border">
+  <app-header></app-header>
+</ion-header>
+
+<ion-content class="app-background">
+  <div class="section-header blue-bg">
+    <h2>Comunicación Interna</h2>
+    <p>Gestiona el carrusel y el muro de la empresa</p>
+  </div>
+
+  <div class="dashboard-container">
+    <div class="segment-container">
+      <ion-segment [(ngModel)]="seccionActual" mode="ios" class="custom-segment">
+        <ion-segment-button value="carrusel">
+          <ion-label>Carrusel (Inicio)</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="muro">
+          <ion-label>Muro (Voz Empleado)</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <div *ngIf="seccionActual === 'carrusel'">
+      <div class="flat-card full">
+        <h3 class="card-title"><ion-icon name="images-outline"></ion-icon> Nueva Noticia Visual</h3>
+        <div class="form-container">
+          <ion-item lines="none" class="form-item"><ion-input label="Título" labelPlacement="floating" [(ngModel)]="nuevaNoticia.titulo"></ion-input></ion-item>
+          <ion-item lines="none" class="form-item"><ion-input label="Subtítulo" labelPlacement="floating" [(ngModel)]="nuevaNoticia.subtitulo"></ion-input></ion-item>
+          <ion-item lines="none" class="form-item"><ion-input label="URL Imagen (Opcional)" labelPlacement="floating" [(ngModel)]="nuevaNoticia.imagenUrl"></ion-input></ion-item>
+          <ion-item lines="none" class="form-item"><ion-textarea label="Contenido completo de la noticia" labelPlacement="floating" rows="6" [(ngModel)]="nuevaNoticia.contenido"></ion-textarea></ion-item>
+        </div>
+        <ion-button expand="block" class="btn-corporativo ion-margin-top" (click)='publicarNoticia()'>
+          <ion-icon name="send-outline" slot="start"></ion-icon> Publicar en Inicio
+        </ion-button>
+      </div>
+
+      <h3 class="section-title">Noticias Activas</h3>
+      <div class="flat-card full log-card" *ngFor="let n of listaNoticias">
+        <div class="log-header">
+          <span class="log-date">{{ n.fechaCreacion | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="log-body">
+          <p><strong>{{ n.titulo }}</strong></p>
+          <p style="font-size: 0.85rem;">{{ n.subtitulo }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="seccionActual === 'muro'">
+      <div class="flat-card full">
+        <h3 class="card-title"><ion-icon name="document-text-outline"></ion-icon> Nuevo Comunicado</h3>
+        <div class="form-container">
+          <ion-item lines="none" class="form-item"><ion-input label="Título del aviso" labelPlacement="floating" [(ngModel)]="nuevaPublicacion.titulo"></ion-input></ion-item>
+          <ion-item lines="none" class="form-item">
+            <ion-textarea label="Contenido del mensaje" labelPlacement="floating" rows="4" [(ngModel)]="nuevaPublicacion.contenido"></ion-textarea>
+          </ion-item>
+        </div>
+        <ion-button expand="block" class="btn-corporativo ion-margin-top" (click)="publicarMuro()">
+          <ion-icon name="megaphone-outline" slot="start"></ion-icon> Publicar Comunicado
+        </ion-button>
+      </div>
+
+      <h3 class="section-title">Historial del Muro</h3>
+      <div class="flat-card full log-card" *ngFor="let p of listaMuro">
+        <div class="log-header">
+          <span class="log-date">{{ p.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+        <div class="log-body">
+          <p><strong>{{ p.titulo }}</strong></p>
+          <p class="truncate-text">{{ p.contenido }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
