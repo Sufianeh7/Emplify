@@ -13,6 +13,7 @@ public class Noticia {
 
     private String titulo;
     private String subtitulo;
+    private String contenido;
 
     // Puede ser "blue-bg" (fondo azul corporativo) o "image-bg" (imagen de fondo)
     private String tipoFondo;
@@ -47,4 +48,6 @@ public class Noticia {
     public void setVisible(Boolean visible) { this.visible = visible; }
     public Empresa getEmpresa() { return empresa; }
     public void setEmpresa(Empresa empresa) { this.empresa = empresa; }
+    public String getContenido(){return contenido;}
+    public void setContenido(String contenido){this.contenido = contenido;}
 }
