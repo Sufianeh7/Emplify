@@ -1,23 +1,32 @@
 package com.emplify.backend.modelos;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * Entidad que registra las entradas y salidas de la jornada de un empleado.
+ */
 @Entity
-@Table(name = "fichajes")
+@Table(name = "fichaje")
 public class Fichaje {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_fichaje")
     private Integer idFichaje;
 
-    @ManyToOne
+    // LAZY: Crítico aquí, ya que habrá miles de fichajes y no queremos cargar al empleado cada vez
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_empleado", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "manager", "empresa", "usuario"})
     private Empleado empleado;
 
-    @Column(nullable = false)
+    @Column(name = "hora_entrada", nullable = false)
     private LocalDateTime horaEntrada;
 
+    // Puede ser nulo porque cuando el empleado entra a trabajar, aún no ha salido
+    @Column(name = "hora_salida")
     private LocalDateTime horaSalida;
 
     public Fichaje() {}

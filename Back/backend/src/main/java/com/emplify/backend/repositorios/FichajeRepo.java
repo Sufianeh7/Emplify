@@ -11,12 +11,13 @@ import java.util.Optional;
 @Repository
 public interface FichajeRepo extends JpaRepository<Fichaje, Integer> {
 
-    // Busca si el empleado tiene un fichaje a medias (ha entrado pero no ha salido)
+    // Busca si el empleado tiene un turno abierto
     Optional<Fichaje> findFirstByEmpleado_IdEmpleadoAndHoraSalidaIsNullOrderByHoraEntradaDesc(Integer idEmpleado);
 
-    // Saca todos los fichajes de un empleado entre dos fechas (para sacar los de "hoy")
+    // Fichajes de un día concreto
     List<Fichaje> findByEmpleado_IdEmpleadoAndHoraEntradaBetweenOrderByHoraEntradaAsc(
             Integer idEmpleado, LocalDateTime inicioDia, LocalDateTime finDia);
 
-    List<Fichaje> findByEmpleado_IdEmpleado(Integer idEmpleado);
+    // Histórico completo ordenado de más reciente a más antiguo
+    List<Fichaje> findByEmpleado_IdEmpleadoOrderByHoraEntradaDesc(Integer idEmpleado);
 }

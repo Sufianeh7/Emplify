@@ -5,6 +5,7 @@ import com.emplify.backend.modelos.Fichaje;
 import com.emplify.backend.repositorios.EmpleadoRepo;
 import com.emplify.backend.repositorios.FichajeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,7 @@ public class FichajeControlador {
     @Autowired
     private EmpleadoRepo empleadoRepo;
 
-    // 1. OBTENER ESTADO DEL EMPLEADO HOY
+    // Obtiene el estado actual (Fichaje de hoy y si está trabajando en este instante)
     @GetMapping("/estado/{idEmpleado}")
     public ResponseEntity<?> obtenerEstadoHoy(@PathVariable Integer idEmpleado) {
         LocalDateTime inicioDia = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
@@ -41,6 +42,7 @@ public class FichajeControlador {
         Map<String, Object> respuesta = new HashMap<>();
         respuesta.put("fichajes", fichajesHoy);
         respuesta.put("trabajando", fichajeAbierto.isPresent());
+
         if (fichajeAbierto.isPresent()) {
             respuesta.put("horaEntradaActual", fichajeAbierto.get().getHoraEntrada());
         }
@@ -48,15 +50,17 @@ public class FichajeControlador {
         return ResponseEntity.ok(respuesta);
     }
 
-    // 2. REGISTRAR ENTRADA
+    // Ficha la entrada
     @PostMapping("/entrada/{idEmpleado}")
     public ResponseEntity<?> registrarEntrada(@PathVariable Integer idEmpleado) {
         Optional<Empleado> empOpt = empleadoRepo.findById(idEmpleado);
-        if (empOpt.isEmpty()) return ResponseEntity.badRequest().body("{\"error\": \"Empleado no encontrado\"}");
 
-        // Comprobamos que no esté trabajando ya
+        if (empOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\": \"Empleado no encontrado\"}");
+        }
+
         if (fichajeRepo.findFirstByEmpleado_IdEmpleadoAndHoraSalidaIsNullOrderByHoraEntradaDesc(idEmpleado).isPresent()) {
-            return ResponseEntity.badRequest().body("{\"error\": \"Ya tienes un turno abierto\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"error\": \"Ya tienes un turno abierto sin finalizar\"}");
         }
 
         Fichaje nuevo = new Fichaje();
@@ -64,16 +68,16 @@ public class FichajeControlador {
         nuevo.setHoraEntrada(LocalDateTime.now());
 
         fichajeRepo.save(nuevo);
-        return ResponseEntity.ok("{\"mensaje\": \"Entrada registrada correctamente\"}");
+        return ResponseEntity.status(HttpStatus.CREATED).body("{\"mensaje\": \"Entrada registrada correctamente\"}");
     }
 
-    // 3. REGISTRAR SALIDA
+    // Ficha la salida
     @PutMapping("/salida/{idEmpleado}")
     public ResponseEntity<?> registrarSalida(@PathVariable Integer idEmpleado) {
         Optional<Fichaje> fichajeAbierto = fichajeRepo.findFirstByEmpleado_IdEmpleadoAndHoraSalidaIsNullOrderByHoraEntradaDesc(idEmpleado);
 
         if (fichajeAbierto.isEmpty()) {
-            return ResponseEntity.badRequest().body("{\"error\": \"No tienes ninguna entrada registrada para salir\"}");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\": \"No tienes ninguna entrada registrada para salir\"}");
         }
 
         Fichaje actualizar = fichajeAbierto.get();
@@ -83,12 +87,10 @@ public class FichajeControlador {
         return ResponseEntity.ok("{\"mensaje\": \"Salida registrada correctamente\"}");
     }
 
-    // 4. OBTENER FICHAJES DE UN EMPLEADO (Histórico)
+    // Obtiene el historial completo del empleado
     @GetMapping("/historial/{idEmpleado}")
-    public ResponseEntity<?> obtenerHistorialFichajes(@PathVariable Integer idEmpleado) {
-        // En una app real, aquí filtraríamos por mes. Por ahora, devolvemos todos los de ese empleado.
-        // Asegúrate de que este método exista en tu FichajeRepo (o crealo: List<Fichaje> findByEmpleado_IdEmpleado(Integer idEmpleado); )
-        List<Fichaje> historial = fichajeRepo.findByEmpleado_IdEmpleado(idEmpleado);
+    public ResponseEntity<List<Fichaje>> obtenerHistorialFichajes(@PathVariable Integer idEmpleado) {
+        List<Fichaje> historial = fichajeRepo.findByEmpleado_IdEmpleadoOrderByHoraEntradaDesc(idEmpleado);
         return ResponseEntity.ok(historial);
     }
 }

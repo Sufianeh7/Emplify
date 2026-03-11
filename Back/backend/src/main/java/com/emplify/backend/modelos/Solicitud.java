@@ -1,9 +1,13 @@
 package com.emplify.backend.modelos;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * Entidad que registra las peticiones de ausencia (vacaciones, asuntos propios, médicas) de los empleados.
+ */
 @Entity
 @Table(name = "solicitud")
 public class Solicitud {
@@ -19,26 +23,28 @@ public class Solicitud {
     @Column(name = "fecha_fin", nullable = false)
     private LocalDate fechaFin;
 
-    @Column(name = "estado", nullable = false)
+    @Column(name = "estado", nullable = false, length = 20)
     private String estado; // "PENDIENTE", "APROBADA", "RECHAZADA"
 
-    @Column(name = "fecha_solicitud")
+    @Column(name = "fecha_solicitud", nullable = false)
     private LocalDateTime fechaSolicitud;
 
-    // NUEVO: Para que coincida con lo que enviamos desde Ionic
     @Column(name = "comentarios", columnDefinition = "TEXT")
     private String comentarios;
 
-    @ManyToOne
+    // LAZY: Evita cargar todo el árbol del empleado al listar el historial
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_empleado", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "manager", "empresa", "usuario"})
     private Empleado empleado;
 
-    @ManyToOne
+    // LAZY: No se necesitan todos los detalles del tipo de solicitud en cada petición
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_tipo", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private TipoSolicitud tipoSolicitud;
 
-    public Solicitud() {
-    }
+    public Solicitud() {}
 
     // --- GETTERS Y SETTERS ---
     public Integer getIdSolicitud() { return idSolicitud; }

@@ -9,6 +9,7 @@ import com.emplify.backend.repositorios.SolicitudRepo;
 import com.emplify.backend.repositorios.TipoSolicitudRepo;
 import com.emplify.backend.repositorios.CuadranteRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -37,44 +38,50 @@ public class SolicitudControlador {
     @Autowired
     private CuadranteRepo cuadranteRepo;
 
+    // Obtiene los tipos de solicitud disponibles
     @GetMapping("/tipos")
     public ResponseEntity<List<TipoSolicitud>> obtenerTipos() {
         return ResponseEntity.ok(tipoSolicitudRepo.findAll());
     }
 
+    // Historial del empleado logueado
     @GetMapping("/mis-solicitudes")
     public ResponseEntity<List<Solicitud>> obtenerHistorialPropio(Principal principal) {
         return ResponseEntity.ok(solicitudRepo.findByEmpleado_UsuarioEmailOrderByFechaSolicitudDesc(principal.getName()));
     }
 
+    // Crea una nueva solicitud con múltiples validaciones
     @PostMapping("/nueva")
     public ResponseEntity<?> crearSolicitud(@RequestBody Map<String, Object> datos, Principal principal) {
         try {
-            if (datos.get("idTipo") == null) return ResponseEntity.badRequest().body("{\"error\": \"Falta idTipo\"}");
-            Integer idTipo = Integer.parseInt(datos.get("idTipo").toString());
-
-            Empleado empleado = empleadoRepo.findByUsuarioEmail(principal.getName()).orElse(null);
-            TipoSolicitud tipo = tipoSolicitudRepo.findById(idTipo).orElse(null);
-
-            if (empleado == null || tipo == null) {
-                return ResponseEntity.badRequest().body("{\"error\": \"Empleado o Tipo no existen\"}");
+            if (!datos.containsKey("idTipo") || !datos.containsKey("fechaInicio") || !datos.containsKey("fechaFin")) {
+                return ResponseEntity.badRequest().body("{\"error\": \"Faltan datos obligatorios\"}");
             }
 
-            // Convertimos directamente a LocalDate para el repositorio
+            Integer idTipo = Integer.parseInt(datos.get("idTipo").toString());
+            Optional<Empleado> empleadoOpt = empleadoRepo.findByUsuarioEmail(principal.getName());
+            Optional<TipoSolicitud> tipoOpt = tipoSolicitudRepo.findById(idTipo);
+
+            if (empleadoOpt.isEmpty() || tipoOpt.isEmpty()) {
+                return ResponseEntity.badRequest().body("{\"error\": \"Empleado o Tipo de solicitud no válidos\"}");
+            }
+
+            Empleado empleado = empleadoOpt.get();
+            TipoSolicitud tipo = tipoOpt.get();
+
             LocalDate inicio = LocalDate.parse(datos.get("fechaInicio").toString().split("T")[0]);
             LocalDate fin = LocalDate.parse(datos.get("fechaFin").toString().split("T")[0]);
-            LocalDate hoy = LocalDate.now();
 
-            if (inicio.isBefore(hoy)) {
+            if (inicio.isBefore(LocalDate.now())) {
                 return ResponseEntity.badRequest().body("{\"error\": \"No puedes solicitar ausencia para fechas pasadas.\"}");
             }
 
-            // 1. VALIDACIÓN DE SOLAPAMIENTO
+            // 1. Valida solapamientos
             if (solicitudRepo.existeSolapamiento(empleado.getIdEmpleado(), inicio, fin)) {
-                return ResponseEntity.badRequest().body("{\"error\": \"Ya tienes una solicitud pendiente o aprobada que coincide con estas fechas.\"}");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"error\": \"Ya tienes una solicitud pendiente o aprobada en estas fechas.\"}");
             }
 
-            // 2. VALIDACIÓN DE DÍAS LABORALES (Pasamos objetos LocalDate directamente)
+            // 2. Valida que tenga turnos laborales asignados en ese rango
             List<Cuadrante> turnosEnRango = cuadranteRepo.findByEmpleado_IdEmpleadoAndFechaBetween(
                     empleado.getIdEmpleado(), inicio, fin
             );
@@ -84,90 +91,89 @@ public class SolicitudControlador {
                     .count();
 
             if (diasLaborales == 0) {
-                return ResponseEntity.badRequest().body("{\"error\": \"No tienes turnos de trabajo en el rango seleccionado.\"}");
+                return ResponseEntity.badRequest().body("{\"error\": \"No tienes turnos de trabajo asignados en el rango seleccionado.\"}");
             }
 
-            // 3. VALIDACIÓN DE SALDO DE DÍAS
+            // 3. Valida saldo disponible según el tipo
             String nombreTipo = tipo.getNombre().toUpperCase();
-            if (nombreTipo.contains("VACACIONES")) {
-                if (empleado.getVacacionesDisponibles() < diasLaborales) {
-                    return ResponseEntity.badRequest().body("{\"error\": \"Días insuficientes de Vacaciones. Disponibles: " + empleado.getVacacionesDisponibles() + "\"}");
-                }
-            } else if (nombreTipo.contains("ASUNTOS") || nombreTipo.contains("PROPIOS")) {
-                if (empleado.getAsuntosPropiosDisponibles() < diasLaborales) {
-                    return ResponseEntity.badRequest().body("{\"error\": \"Días insuficientes de Asuntos Propios. Disponibles: " + empleado.getAsuntosPropiosDisponibles() + "\"}");
-                }
+            if (nombreTipo.contains("VACACIONES") && empleado.getVacacionesDisponibles() < diasLaborales) {
+                return ResponseEntity.badRequest().body("{\"error\": \"Días insuficientes. Disponibles: " + empleado.getVacacionesDisponibles() + "\"}");
+            } else if ((nombreTipo.contains("ASUNTOS") || nombreTipo.contains("PROPIOS")) && empleado.getAsuntosPropiosDisponibles() < diasLaborales) {
+                return ResponseEntity.badRequest().body("{\"error\": \"Días insuficientes. Disponibles: " + empleado.getAsuntosPropiosDisponibles() + "\"}");
             }
 
-            // 4. GUARDAR SOLICITUD
+            // 4. Guarda
             Solicitud nuevaSolicitud = new Solicitud();
             nuevaSolicitud.setEmpleado(empleado);
             nuevaSolicitud.setTipoSolicitud(tipo);
             nuevaSolicitud.setFechaInicio(inicio);
             nuevaSolicitud.setFechaFin(fin);
-            nuevaSolicitud.setComentarios((String) datos.get("comentarios"));
+            nuevaSolicitud.setComentarios((String) datos.getOrDefault("comentarios", ""));
             nuevaSolicitud.setEstado("PENDIENTE");
             nuevaSolicitud.setFechaSolicitud(LocalDateTime.now());
 
-            return ResponseEntity.ok(solicitudRepo.save(nuevaSolicitud));
+            return ResponseEntity.status(HttpStatus.CREATED).body(solicitudRepo.save(nuevaSolicitud));
+
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body("{\"error\": \"Error de formato: " + e.getMessage() + "\"}");
+            return ResponseEntity.internalServerError().body("{\"error\": \"Error al procesar la solicitud\"}");
         }
     }
 
+    // Obtiene solicitudes pendientes del equipo a cargo
     @GetMapping("/equipo/pendientes")
     public ResponseEntity<?> obtenerSolicitudesEquipo(Principal principal) {
         Optional<Empleado> managerOpt = empleadoRepo.findByUsuarioEmail(principal.getName());
+
         if (managerOpt.isPresent()) {
-            Integer idManager = managerOpt.get().getIdEmpleado();
-            List<Solicitud> pendientes = solicitudRepo.findByEmpleado_Manager_IdEmpleadoAndEstado(idManager, "PENDIENTE");
+            List<Solicitud> pendientes = solicitudRepo.findByEmpleado_Manager_IdEmpleadoAndEstado(managerOpt.get().getIdEmpleado(), "PENDIENTE");
             return ResponseEntity.ok(pendientes);
         }
-        return ResponseEntity.status(401).body("No autorizado");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"error\": \"No autorizado\"}");
     }
 
+    // Aprueba o rechazaa una solicitud (Actualiza saldo y limpia cuadrante)
     @Transactional
     @PutMapping("/{id}/estado")
     public ResponseEntity<?> cambiarEstadoSolicitud(@PathVariable Integer id, @RequestBody Map<String, String> body) {
         Optional<Solicitud> solOpt = solicitudRepo.findById(id);
 
-        if (solOpt.isPresent()) {
-            Solicitud solicitud = solOpt.get();
-            String nuevoEstado = body.get("estado");
+        if (solOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\": \"Solicitud no encontrada\"}");
+        }
 
-            if ("APROBADA".equals(nuevoEstado) && !"APROBADA".equals(solicitud.getEstado())) {
-                Empleado empleado = solicitud.getEmpleado();
+        Solicitud solicitud = solOpt.get();
+        String nuevoEstado = body.get("estado");
 
-                // Buscamos usando LocalDate (campos nativos de la entidad Solicitud)
-                List<Cuadrante> turnosBorrar = cuadranteRepo.findByEmpleado_IdEmpleadoAndFechaBetween(
-                        empleado.getIdEmpleado(),
-                        solicitud.getFechaInicio(),
-                        solicitud.getFechaFin()
-                );
+        // Si se APRUEBA por primera vez, se descuentan días y limpia el cuadrante
+        if ("APROBADA".equals(nuevoEstado) && !"APROBADA".equals(solicitud.getEstado())) {
+            Empleado empleado = solicitud.getEmpleado();
 
-                long diasADescontar = turnosBorrar.stream()
-                        .filter(t -> !t.getTurno().equalsIgnoreCase("LIBRE"))
-                        .count();
+            List<Cuadrante> turnosBorrar = cuadranteRepo.findByEmpleado_IdEmpleadoAndFechaBetween(
+                    empleado.getIdEmpleado(),
+                    solicitud.getFechaInicio(),
+                    solicitud.getFechaFin()
+            );
 
-                String nombreTipo = solicitud.getTipoSolicitud().getNombre().toUpperCase();
+            long diasADescontar = turnosBorrar.stream()
+                    .filter(t -> !t.getTurno().equalsIgnoreCase("LIBRE"))
+                    .count();
 
-                if (nombreTipo.contains("VACACIONES")) {
-                    empleado.setVacacionesDisponibles(empleado.getVacacionesDisponibles() - (int)diasADescontar);
-                } else if (nombreTipo.contains("ASUNTOS") || nombreTipo.contains("PROPIOS")) {
-                    empleado.setAsuntosPropiosDisponibles(empleado.getAsuntosPropiosDisponibles() - (int)diasADescontar);
-                }
+            String nombreTipo = solicitud.getTipoSolicitud().getNombre().toUpperCase();
 
-                if (!turnosBorrar.isEmpty()) {
-                    cuadranteRepo.deleteAll(turnosBorrar);
-                }
-                empleadoRepo.save(empleado);
+            if (nombreTipo.contains("VACACIONES")) {
+                empleado.setVacacionesDisponibles(empleado.getVacacionesDisponibles() - (int)diasADescontar);
+            } else if (nombreTipo.contains("ASUNTOS") || nombreTipo.contains("PROPIOS")) {
+                empleado.setAsuntosPropiosDisponibles(empleado.getAsuntosPropiosDisponibles() - (int)diasADescontar);
             }
 
-            solicitud.setEstado(nuevoEstado);
-            solicitudRepo.save(solicitud);
-            return ResponseEntity.ok("{\"mensaje\": \"Estado actualizado y cuadrante limpiado\"}");
+            if (!turnosBorrar.isEmpty()) {
+                cuadranteRepo.deleteAll(turnosBorrar);
+            }
+            empleadoRepo.save(empleado);
         }
-        return ResponseEntity.status(404).body("{\"error\": \"No encontrada\"}");
+
+        solicitud.setEstado(nuevoEstado);
+        solicitudRepo.save(solicitud);
+        return ResponseEntity.ok("{\"mensaje\": \"Estado de la solicitud actualizado correctamente\"}");
     }
 }

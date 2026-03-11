@@ -12,17 +12,13 @@ import java.util.List;
 @Repository
 public interface SolicitudRepo extends JpaRepository<Solicitud, Integer> {
 
-    // 1. Obtener el historial de un empleado por su ID
-    List<Solicitud> findByEmpleado_IdEmpleado(Integer idEmpleado);
-
-    // 2. Obtener historial por Email (ordenado por fecha de solicitud descendente)
+    // Obtiene el historial completo de un empleado por su email
     List<Solicitud> findByEmpleado_UsuarioEmailOrderByFechaSolicitudDesc(String email);
 
-    // 3. Método para que el mánager vea las peticiones de su equipo
+    // Permite al mánager ver las peticiones de su equipo filtradas por estado
     List<Solicitud> findByEmpleado_Manager_IdEmpleadoAndEstado(Integer idManager, String estado);
 
-    // 4. NUEVO: Validación de solapamiento
-    // Verifica si ya existe una solicitud (que no esté RECHAZADA) en el rango de fechas indicado
+    // Validación JPQL: Comprueba si ya existe una solicitud activa en el rango de fechas indicado
     @Query("SELECT COUNT(s) > 0 FROM Solicitud s " +
             "WHERE s.empleado.idEmpleado = :idEmpleado " +
             "AND s.estado != 'RECHAZADA' " +
