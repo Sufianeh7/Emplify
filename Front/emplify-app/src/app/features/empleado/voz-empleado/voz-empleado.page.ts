@@ -165,6 +165,8 @@ export class VozEmpleadoPage {
           pub.cargandoComentario = false;
         }
       });
+
+      this.cargarMuro()
   }
 
   // Utilidad de Toast
