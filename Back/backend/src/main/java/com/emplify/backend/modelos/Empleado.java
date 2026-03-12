@@ -69,4 +69,13 @@ public class Empleado {
 
     public Integer getAsuntosPropiosDisponibles() { return asuntosPropiosDisponibles; }
     public void setAsuntosPropiosDisponibles(Integer asuntosPropiosDisponibles) { this.asuntosPropiosDisponibles = asuntosPropiosDisponibles; }
+
+    // Jackson lee esto y crea automáticamente la propiedad "nombreUsuario" en el JSON
+    public String getNombreUsuario() {
+        if (this.usuario != null && this.usuario.getNombre() != null) {
+            return this.usuario.getNombre();
+        }
+        return "Desconocido";
+    }
+
 }
