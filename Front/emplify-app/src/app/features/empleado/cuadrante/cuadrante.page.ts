@@ -46,13 +46,17 @@ export class CuadrantePage implements OnInit {
     });
   }
 
-  // Inicializa el componente y lee los parámetros de la URL para abrir la pestaña correcta
+  // Se ejecuta SOLO LA PRIMERA VEZ. Escucha los parámetros de la URL de forma continua.
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       if (params['tab']) {
         this.vistaActual = params['tab'];
       }
     });
+  }
+
+  // Se ejecuta SIEMPRE que entramos a la pantalla (refresco automático de datos)
+  ionViewWillEnter() {
     this.inicializarDatos();
   }
 
@@ -106,6 +110,8 @@ export class CuadrantePage implements OnInit {
         .subscribe({
           next: (res: any) => {
             this.fichajesTotales = res;
+
+            // Si el usuario ya tenía un día tocado en el calendario, refrescamos esa lista específica
             if (this.fechaElegidaNormal) {
               this.filtrarFichajesPorDia(this.fechaElegidaNormal);
             }

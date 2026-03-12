@@ -29,8 +29,8 @@
 
       <div class="ticket-header">
         <div class="employee-basic">
-          <div class="avatar-mini">{{ getInicial(ticket.empleado?.usuario?.nombre) }}</div>
-          <span class="emp-name">{{ ticket.empleado?.usuario?.nombre || 'Desconocido' }}</span>
+          <div class="avatar-mini">{{ getInicial(ticket.empleado?.nombreUsuario) }}</div>
+          <span class="emp-name">{{ ticket.empleado?.nombreUsuario || "Desconocido"}}</span>
         </div>
         <span class="ticket-date">{{ ticket.fechaCreacion | date:'dd MMM yyyy' }}</span>
       </div>
@@ -61,7 +61,7 @@
             Ticket #{{ ticketSeleccionado?.idTicket }}
             <br>
             <span style="font-size: 0.75rem; color: #565959; font-weight: 500;">
-              De: {{ ticketSeleccionado?.empleado?.usuario?.nombre }}
+              De: {{ ticketSeleccionado?.empleado?.nombreUsuario || "Desconocido"}}
             </span>
           </ion-title>
         </ion-toolbar>
@@ -80,7 +80,7 @@
 
           <div class="message-wrapper theirs">
             <div class="message-bubble">
-              <span class="sender-name">{{ ticketSeleccionado?.empleado?.usuario?.nombre }}</span>
+              <span class="sender-name">{{ ticketSeleccionado?.empleado?.nombreUsuario || "Desconocido"}}</span>
               <p><strong>Asunto:</strong> {{ ticketSeleccionado?.titulo }}</p>
               <p>{{ ticketSeleccionado?.descripcion }}</p>
             </div>

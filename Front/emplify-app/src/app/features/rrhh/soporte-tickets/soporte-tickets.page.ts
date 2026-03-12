@@ -63,14 +63,18 @@ export class SoporteTicketsPage implements OnDestroy {
   }
 
   // --- 1. LÓGICA DE LISTADOS ---
-  cargarTickets() {
+cargarTickets() {
     const token = localStorage.getItem('token');
     if (!token) return;
     const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
 
     this.http.get('http://localhost:8080/api/tickets/todos', { headers })
       .subscribe({
-        next: (res: any) => this.tickets = res,
+        next: (res: any) => {
+          // CHIVATO: Esto imprimirá en la consola de tu navegador (F12) lo que manda el backend
+          console.log('📦 Tickets recibidos del backend:', res);
+          this.tickets = res;
+        },
         error: (err) => {
           console.error('Error al cargar tickets globales', err);
           this.mostrarToast('Error al obtener los tickets', 'danger');

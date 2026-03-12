@@ -107,19 +107,31 @@ export class InicioPage implements OnInit, OnDestroy {
     });
   }
 
-  // Busca cuándo es el siguiente turno laboral
+// Busca cuándo es el siguiente turno laboral
   cargarProximoTurno(idEmpleado: number) {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
+
     this.http.get<any>(`http://localhost:8080/api/cuadrante/proximo/${idEmpleado}`, { headers }).subscribe({
       next: (turnoBackend) => {
         if (turnoBackend) {
+          // 1. Miramos qué tipo de turno nos manda el Backend (MAÑANA, TARDE, NOCHE)
+          const tipoTurno = turnoBackend.turno?.toUpperCase();
+          let horasAsignadas = 'Horario sin definir';
+
+          // 2. Lo traducimos a horas reales
+          if (tipoTurno === 'MAÑANA') horasAsignadas = '08:00 - 16:00';
+          else if (tipoTurno === 'TARDE') horasAsignadas = '16:00 - 00:00';
+          else if (tipoTurno === 'NOCHE') horasAsignadas = '00:00 - 08:00';
+
+          // 3. Lo guardamos para que el HTML lo pinte perfecto
           this.proximoTurno = {
             fecha: turnoBackend.fecha || 'Fecha por confirmar',
-            horario: `${turnoBackend.horaInicio || '00:00'} - ${turnoBackend.horaFin || '00:00'}`
+            horario: horasAsignadas
           };
         }
-      }
+      },
+      error: (err) => console.error('No se pudo cargar el próximo turno', err)
     });
   }
 
