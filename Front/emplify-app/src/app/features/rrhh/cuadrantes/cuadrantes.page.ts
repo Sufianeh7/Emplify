@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
@@ -12,26 +12,30 @@ import { calendarOutline, peopleOutline, saveOutline, timeOutline } from 'ionico
   templateUrl: './cuadrantes.page.html',
   styleUrls: ['./cuadrantes.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, HeaderComponent] // <--- Añadido HeaderComponent
+  imports: [IonicModule, CommonModule, FormsModule, HeaderComponent]
 })
-export class CuadrantesPage implements OnInit {
+export class CuadrantesPage {
 
   empleados: any[] = [];
 
-  // Variables para el formulario interactivo
+  // Modelos del formulario interactivo
   empleadosSeleccionados: number[] = [];
   fechasSeleccionadas: string[] = [];
   tipoTurno: string = 'MAÑANA';
 
-  constructor(private http: HttpClient, private toastController: ToastController) {
-    // Añadido timeOutline
+  constructor(
+    private http: HttpClient,
+    private toastController: ToastController
+  ) {
     addIcons({ calendarOutline, peopleOutline, saveOutline, timeOutline });
   }
 
-  ngOnInit() {
+  // Se ejecuta siempre que se entra a la vista. Garantiza que la lista de empleados está al día.
+  ionViewWillEnter() {
     this.cargarEmpleados();
   }
 
+  // Descarga la lista completa de empleados bajo la supervisión del usuario logueado
   cargarEmpleados() {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
@@ -39,19 +43,21 @@ export class CuadrantesPage implements OnInit {
     this.http.get('http://localhost:8080/api/cuadrante/mis-empleados', { headers })
       .subscribe({
         next: (res: any) => this.empleados = res,
-        error: (err) => console.error('Error cargando empleados', err)
+        error: (err) => console.error('Error cargando la lista de empleados', err)
       });
   }
 
-guardarCuadrante() {
-    // 1. BLINDAJE: Nos aseguramos de que siempre sea un Array (Ionic a veces devuelve un String)
+  // Construye y envía el paquete de asignación masiva al Backend
+  guardarCuadrante() {
+    // Forzamos que siempre sea un array válido.
     let fechasArray = Array.isArray(this.fechasSeleccionadas)
       ? this.fechasSeleccionadas
       : [this.fechasSeleccionadas];
 
-    // Filtramos por si hay algún nulo o indefinido
+    // Limpiamos elementos vacíos por seguridad
     fechasArray = fechasArray.filter(f => f);
 
+    // 2. Validación de campos obligatorios
     if (this.empleadosSeleccionados.length === 0 || fechasArray.length === 0) {
       this.mostrarToast('Selecciona al menos un empleado y una fecha', 'warning');
       return;
@@ -63,38 +69,38 @@ guardarCuadrante() {
       'Content-Type': 'application/json'
     });
 
-    // 2. Construimos las peticiones
+    // 3. Transformamos la selección múltiple en una lista plana de asignaciones 1 a 1
     const peticiones: any[] = [];
+
     for (const idEmp of this.empleadosSeleccionados) {
-      for (const fecha of fechasArray) {
+      for (const fechaISO of fechasArray) {
         peticiones.push({
           empleado: { idEmpleado: idEmp },
-          fecha: fecha.split('T')[0], // Cortamos la hora
+          fecha: fechaISO.split('T')[0], // Extraemos solo el YYYY-MM-DD
           turno: this.tipoTurno
         });
       }
     }
 
-    // 3. DEBUG: Mira la consola de tu navegador (F12) al guardar. ¡Deberías ver un array perfecto!
-    console.log('📦 Peticiones a guardar:', peticiones);
-
+    // 4. Enviamos el paquete masivo
     this.http.post('http://localhost:8080/api/cuadrante/asignar-masivo', peticiones, { headers })
       .subscribe({
         next: (res: any) => {
-          const mensajeExito = res.mensaje ? res.mensaje : `¡${peticiones.length} turnos asignados con éxito!`;
+          const mensajeExito = res.mensaje || `¡${peticiones.length} turnos asignados con éxito!`;
           this.mostrarToast(mensajeExito, 'success');
 
-          // Limpiamos
+          // Reseteamos el formulario tras guardar
           this.fechasSeleccionadas = [];
           this.empleadosSeleccionados = [];
         },
         error: (err) => {
-          console.error('❌ Error del backend:', err);
+          console.error('Error del backend al asignar turnos:', err);
           this.mostrarToast('Error al guardar en la base de datos', 'danger');
         }
       });
   }
 
+  // Muestra mensajes en pantalla
   async mostrarToast(mensaje: string, color: string) {
     const toast = await this.toastController.create({
       message: mensaje,

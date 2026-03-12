@@ -89,6 +89,3 @@
   }
   .closed-notice { text-align: center; font-size: 0.85rem; color: #565959; padding: 10px; font-weight: 500; font-style: italic;}
 }
-
-.custom-footer { background: #ffffff; border-top: 1px solid rgba(0,0,0,0.05); }
-.custom-tab-bar { --background: #ffffff; --border: none; padding-bottom: env(safe-area-inset-bottom); ion-tab-button { color: #565959; &.tab-active { color: #0071ad; } } }

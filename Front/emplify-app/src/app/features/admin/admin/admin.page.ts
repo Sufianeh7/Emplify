@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { addIcons } from 'ionicons';
-import {
-  businessOutline, personAddOutline, saveOutline, statsChartOutline,
-  peopleOutline, pieChartOutline, addCircleOutline, listOutline,
-  briefcaseOutline
-} from 'ionicons/icons';
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
+
+// Solo importamos los iconos que usamos en esta pantalla
+import {
+  businessOutline, personAddOutline, saveOutline,
+  peopleOutline, addCircleOutline, listOutline, briefcaseOutline,
+  personCircleOutline
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-admin',
@@ -18,16 +20,16 @@ import { HeaderComponent } from 'src/app/shared/componentes/header/header.compon
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule, HeaderComponent]
 })
-export class AdminPage implements OnInit {
+export class AdminPage {
 
-  seccionActual: string = 'dashboard'; // Por defecto abrimos el dashboard
+  seccionActual: string = 'dashboard';
 
-  // --- DATOS ---
+  // --- MODELOS DE DATOS ---
   estadisticas: any = { totalEmpresas: 0, totalEmpleados: 0 };
   empresas: any[] = [];
   empleados: any[] = [];
 
-  // --- FORMULARIOS ---
+  // Modelos para formularios de creación
   nuevaEmpresa = {
     nombre: '', sector: '', direccion: '', colorPrimario: '#0071ad', colorSecundario: '#3dc2ff', logoUrl: ''
   };
@@ -36,36 +38,40 @@ export class AdminPage implements OnInit {
     nombre: '', email: '', password: '', rol: 'EMPLEADO', idEmpresa: null, idManager: null, departamento: '', puesto: ''
   };
 
-  constructor(private http: HttpClient, private toastController: ToastController) {
+  constructor(
+    private http: HttpClient,
+    private toastController: ToastController
+  ) {
     addIcons({
-      businessOutline, personAddOutline, saveOutline, statsChartOutline,
-      peopleOutline, pieChartOutline, addCircleOutline, listOutline, briefcaseOutline
+      businessOutline, personAddOutline, saveOutline,
+      peopleOutline, addCircleOutline, listOutline, briefcaseOutline, personCircleOutline
     });
   }
 
-  ngOnInit() {
+  // Refresca la vista del SuperAdmin siempre que entra
+  ionViewWillEnter() {
     this.cargarDatosGlobales();
   }
 
-  // NUEVO: Filtra los empleados por empresa Y que tengan rol de MANAGER
+  // GETTER DINÁMICO: Filtra a los empleados para mostrar solo a los que son Mánagers
+  // y que además pertenezcan a la empresa que acabamos de seleccionar en el formulario.
   get posiblesManagers() {
     if (!this.nuevoEmpleado.idEmpresa) return [];
 
     return this.empleados.filter(e =>
       e.empresa?.idEmpresa === this.nuevoEmpleado.idEmpresa &&
-      e.usuario?.rol === 'MANAGER' // <-- Condición para listar solo a los mánagers
+      e.usuario?.rol === 'MANAGER'
     );
   }
 
+  // --- ORQUESTADOR DE CARGA ---
   cargarDatosGlobales() {
     this.cargarEstadisticas();
     this.cargarEmpresas();
     this.cargarEmpleados();
   }
 
-  // ==========================================
-  // LLAMADAS GET
-  // ==========================================
+  // --- LLAMADAS GET ---
   cargarEstadisticas() {
     const headers = this.getHeaders();
     this.http.get('http://localhost:8080/api/admin/stats', { headers }).subscribe({
@@ -86,25 +92,20 @@ export class AdminPage implements OnInit {
     const headers = this.getHeaders();
     this.http.get('http://localhost:8080/api/admin/empleados', { headers }).subscribe({
       next: (res: any) => this.empleados = res,
-      error: (err) => console.error('Error al cargar empleados', err)
+      error: (err) => console.error('Error al cargar listado global de usuarios', err)
     });
   }
 
-  // ==========================================
-  // LLAMADAS POST (CREACIÓN)
-  // ==========================================
+  // --- LLAMADAS POST (CREACIÓN) ---
   crearEmpresa() {
-    if (!this.nuevaEmpresa.nombre) {
-      this.mostrarToast('El nombre de la empresa es obligatorio', 'warning');
-      return;
-    }
+    if (!this.nuevaEmpresa.nombre) return;
 
     const headers = this.getHeaders();
     this.http.post('http://localhost:8080/api/admin/empresas', this.nuevaEmpresa, { headers }).subscribe({
       next: () => {
         this.mostrarToast('Empresa creada con éxito', 'success');
         this.nuevaEmpresa = { nombre: '', sector: '', direccion: '', colorPrimario: '#0071ad', colorSecundario: '#3dc2ff', logoUrl: '' };
-        this.cargarDatosGlobales(); // Refrescamos todo
+        this.cargarDatosGlobales(); // Actualiza contadores y listas
       },
       error: (err) => this.mostrarToast(err.error?.error || 'Error al crear empresa', 'danger')
     });
@@ -112,7 +113,6 @@ export class AdminPage implements OnInit {
 
   crearEmpleado() {
     if (!this.nuevoEmpleado.nombre || !this.nuevoEmpleado.email || !this.nuevoEmpleado.password || !this.nuevoEmpleado.idEmpresa) {
-      this.mostrarToast('Rellena Nombre, Email, Password y selecciona Empresa', 'warning');
       return;
     }
 
@@ -120,9 +120,8 @@ export class AdminPage implements OnInit {
     this.http.post('http://localhost:8080/api/admin/alta-empleado', this.nuevoEmpleado, { headers }).subscribe({
       next: () => {
         this.mostrarToast('Usuario dado de alta correctamente', 'success');
-        // Limpiamos también el idManager tras crearlo
         this.nuevoEmpleado = { nombre: '', email: '', password: '', rol: 'EMPLEADO', idEmpresa: null, idManager: null, departamento: '', puesto: '' };
-        this.cargarDatosGlobales(); // Refrescamos todo
+        this.cargarDatosGlobales(); // Actualiza contadores y listas
       },
       error: (err) => this.mostrarToast(err.error?.error || 'Error al crear usuario', 'danger')
     });
@@ -136,7 +135,10 @@ export class AdminPage implements OnInit {
 
   async mostrarToast(mensaje: string, color: string) {
     const toast = await this.toastController.create({
-      message: mensaje, duration: 3000, color: color, position: 'bottom'
+      message: mensaje,
+      duration: 3000,
+      color: color,
+      position: 'bottom'
     });
     toast.present();
   }

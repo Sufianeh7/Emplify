@@ -13,12 +13,8 @@
 
     <div class="segment-container">
       <ion-segment [(ngModel)]="filtroActual" mode="ios" class="custom-segment">
-        <ion-segment-button value="abiertos">
-          <ion-label>Pendientes</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="cerrados">
-          <ion-label>Resueltos</ion-label>
-        </ion-segment-button>
+        <ion-segment-button value="abiertos"><ion-label>Pendientes</ion-label></ion-segment-button>
+        <ion-segment-button value="cerrados"><ion-label>Resueltos</ion-label></ion-segment-button>
       </ion-segment>
     </div>
 
@@ -29,7 +25,7 @@
     </div>
 
     <div class="flat-card full ticket-card ion-activatable ripple-parent"
-         *ngFor="let ticket of ticketsFiltrados" (click)="abrirChat(ticket)">
+         *ngFor="let ticket of ticketsFiltrados" (click)="abrirChat(ticket)" style="cursor: pointer;">
 
       <div class="ticket-header">
         <div class="employee-basic">
@@ -95,7 +91,7 @@
             <div class="message-bubble">
               <span class="sender-name" *ngIf="msg.autor?.idEmpleado !== idRRHH">{{ msg.autor?.usuario?.nombre }}</span>
               <p>{{ msg.contenido }}</p>
-              <span class="time">{{ msg.fecha | date:'HH:mm' }}</span>
+              <span class="time">{{ msg.fechaEnvio | date:'HH:mm' }}</span>
             </div>
           </div>
         </div>

@@ -1,21 +1,16 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
-
-// Iconos
 import { addIcons } from 'ionicons';
 import {
-  checkmarkDoneOutline, briefcaseOutline, timeOutline, alertCircleOutline,
-  arrowBackOutline, sendOutline, closeOutline, chatbubblesOutline,
-  homeOutline, calendarOutline, menuOutline, checkmarkCircleOutline,
-  chevronForwardOutline
+  checkmarkDoneOutline, timeOutline, sendOutline,
+  closeOutline, checkmarkCircleOutline, chevronForwardOutline
 } from 'ionicons/icons';
 
-// Librerías WebSocket
+// WebSockets
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
@@ -26,55 +21,48 @@ import SockJS from 'sockjs-client';
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule, HeaderComponent],
 })
-export class SoporteTicketsPage implements OnInit, OnDestroy {
+export class SoporteTicketsPage implements OnDestroy {
 
   @ViewChild('contentChat') contentChat: any;
 
   tickets: any[] = [];
   filtroActual: string = 'abiertos';
 
-  // Variables Chat
+  // Control del chat
   ticketSeleccionado: any = null;
   isChatOpen = false;
   mensajesChat: any[] = [];
   nuevoMensaje: string = '';
 
   idRRHH: number = 0;
-
-  // Cliente WebSocket
   private stompClient: Client | null = null;
 
   constructor(
     private http: HttpClient,
-    private toastController: ToastController,
-    private router: Router
+    private toastController: ToastController
   ) {
     addIcons({
-      checkmarkDoneOutline, briefcaseOutline, timeOutline, alertCircleOutline,
-      arrowBackOutline, sendOutline, closeOutline, chatbubblesOutline,
-      homeOutline, calendarOutline, menuOutline, checkmarkCircleOutline,
-      chevronForwardOutline
+      checkmarkDoneOutline, timeOutline, sendOutline,
+      closeOutline, checkmarkCircleOutline, chevronForwardOutline
     });
   }
 
-  ngOnInit() {
+  // Refresca la lista de tickets globales al entrar a la vista
+  ionViewWillEnter() {
     const datos = localStorage.getItem('empleadoLogueado');
     if (datos) {
       const empleado = JSON.parse(datos);
       this.idRRHH = empleado.idEmpleado;
     }
-  }
-
-  ionViewWillEnter() {
     this.cargarTickets();
   }
 
+  // Limpia el socket de conexión para no consumir memoria en segundo plano
   ngOnDestroy() {
     this.desconectarWebSocket();
   }
 
-  // --- LÓGICA DE TICKETS ---
-
+  // --- 1. LÓGICA DE LISTADOS ---
   cargarTickets() {
     const token = localStorage.getItem('token');
     if (!token) return;
@@ -96,6 +84,7 @@ export class SoporteTicketsPage implements OnInit, OnDestroy {
     return est === 'CERRADO' || est === 'RESUELTO';
   }
 
+  // Getter inteligente para los segmentos
   get ticketsFiltrados() {
     if (this.filtroActual === 'abiertos') {
       return this.tickets.filter(t => !this.esTicketCerrado(t.estado));
@@ -109,8 +98,7 @@ export class SoporteTicketsPage implements OnInit, OnDestroy {
     return nombre.charAt(0).toUpperCase();
   }
 
-  // --- LÓGICA DE CHAT Y WEBSOCKETS ---
-
+  // --- 2. LÓGICA DEL CHAT EN TIEMPO REAL ---
   abrirChat(ticket: any) {
     this.ticketSeleccionado = ticket;
     this.mensajesChat = ticket.mensajes || [];
@@ -124,7 +112,7 @@ export class SoporteTicketsPage implements OnInit, OnDestroy {
     this.isChatOpen = false;
     this.ticketSeleccionado = null;
     this.desconectarWebSocket();
-    this.cargarTickets(); // Refrescar lista al salir
+    this.cargarTickets(); // Refrescar lista al salir por si ha habido cambios de estado
   }
 
   conectarWebSocket(idTicket: number) {
@@ -151,7 +139,7 @@ export class SoporteTicketsPage implements OnInit, OnDestroy {
   }
 
   enviarRespuesta() {
-    if (!this.nuevoMensaje.trim()) return;
+    if (!this.nuevoMensaje.trim() || !this.ticketSeleccionado?.idTicket) return;
 
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
@@ -164,13 +152,16 @@ export class SoporteTicketsPage implements OnInit, OnDestroy {
     this.http.post(`http://localhost:8080/api/tickets/${this.ticketSeleccionado.idTicket}/enviar-mensaje`, body, { headers })
       .subscribe({
         next: () => {
-          this.nuevoMensaje = ''; // Se limpia, el mensaje vuelve por WebSocket
+          this.nuevoMensaje = ''; // El mensaje volverá a través del WebSocket y se pintará
         },
-        error: (err) => console.error('Error enviando mensaje', err)
+        error: (err) => console.error('Error enviando mensaje de RRHH', err)
       });
   }
 
+  // --- 3. CAMBIOS DE ESTADO ---
   async resolverTicket(idTicket: number) {
+    if(!idTicket) return;
+
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ Authorization: 'Basic ' + token, 'Content-Type': 'application/json' });
     const body = { estado: 'RESUELTO' };
@@ -179,8 +170,8 @@ export class SoporteTicketsPage implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.mostrarToast('¡Ticket resuelto con éxito!', 'success');
-          this.ticketSeleccionado.estado = 'RESUELTO'; // Actualizamos UI al instante
-          this.cargarTickets();
+          this.ticketSeleccionado.estado = 'RESUELTO'; // Actualización instantánea UI
+          this.cargarTickets(); // Sincronización en segundo plano
         },
         error: () => this.mostrarToast('No se pudo actualizar el ticket', 'danger'),
       });
@@ -200,9 +191,5 @@ export class SoporteTicketsPage implements OnInit, OnDestroy {
       position: 'bottom',
     });
     toast.present();
-  }
-
-  goTo(ruta: string) {
-    this.router.navigate([ruta]);
   }
 }

@@ -42,7 +42,9 @@
       <div class="flat-card full log-card" *ngFor="let fichaje of historialFichajes">
         <div class="log-header">
           <span class="log-date">{{ fichaje.horaEntrada | date:'EEEE, dd MMM yyyy' }}</span>
-          <span class="log-hours badge-horas">{{ calcularHorasTurno(fichaje.horaEntrada, fichaje.horaSalida) }}</span>
+          <span class="log-hours badge-horas" [ngStyle]="{'background': fichaje.horaSalida ? '#e8f5e9' : '#fff3e0', 'color': fichaje.horaSalida ? '#2e7d32' : '#e65100'}">
+            {{ calcularHorasTurno(fichaje.horaEntrada, fichaje.horaSalida) }}
+          </span>
         </div>
 
         <div class="log-body">

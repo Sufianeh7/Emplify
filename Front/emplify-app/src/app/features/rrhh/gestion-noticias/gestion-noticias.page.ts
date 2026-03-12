@@ -1,14 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
 import { addIcons } from 'ionicons';
-import {
-  megaphoneOutline, imagesOutline, documentTextOutline,
-  sendOutline, trashOutline, eyeOutline
-} from 'ionicons/icons';
+import { megaphoneOutline, imagesOutline, documentTextOutline, sendOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-gestion-noticias',
@@ -17,25 +14,34 @@ import {
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule, HeaderComponent]
 })
-export class GestionNoticiasPage implements OnInit {
+export class GestionNoticiasPage {
 
   seccionActual: string = 'carrusel';
   idEmpresaLogueada: number = 0;
 
-  nuevaNoticia: any = { titulo: '', subtitulo: '',contenido: '' ,imagenUrl: '', tipoFondo: 'blue-bg' };
+  // Modelos de los formularios
+  nuevaNoticia: any = { titulo: '', subtitulo: '', contenido: '', imagenUrl: '', tipoFondo: 'blue-bg' };
   nuevaPublicacion: any = { titulo: '', contenido: '' };
 
+  // Listados de histórico
   listaNoticias: any[] = [];
   listaMuro: any[] = [];
 
-  constructor(private http: HttpClient, private toastController: ToastController) {
-    addIcons({ megaphoneOutline, imagesOutline, documentTextOutline, sendOutline, trashOutline, eyeOutline });
+  constructor(
+    private http: HttpClient,
+    private toastController: ToastController
+  ) {
+    addIcons({ megaphoneOutline, imagesOutline, documentTextOutline, sendOutline });
   }
 
-  ngOnInit() {
+  // Asegura la carga de datos cada vez que se entra a la vista
+  ionViewWillEnter() {
     const empleado = JSON.parse(localStorage.getItem('empleadoLogueado') || '{}');
     this.idEmpresaLogueada = empleado?.empresa?.idEmpresa;
-    this.cargarDatos();
+
+    if (this.idEmpresaLogueada) {
+      this.cargarDatos();
+    }
   }
 
   cargarDatos() {
@@ -43,59 +49,73 @@ export class GestionNoticiasPage implements OnInit {
     this.cargarMuro();
   }
 
+  // --- 1. GESTIÓN DEL CARRUSEL ---
   cargarNoticias() {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
-    this.http.get<any[]>(`http://localhost:8080/api/noticias/empresa/${this.idEmpresaLogueada}`, { headers })
-      .subscribe(res => this.listaNoticias = res);
-  }
 
-  cargarMuro() {
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
-    this.http.get<any[]>(`http://localhost:8080/api/voz-empleado/empresa/${this.idEmpresaLogueada}`, { headers })
-      .subscribe(res => this.listaMuro = res);
+    this.http.get<any[]>(`http://localhost:8080/api/noticias/empresa/${this.idEmpresaLogueada}`, { headers })
+      .subscribe({
+        next: (res) => this.listaNoticias = res,
+        error: (err) => console.error('Error cargando noticias', err)
+      });
   }
 
   publicarNoticia() {
-    if (!this.nuevaNoticia.titulo) {
-      this.mostrarToast('El título es obligatorio', 'warning');
-      return; // El compilador a veces se queja aquí, pero con el cambio de abajo debería bastar
-    }
+    if (!this.nuevaNoticia.titulo) return;
 
+    // Lógica para decidir el estilo de la tarjeta (con o sin imagen de fondo)
     this.nuevaNoticia.tipoFondo = this.nuevaNoticia.imagenUrl ? 'image-bg' : 'blue-bg';
+
     const body = { ...this.nuevaNoticia, empresa: { idEmpresa: this.idEmpresaLogueada } };
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.post('http://localhost:8080/api/noticias/publicar', body, { headers }).subscribe({
-      next: () => {
-        this.mostrarToast('Noticia publicada en el carrusel', 'success');
-        this.nuevaNoticia = { titulo: '', subtitulo: '', imagenUrl: '', tipoFondo: 'blue-bg' };
-        this.cargarNoticias();
-      }
-    });
+    this.http.post('http://localhost:8080/api/noticias/publicar', body, { headers })
+      .subscribe({
+        next: () => {
+          this.mostrarToast('Noticia publicada en el carrusel', 'success');
+          // Reseteamos el formulario
+          this.nuevaNoticia = { titulo: '', subtitulo: '', contenido: '', imagenUrl: '', tipoFondo: 'blue-bg' };
+          this.cargarNoticias(); // Refrescamos el listado
+        },
+        error: (err) => this.mostrarToast('Error al publicar noticia', 'danger')
+      });
+  }
+
+  // --- 2. GESTIÓN DEL MURO SOCIAL ---
+  cargarMuro() {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
+
+    this.http.get<any[]>(`http://localhost:8080/api/voz-empleado/empresa/${this.idEmpresaLogueada}`, { headers })
+      .subscribe({
+        next: (res) => this.listaMuro = res,
+        error: (err) => console.error('Error cargando el muro', err)
+      });
   }
 
   publicarMuro() {
-    if (!this.nuevaPublicacion.titulo || !this.nuevaPublicacion.contenido) {
-      this.mostrarToast('Título y contenido son obligatorios', 'warning');
-      return;
-    }
+    if (!this.nuevaPublicacion.titulo || !this.nuevaPublicacion.contenido) return;
 
+    // Se asigna también al empleado activo internamente en el backend si el controlador lo requiere.
     const body = { ...this.nuevaPublicacion, empresa: { idEmpresa: this.idEmpresaLogueada } };
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.post('http://localhost:8080/api/voz-empleado/publicar', body, { headers }).subscribe({
-      next: () => {
-        this.mostrarToast('Comunicado publicado en el muro', 'success');
-        this.nuevaPublicacion = { titulo: '', contenido: '' };
-        this.cargarMuro();
-      }
-    });
+    this.http.post('http://localhost:8080/api/voz-empleado/publicar', body, { headers })
+      .subscribe({
+        next: () => {
+          this.mostrarToast('Comunicado publicado en el muro', 'success');
+          // Reseteamos formulario
+          this.nuevaPublicacion = { titulo: '', contenido: '' };
+          this.cargarMuro(); // Refrescamos listado
+        },
+        error: (err) => this.mostrarToast('Error al publicar comunicado', 'danger')
+      });
   }
 
+  // Notificaciones
   async mostrarToast(mensaje: string, color: string) {
     const toast = await this.toastController.create({
       message: mensaje,
@@ -103,6 +123,6 @@ export class GestionNoticiasPage implements OnInit {
       color: color,
       position: 'bottom'
     });
-    return await toast.present(); // Devolvemos la promesa para evitar el error TS7030
+    return await toast.present();
   }
 }

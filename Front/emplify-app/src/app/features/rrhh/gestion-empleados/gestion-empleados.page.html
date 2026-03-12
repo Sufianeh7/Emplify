@@ -21,18 +21,21 @@
     <div *ngIf="empleadosFiltrados.length === 0" class="flat-card full text-center empty-state">
       <ion-icon name="people-outline"></ion-icon>
       <h3>No hay empleados</h3>
-      <p>Pulsa el botón + para dar de alta al primer empleado.</p>
+      <p>No se encontraron resultados o la lista está vacía.</p>
     </div>
 
     <div class="flat-card full employee-card" *ngFor="let emp of empleadosFiltrados">
       <div class="employee-header">
+
         <div class="avatar-circle">
           {{ getInicial(emp.usuario?.nombre) }}
         </div>
+
         <div class="employee-info">
           <h3 class="employee-name">{{ emp.usuario?.nombre || 'Sin nombre' }}</h3>
           <p class="employee-role">{{ emp.puesto || 'Sin puesto asignado' }}</p>
         </div>
+
         <span class="badge-rol" [ngClass]="emp.usuario?.rol?.toLowerCase() || 'empleado'">
           {{ emp.usuario?.rol || 'EMPLEADO' }}
         </span>
@@ -113,7 +116,9 @@
 
         </div>
 
-        <ion-button expand="block" class="btn-corporativo ion-margin-top" style="margin-top: 25px;" (click)="crearEmpleado(modalNuevo)">
+        <ion-button expand="block" class="btn-corporativo ion-margin-top" style="margin-top: 25px;"
+          [disabled]="!nuevoEmpleado.nombre || !nuevoEmpleado.email || !nuevoEmpleado.password"
+          (click)="crearEmpleado(modalNuevo)">
           <ion-icon slot="start" name="person-add-outline"></ion-icon>
           Dar de Alta
         </ion-button>

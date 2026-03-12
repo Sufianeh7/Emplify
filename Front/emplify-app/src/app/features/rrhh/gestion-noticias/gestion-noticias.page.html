@@ -9,14 +9,11 @@
   </div>
 
   <div class="dashboard-container">
+
     <div class="segment-container">
       <ion-segment [(ngModel)]="seccionActual" mode="ios" class="custom-segment">
-        <ion-segment-button value="carrusel">
-          <ion-label>Carrusel (Inicio)</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="muro">
-          <ion-label>Muro (Voz Empleado)</ion-label>
-        </ion-segment-button>
+        <ion-segment-button value="carrusel"><ion-label>Carrusel (Inicio)</ion-label></ion-segment-button>
+        <ion-segment-button value="muro"><ion-label>Muro (Voz Empleado)</ion-label></ion-segment-button>
       </ion-segment>
     </div>
 
@@ -29,7 +26,8 @@
           <ion-item lines="none" class="form-item"><ion-input label="URL Imagen (Opcional)" labelPlacement="floating" [(ngModel)]="nuevaNoticia.imagenUrl"></ion-input></ion-item>
           <ion-item lines="none" class="form-item"><ion-textarea label="Contenido completo de la noticia" labelPlacement="floating" rows="6" [(ngModel)]="nuevaNoticia.contenido"></ion-textarea></ion-item>
         </div>
-        <ion-button expand="block" class="btn-corporativo ion-margin-top" (click)='publicarNoticia()'>
+
+        <ion-button expand="block" class="btn-corporativo ion-margin-top" [disabled]="!nuevaNoticia.titulo" (click)="publicarNoticia()">
           <ion-icon name="send-outline" slot="start"></ion-icon> Publicar en Inicio
         </ion-button>
       </div>
@@ -55,7 +53,8 @@
             <ion-textarea label="Contenido del mensaje" labelPlacement="floating" rows="4" [(ngModel)]="nuevaPublicacion.contenido"></ion-textarea>
           </ion-item>
         </div>
-        <ion-button expand="block" class="btn-corporativo ion-margin-top" (click)="publicarMuro()">
+
+        <ion-button expand="block" class="btn-corporativo ion-margin-top" [disabled]="!nuevaPublicacion.titulo || !nuevaPublicacion.contenido" (click)="publicarMuro()">
           <ion-icon name="megaphone-outline" slot="start"></ion-icon> Publicar Comunicado
         </ion-button>
       </div>
@@ -71,5 +70,6 @@
         </div>
       </div>
     </div>
+
   </div>
 </ion-content>

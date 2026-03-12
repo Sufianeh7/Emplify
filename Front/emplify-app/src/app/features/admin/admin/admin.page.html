@@ -13,15 +13,9 @@
 
     <div class="segment-container">
       <ion-segment [(ngModel)]="seccionActual" mode="ios" class="custom-segment">
-        <ion-segment-button value="dashboard">
-          <ion-label>Dashboard</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="empresas">
-          <ion-label>Empresas</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="usuarios">
-          <ion-label>Usuarios</ion-label>
-        </ion-segment-button>
+        <ion-segment-button value="dashboard"><ion-label>Dashboard</ion-label></ion-segment-button>
+        <ion-segment-button value="empresas"><ion-label>Empresas</ion-label></ion-segment-button>
+        <ion-segment-button value="usuarios"><ion-label>Usuarios</ion-label></ion-segment-button>
       </ion-segment>
     </div>
 
@@ -50,7 +44,7 @@
           <ion-item lines="none" class="form-item"><ion-input label="Dirección" labelPlacement="floating" [(ngModel)]="nuevaEmpresa.direccion"></ion-input></ion-item>
           <ion-item lines="none" class="form-item"><ion-input label="Color Hex (#000000)" labelPlacement="floating" [(ngModel)]="nuevaEmpresa.colorPrimario"></ion-input></ion-item>
         </div>
-        <ion-button expand="block" class="btn-corporativo ion-margin-top" (click)="crearEmpresa()">Dar de Alta</ion-button>
+        <ion-button expand="block" class="btn-corporativo ion-margin-top" [disabled]="!nuevaEmpresa.nombre" (click)="crearEmpresa()">Dar de Alta</ion-button>
       </div>
 
       <div class="flat-card full">
@@ -105,7 +99,10 @@
             </ion-select>
           </ion-item>
         </div>
-        <ion-button expand="block" class="btn-corporativo ion-margin-top" (click)="crearEmpleado()">Registrar Usuario</ion-button>
+
+        <ion-button expand="block" class="btn-corporativo ion-margin-top"
+          [disabled]="!nuevoEmpleado.nombre || !nuevoEmpleado.email || !nuevoEmpleado.password || !nuevoEmpleado.idEmpresa"
+          (click)="crearEmpleado()">Registrar Usuario</ion-button>
       </div>
 
       <div class="flat-card full">
