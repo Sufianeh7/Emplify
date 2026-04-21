@@ -1,4 +1,4 @@
-# 🚀 Emplify - Guía de Inicio Rápido (Quickstart)
+# 🚀 Emplify - Guía de Inicio Rápido
 
 ![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=java&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
@@ -41,7 +41,9 @@ cd Emplify
 ### 2️⃣ Preparar la base de datos MySQL
 
 La URL de conexión del backend incluye el parámetro `createDatabaseIfNotExist=true`, lo que significa que Hibernate creará el esquema `emplify_db` automáticamente la primera vez que arranques. 
+
 Solo necesitas tener el servidor MySQL en ejecución y un usuario con los privilegios adecuados.
+
 Si utilizas la cuenta por defecto `root` sin contraseña (como viene en la configuración base), conéctate a MySQL y asegúrate de otorgar los accesos:
 
 ```
@@ -119,7 +121,7 @@ Abre http://localhost:8100 en tu navegador. Verás la pantalla de inicio de sesi
 
 Ingresa el correo y la contraseña de un usuario existente. La aplicación codifica las credenciales como un encabezado `Base64 Authorization: Basic` y llama a `GET /api/empleados/perfil` para verificarlas. Si es exitoso, tu token de sesión se guarda en `localStorage` y serás redirigido al panel de tu rol.
 
-* **Nota:** No hay un flujo de auto-registro. El primer usuario ADMIN debe insertarse directamente en la tabla usuario con una contraseña hasheada en BCrypt, o ser creado a través del endpoint POST /api/admin/alta-empleado una vez que tengas una credencial ADMIN existente. *
+* **Nota:** No hay un flujo de auto-registro. El primer usuario ADMIN debe insertarse directamente en la tabla `usuario` con una contraseña hasheada en BCrypt, o ser creado a través del endpoint `POST /api/admin/alta-empleado` una vez que tengas una credencial ADMIN existente. *
   
 Para generar un hash BCrypt para una contraseña inicial, puedes usar cualquier herramienta online de BCrypt o descomentar temporalmente el bloque de generación de hash en `BackendApplication.java`:
 
@@ -142,6 +144,6 @@ Una vez que ambos procesos estén levantados, tendrás acceso a los siguientes s
 
 | Servicio | URL | LocalNotas |
 | :--- | :--- | :--- |
-| **Spring Boot API** | http://localhost:8080 | Endpoints REST bajo la ruta /api/ | 
-| **WebSocket Endpoint** | http://localhost:8080/ws-endpoint | STOMP sobre protocolo SockJS |
-| **Frontend Ionic** | http://localhost:8100 | Servidor de desarrollo Angular |
+| **Spring Boot API** | `http://localhost:8080` | Endpoints REST bajo la ruta `/api/` | 
+| **WebSocket Endpoint** | `http://localhost:8080/ws-endpoint` | STOMP sobre protocolo SockJS |
+| **Frontend Ionic** | `http://localhost:8100` | Servidor de desarrollo Angular |
