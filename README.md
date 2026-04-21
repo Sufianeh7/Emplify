@@ -20,8 +20,11 @@ Setup
 Clone the repository
 
 Clone the Emplify monorepo and move into it:
+
+´´´bash
 git clone https://github.com/Sufianeh7/Emplify.git
 cd Emplify
+´´´
 2
 Create the MySQL database
 
