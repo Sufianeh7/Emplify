@@ -34,7 +34,7 @@ Antes de comenzar, asegúrate de tener instaladas las siguientes herramientas en
 Clona el monorepositorio de Emplify y navega hacia su carpeta:
 
 ```bash
-git clone [https://github.com/Sufianeh7/Emplify.git](https://github.com/Sufianeh7/Emplify.git)
+git clone https://github.com/Sufianeh7/Emplify.git
 cd Emplify
 ```
 
