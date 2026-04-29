@@ -27,8 +27,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/empresa/**").permitAll()
-                        // 1: Permitimos que el WebSocket se conecte sin token inicial
-                        .requestMatchers("/ws-endpoint/**").permitAll()
+                        .requestMatchers("/api/ws-endpoint/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 // 2: Si falla la seguridad, devolvemos un 401
