@@ -67,7 +67,7 @@ export class GestionEmpleadosPage {
 
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.get(environment.apiUrl+'/api/rrhh/empleados', { headers })
+    this.http.get(environment.apiUrl+'/rrhh/empleados', { headers })
       .subscribe({
         next: (res: any) => {
           this.empleados = res;
@@ -102,7 +102,7 @@ export class GestionEmpleadosPage {
 
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.get(environment.apiUrl+'/api/rrhh/posibles-managers', { headers })
+    this.http.get(environment.apiUrl+'/rrhh/posibles-managers', { headers })
       .subscribe({
         next: (res: any) => this.posiblesManagers = res,
         error: (err) => console.error('Error al cargar mánagers', err)
@@ -117,7 +117,7 @@ export class GestionEmpleadosPage {
       'Content-Type': 'application/json'
     });
 
-    this.http.post(environment.apiUrl+'/api/rrhh/alta-empleado', this.nuevoEmpleado, { headers })
+    this.http.post(environment.apiUrl+'/rrhh/alta-empleado', this.nuevoEmpleado, { headers })
       .subscribe({
         next: () => {
           this.mostrarToast('Empleado dado de alta correctamente', 'success');

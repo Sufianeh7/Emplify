@@ -39,7 +39,7 @@ export class ControlFichajesPage {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.get(environment.apiUrl+'/api/cuadrante/mis-empleados', { headers })
+    this.http.get(environment.apiUrl+'/cuadrante/mis-empleados', { headers })
       .subscribe({
         next: (res: any) => this.empleados = res,
         error: (err) => console.error('Error cargando empleados', err)
@@ -56,7 +56,7 @@ export class ControlFichajesPage {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.get(environment.apiUrl+`/api/fichajes/historial/${idEmpleado}`, { headers })
+    this.http.get(environment.apiUrl+`/fichajes/historial/${idEmpleado}`, { headers })
       .subscribe({
         next: (res: any) => {
           // Ya no hacemos el .sort() aquí porque el Backend ya lo envía ordenado cronológicamente

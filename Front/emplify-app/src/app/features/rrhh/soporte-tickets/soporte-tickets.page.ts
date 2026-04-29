@@ -69,7 +69,7 @@ export class SoporteTicketsPage implements OnDestroy {
     if (!token) return;
     const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
 
-    this.http.get(environment.apiUrl+'/api/tickets/todos', { headers })
+    this.http.get(environment.apiUrl+'/tickets/todos', { headers })
       .subscribe({
         next: (res: any) => this.tickets = res,
         error: (err) => {
@@ -150,7 +150,7 @@ export class SoporteTicketsPage implements OnDestroy {
 
     const body = { contenido: this.nuevoMensaje };
 
-    this.http.post(environment.apiUrl+`/api/tickets/${this.ticketSeleccionado.idTicket}/enviar-mensaje`, body, { headers })
+    this.http.post(environment.apiUrl+`/tickets/${this.ticketSeleccionado.idTicket}/enviar-mensaje`, body, { headers })
       .subscribe({
         next: () => {
           this.nuevoMensaje = ''; // El mensaje volverá a través del WebSocket y se pintará
@@ -167,7 +167,7 @@ export class SoporteTicketsPage implements OnDestroy {
     const headers = new HttpHeaders({ Authorization: 'Basic ' + token, 'Content-Type': 'application/json' });
     const body = { estado: 'RESUELTO' };
 
-    this.http.put(environment.apiUrl+`/api/tickets/${idTicket}/responder`, body, { headers })
+    this.http.put(environment.apiUrl+`/tickets/${idTicket}/responder`, body, { headers })
       .subscribe({
         next: () => {
           this.mostrarToast('¡Ticket resuelto con éxito!', 'success');

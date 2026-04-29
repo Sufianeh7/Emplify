@@ -58,7 +58,7 @@ export class PerfilPage {
     const token = localStorage.getItem('token');
     if (token) {
       const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
-      this.http.get(environment.apiUrl+'/api/empleados/perfil', { headers })
+      this.http.get(environment.apiUrl+'/empleados/perfil', { headers })
         .subscribe({
           next: (res: any) => {
             this.empleado = res;
@@ -106,7 +106,7 @@ export class PerfilPage {
       nueva: this.passNueva
     };
 
-    this.http.put(environment.apiUrl+'/api/usuarios/cambiar-password', body, { headers })
+    this.http.put(environment.apiUrl+'/usuarios/cambiar-password', body, { headers })
       .subscribe({
         next: () => {
           this.mostrarMensaje('¡Contraseña actualizada con éxito!', 'success');

@@ -36,7 +36,7 @@ export class NoticiasPage {
     if (idEmpresa && token) {
       const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-      this.http.get<any[]>(environment.apiUrl+`/api/noticias/empresa/${idEmpresa}`, { headers })
+      this.http.get<any[]>(environment.apiUrl+`/noticias/empresa/${idEmpresa}`, { headers })
         .subscribe({
           next: (res) => {
             // Añadimos 'expandida' en false por defecto para controlar el acordeón del HTML

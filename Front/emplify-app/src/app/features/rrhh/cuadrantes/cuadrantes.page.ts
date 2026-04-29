@@ -41,7 +41,7 @@ export class CuadrantesPage {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.get(environment.apiUrl+'/api/cuadrante/mis-empleados', { headers })
+    this.http.get(environment.apiUrl+'/cuadrante/mis-empleados', { headers })
       .subscribe({
         next: (res: any) => this.empleados = res,
         error: (err) => console.error('Error cargando la lista de empleados', err)
@@ -84,7 +84,7 @@ export class CuadrantesPage {
     }
 
     // 4. Enviamos el paquete masivo
-    this.http.post(environment.apiUrl+'/api/cuadrante/asignar-masivo', peticiones, { headers })
+    this.http.post(environment.apiUrl+'/cuadrante/asignar-masivo', peticiones, { headers })
       .subscribe({
         next: (res: any) => {
           const mensajeExito = res.mensaje || `¡${peticiones.length} turnos asignados con éxito!`;

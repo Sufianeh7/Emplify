@@ -72,7 +72,7 @@ export class TicketsPage implements OnDestroy {
     if (!token) return;
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.get(environment.apiUrl+`/api/tickets/mis-tickets`, { headers })
+    this.http.get(environment.apiUrl+`/tickets/mis-tickets`, { headers })
       .subscribe({
         next: (res: any) => this.tickets = res,
         error: (err) => console.error('Error cargando tickets', err)
@@ -106,7 +106,7 @@ export class TicketsPage implements OnDestroy {
       descripcion: this.nuevaDescripcion
     };
 
-    this.http.post(environment.apiUrl+'/api/tickets/nuevo', body, { headers })
+    this.http.post(environment.apiUrl+'/tickets/nuevo', body, { headers })
       .subscribe({
         next: () => {
           this.mostrarToast('Ticket creado correctamente', 'success');
@@ -176,7 +176,7 @@ export class TicketsPage implements OnDestroy {
 
     const body = { contenido: this.nuevoMensaje };
 
-    this.http.post(environment.apiUrl+`/api/tickets/${this.ticketSeleccionado.idTicket}/enviar-mensaje`, body, { headers })
+    this.http.post(environment.apiUrl+`/tickets/${this.ticketSeleccionado.idTicket}/enviar-mensaje`, body, { headers })
       .subscribe({
         next: () => {
           this.nuevoMensaje = ''; // Limpiamos la caja. El mensaje se pintará cuando el WebSocket avise.

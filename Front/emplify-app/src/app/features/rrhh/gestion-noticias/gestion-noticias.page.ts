@@ -55,7 +55,7 @@ export class GestionNoticiasPage {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.get<any[]>(environment.apiUrl+`/api/noticias/empresa/${this.idEmpresaLogueada}`, { headers })
+    this.http.get<any[]>(environment.apiUrl+`/noticias/empresa/${this.idEmpresaLogueada}`, { headers })
       .subscribe({
         next: (res) => this.listaNoticias = res,
         error: (err) => console.error('Error cargando noticias', err)
@@ -72,7 +72,7 @@ export class GestionNoticiasPage {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.post(environment.apiUrl+'/api/noticias/publicar', body, { headers })
+    this.http.post(environment.apiUrl+'/noticias/publicar', body, { headers })
       .subscribe({
         next: () => {
           this.mostrarToast('Noticia publicada en el carrusel', 'success');
@@ -89,7 +89,7 @@ export class GestionNoticiasPage {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.get<any[]>(environment.apiUrl+`/api/voz-empleado/empresa/${this.idEmpresaLogueada}`, { headers })
+    this.http.get<any[]>(environment.apiUrl+`/voz-empleado/empresa/${this.idEmpresaLogueada}`, { headers })
       .subscribe({
         next: (res) => this.listaMuro = res,
         error: (err) => console.error('Error cargando el muro', err)
@@ -104,7 +104,7 @@ export class GestionNoticiasPage {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.post(environment.apiUrl+'/api/voz-empleado/publicar', body, { headers })
+    this.http.post(environment.apiUrl+'/voz-empleado/publicar', body, { headers })
       .subscribe({
         next: () => {
           this.mostrarToast('Comunicado publicado en el muro', 'success');

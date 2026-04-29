@@ -76,7 +76,7 @@ export class CuadrantePage implements OnInit {
       const empleado = JSON.parse(empleadoStr);
       const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-      this.http.get(environment.apiUrl+`/api/cuadrante/empleado/${empleado.idEmpleado}`, { headers })
+      this.http.get(environment.apiUrl+`/cuadrante/empleado/${empleado.idEmpleado}`, { headers })
         .subscribe({
           next: (res: any) => {
             this.turnos = res;
@@ -107,7 +107,7 @@ export class CuadrantePage implements OnInit {
       const empleado = JSON.parse(empleadoStr);
       const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-      this.http.get(environment.apiUrl+`/api/fichajes/historial/${empleado.idEmpleado}`, { headers })
+      this.http.get(environment.apiUrl+`/fichajes/historial/${empleado.idEmpleado}`, { headers })
         .subscribe({
           next: (res: any) => {
             this.fichajesTotales = res;

@@ -67,7 +67,7 @@ export class SolicitudesPage implements OnInit {
     const token = localStorage.getItem('token');
     if (token) {
       const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
-      this.http.get(environment.apiUrl+'/api/empleados/perfil', { headers }).subscribe({
+      this.http.get(environment.apiUrl+'/empleados/perfil', { headers }).subscribe({
           next: (res: any) => {
             this.diasVacaciones = res.vacacionesDisponibles;
             this.diasAsuntos = res.asuntosPropiosDisponibles;
@@ -100,7 +100,7 @@ export class SolicitudesPage implements OnInit {
     const token = localStorage.getItem('token');
     if (token) {
       const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
-      this.http.get(environment.apiUrl+'/api/solicitudes/tipos', { headers }).subscribe({
+      this.http.get(environment.apiUrl+'/solicitudes/tipos', { headers }).subscribe({
           next: (res: any) => (this.tiposSolicitud = res),
           error: (err) => console.error('Error al cargar tipos', err),
         });
@@ -112,7 +112,7 @@ export class SolicitudesPage implements OnInit {
     const token = localStorage.getItem('token');
     if (token) {
       const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
-      this.http.get(environment.apiUrl+`/api/solicitudes/mis-solicitudes`, { headers }).subscribe({
+      this.http.get(environment.apiUrl+`/solicitudes/mis-solicitudes`, { headers }).subscribe({
           next: (res: any) => (this.misSolicitudes = res),
           error: (err) => console.error('Error al cargar historial', err),
         });
@@ -141,7 +141,7 @@ export class SolicitudesPage implements OnInit {
       'Content-Type': 'application/json',
     });
 
-    this.http.post(environment.apiUrl+'/api/solicitudes/nueva', body, { headers }).subscribe({
+    this.http.post(environment.apiUrl+'/solicitudes/nueva', body, { headers }).subscribe({
         next: () => {
           this.mostrarToast('Solicitud enviada con éxito', 'success');
           this.cerrarModal();

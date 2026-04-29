@@ -53,7 +53,7 @@ export class GestionEquipoPage {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.get(environment.apiUrl+'/api/solicitudes/equipo/pendientes', { headers })
+    this.http.get(environment.apiUrl+'/solicitudes/equipo/pendientes', { headers })
       .subscribe({
         next: (res: any) => this.solicitudes = res,
         error: (err) => console.error('Error al cargar peticiones', err)
@@ -65,7 +65,7 @@ export class GestionEquipoPage {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.get(environment.apiUrl+'/api/empleados/mi-equipo', { headers })
+    this.http.get(environment.apiUrl+'/empleados/mi-equipo', { headers })
       .subscribe({
         next: (res: any) => this.miEquipo = res,
         error: (err) => console.error('Error al cargar el directorio del equipo', err)
@@ -83,7 +83,7 @@ export class GestionEquipoPage {
 
     const body = { estado: nuevoEstado };
 
-    this.http.put(environment.apiUrl+`/api/solicitudes/${idSolicitud}/estado`, body, { headers })
+    this.http.put(environment.apiUrl+`/solicitudes/${idSolicitud}/estado`, body, { headers })
       .subscribe({
         next: async () => {
           this.mostrarToast(
