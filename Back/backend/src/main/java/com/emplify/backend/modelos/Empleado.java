@@ -1,6 +1,6 @@
 package com.emplify.backend.modelos;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 /**
@@ -27,7 +27,7 @@ public class Empleado {
     // JsonIgnoreProperties evita que Jackson se rompa al intentar convertir un proxy Lazy a JSON.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_manager")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnore
     private Empleado manager;
 
     @Column(name = "departamento", length = 100)
