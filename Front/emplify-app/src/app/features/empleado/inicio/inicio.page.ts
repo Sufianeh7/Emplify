@@ -148,7 +148,8 @@ export class InicioPage implements OnInit, OnDestroy {
         this.trabajando = res.trabajando;
 
         if (this.trabajando && res.horaEntradaActual) {
-          this.horaEntradaActual = new Date(res.horaEntradaActual);
+          const fechaUTC = res.horaEntradaActual.endsWith('Z') ? res.horaEntradaActual : res.horaEntradaActual + 'Z';
+          this.horaEntradaActual = new Date(fechaUTC);
           this.iniciarTemporizador();
         } else {
           this.detenerTemporizador();
