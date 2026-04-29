@@ -6,6 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
 import { addIcons } from 'ionicons';
 import { timeOutline, searchOutline, logInOutline, logOutOutline, documentTextOutline } from 'ionicons/icons';
+import { environment } from 'src/environments/environment.prod';
 
 @Component({
   selector: 'app-control-fichaje',
@@ -38,7 +39,7 @@ export class ControlFichajesPage {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.get('http://localhost:8080/api/cuadrante/mis-empleados', { headers })
+    this.http.get(environment.apiUrl+'/api/cuadrante/mis-empleados', { headers })
       .subscribe({
         next: (res: any) => this.empleados = res,
         error: (err) => console.error('Error cargando empleados', err)
@@ -55,7 +56,7 @@ export class ControlFichajesPage {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.get(`http://localhost:8080/api/fichajes/historial/${idEmpleado}`, { headers })
+    this.http.get(environment.apiUrl+`/api/fichajes/historial/${idEmpleado}`, { headers })
       .subscribe({
         next: (res: any) => {
           // Ya no hacemos el .sort() aquí porque el Backend ya lo envía ordenado cronológicamente

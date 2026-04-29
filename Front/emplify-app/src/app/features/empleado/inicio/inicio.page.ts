@@ -11,6 +11,7 @@ import {
   playCircleOutline, stopCircleOutline
 } from 'ionicons/icons';
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
+import { environment } from 'src/environments/environment.prod';
 
 @Component({
   selector: 'app-inicio',
@@ -90,7 +91,7 @@ export class InicioPage implements OnInit, OnDestroy {
   cargarNoticias(idEmpresa: number) {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
-    this.http.get<any[]>(`http://localhost:8080/api/noticias/empresa/${idEmpresa}`, { headers }).subscribe({
+    this.http.get<any[]>(environment.apiUrl+`/api/noticias/empresa/${idEmpresa}`, { headers }).subscribe({
       next: (data) => this.noticias = data,
       error: () => console.warn('No se pudieron cargar las noticias.')
     });
@@ -100,7 +101,7 @@ export class InicioPage implements OnInit, OnDestroy {
   cargarUltimaPublicacion(idEmpresa: number) {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
-    this.http.get<any[]>(`http://localhost:8080/api/voz-empleado/empresa/${idEmpresa}`, { headers }).subscribe({
+    this.http.get<any[]>(environment.apiUrl+`/api/voz-empleado/empresa/${idEmpresa}`, { headers }).subscribe({
       next: (publicaciones) => {
         if (publicaciones && publicaciones.length > 0) this.ultimaPublicacion = publicaciones[0];
       }
@@ -112,7 +113,7 @@ export class InicioPage implements OnInit, OnDestroy {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.get<any>(`http://localhost:8080/api/cuadrante/proximo/${idEmpleado}`, { headers }).subscribe({
+    this.http.get<any>(environment.apiUrl+`/api/cuadrante/proximo/${idEmpleado}`, { headers }).subscribe({
       next: (turnoBackend) => {
         if (turnoBackend) {
           // 1. Miramos qué tipo de turno nos manda el Backend (MAÑANA, TARDE, NOCHE)
@@ -141,7 +142,7 @@ export class InicioPage implements OnInit, OnDestroy {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.get<any>(`http://localhost:8080/api/fichajes/estado/${this.idEmpleadoLogueado}`, { headers }).subscribe({
+    this.http.get<any>(environment.apiUrl+`/api/fichajes/estado/${this.idEmpleadoLogueado}`, { headers }).subscribe({
       next: (res) => {
         this.fichajesHoy = res.fichajes || [];
         this.trabajando = res.trabajando;
@@ -163,7 +164,7 @@ export class InicioPage implements OnInit, OnDestroy {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.post(`http://localhost:8080/api/fichajes/entrada/${this.idEmpleadoLogueado}`, {}, { headers }).subscribe({
+    this.http.post(environment.apiUrl+`/api/fichajes/entrada/${this.idEmpleadoLogueado}`, {}, { headers }).subscribe({
       next: () => {
         this.mostrarToast('Entrada registrada con éxito', 'success');
         this.cargarEstadoFichaje();
@@ -177,7 +178,7 @@ export class InicioPage implements OnInit, OnDestroy {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.put(`http://localhost:8080/api/fichajes/salida/${this.idEmpleadoLogueado}`, {}, { headers }).subscribe({
+    this.http.put(environment.apiUrl+`/api/fichajes/salida/${this.idEmpleadoLogueado}`, {}, { headers }).subscribe({
       next: () => {
         this.mostrarToast('Salida registrada con éxito', 'success');
         this.cargarEstadoFichaje();

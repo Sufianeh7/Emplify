@@ -9,6 +9,7 @@ import {
   personAddOutline, peopleOutline, searchOutline,
   closeOutline, businessOutline, mailOutline
 } from 'ionicons/icons';
+import { environment } from 'src/environments/environment.prod';
 
 @Component({
   selector: 'app-empleados',
@@ -66,7 +67,7 @@ export class GestionEmpleadosPage {
 
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.get('http://localhost:8080/api/rrhh/empleados', { headers })
+    this.http.get(environment.apiUrl+'/api/rrhh/empleados', { headers })
       .subscribe({
         next: (res: any) => {
           this.empleados = res;
@@ -101,7 +102,7 @@ export class GestionEmpleadosPage {
 
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.get('http://localhost:8080/api/rrhh/posibles-managers', { headers })
+    this.http.get(environment.apiUrl+'/api/rrhh/posibles-managers', { headers })
       .subscribe({
         next: (res: any) => this.posiblesManagers = res,
         error: (err) => console.error('Error al cargar mánagers', err)
@@ -116,7 +117,7 @@ export class GestionEmpleadosPage {
       'Content-Type': 'application/json'
     });
 
-    this.http.post('http://localhost:8080/api/rrhh/alta-empleado', this.nuevoEmpleado, { headers })
+    this.http.post(environment.apiUrl+'/api/rrhh/alta-empleado', this.nuevoEmpleado, { headers })
       .subscribe({
         next: () => {
           this.mostrarToast('Empleado dado de alta correctamente', 'success');

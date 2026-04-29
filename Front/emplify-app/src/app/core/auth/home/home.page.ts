@@ -6,6 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { eyeOutline, eyeOffOutline } from 'ionicons/icons';
+import { environment } from 'src/environments/environment.prod';
 
 @Component({
   selector: 'app-home',
@@ -47,7 +48,7 @@ export class HomePage {
       'Authorization': 'Basic ' + token
     });
 
-    this.http.get('http://localhost:8080/api/empleados/perfil', { headers }).subscribe({
+    this.http.get(environment.apiUrl+'/empleados/perfil', { headers }).subscribe({
       next: (res: any) => {
         localStorage.setItem('token', token);
         localStorage.setItem('empleadoLogueado', JSON.stringify(res));

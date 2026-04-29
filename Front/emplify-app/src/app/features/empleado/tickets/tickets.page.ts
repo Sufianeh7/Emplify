@@ -13,6 +13,7 @@ import { HeaderComponent } from 'src/app/shared/componentes/header/header.compon
 // WebSockets
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
+import { environment } from 'src/environments/environment.prod';
 
 @Component({
   selector: 'app-tickets',
@@ -71,7 +72,7 @@ export class TicketsPage implements OnDestroy {
     if (!token) return;
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.get(`http://localhost:8080/api/tickets/mis-tickets`, { headers })
+    this.http.get(environment.apiUrl+`/api/tickets/mis-tickets`, { headers })
       .subscribe({
         next: (res: any) => this.tickets = res,
         error: (err) => console.error('Error cargando tickets', err)
@@ -105,7 +106,7 @@ export class TicketsPage implements OnDestroy {
       descripcion: this.nuevaDescripcion
     };
 
-    this.http.post('http://localhost:8080/api/tickets/nuevo', body, { headers })
+    this.http.post(environment.apiUrl+'/api/tickets/nuevo', body, { headers })
       .subscribe({
         next: () => {
           this.mostrarToast('Ticket creado correctamente', 'success');
@@ -140,7 +141,7 @@ export class TicketsPage implements OnDestroy {
 
   conectarWebSocket(idTicket: number) {
     this.stompClient = new Client({
-      webSocketFactory: () => new SockJS('http://localhost:8080/ws-endpoint'),
+      webSocketFactory: () => new SockJS(environment.apiUrl+'/ws-endpoint'),
       reconnectDelay: 5000, // Reintento si se cae la red
     });
 
@@ -175,7 +176,7 @@ export class TicketsPage implements OnDestroy {
 
     const body = { contenido: this.nuevoMensaje };
 
-    this.http.post(`http://localhost:8080/api/tickets/${this.ticketSeleccionado.idTicket}/enviar-mensaje`, body, { headers })
+    this.http.post(environment.apiUrl+`/api/tickets/${this.ticketSeleccionado.idTicket}/enviar-mensaje`, body, { headers })
       .subscribe({
         next: () => {
           this.nuevoMensaje = ''; // Limpiamos la caja. El mensaje se pintará cuando el WebSocket avise.

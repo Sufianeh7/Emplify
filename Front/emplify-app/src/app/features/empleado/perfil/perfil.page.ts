@@ -11,6 +11,7 @@ import {
   eyeOffOutline
 } from 'ionicons/icons';
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
+import { environment } from 'src/environments/environment.prod';
 
 @Component({
   selector: 'app-perfil',
@@ -57,7 +58,7 @@ export class PerfilPage {
     const token = localStorage.getItem('token');
     if (token) {
       const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
-      this.http.get('http://localhost:8080/api/empleados/perfil', { headers })
+      this.http.get(environment.apiUrl+'/api/empleados/perfil', { headers })
         .subscribe({
           next: (res: any) => {
             this.empleado = res;
@@ -105,7 +106,7 @@ export class PerfilPage {
       nueva: this.passNueva
     };
 
-    this.http.put('http://localhost:8080/api/usuarios/cambiar-password', body, { headers })
+    this.http.put(environment.apiUrl+'/api/usuarios/cambiar-password', body, { headers })
       .subscribe({
         next: () => {
           this.mostrarMensaje('¡Contraseña actualizada con éxito!', 'success');

@@ -12,6 +12,7 @@ import {
   peopleOutline, addCircleOutline, listOutline, briefcaseOutline,
   personCircleOutline
 } from 'ionicons/icons';
+import { environment } from 'src/environments/environment.prod';
 
 @Component({
   selector: 'app-admin',
@@ -74,7 +75,7 @@ export class AdminPage {
   // --- LLAMADAS GET ---
   cargarEstadisticas() {
     const headers = this.getHeaders();
-    this.http.get('http://localhost:8080/api/admin/stats', { headers }).subscribe({
+    this.http.get(environment.apiUrl+'/api/admin/stats', { headers }).subscribe({
       next: (res: any) => this.estadisticas = res,
       error: (err) => console.error('Error cargando estadísticas', err)
     });
@@ -82,7 +83,7 @@ export class AdminPage {
 
   cargarEmpresas() {
     const headers = this.getHeaders();
-    this.http.get('http://localhost:8080/api/admin/empresas', { headers }).subscribe({
+    this.http.get(environment.apiUrl+'/api/admin/empresas', { headers }).subscribe({
       next: (res: any) => this.empresas = res,
       error: (err) => console.error('Error al cargar empresas', err)
     });
@@ -90,7 +91,7 @@ export class AdminPage {
 
   cargarEmpleados() {
     const headers = this.getHeaders();
-    this.http.get('http://localhost:8080/api/admin/empleados', { headers }).subscribe({
+    this.http.get(environment.apiUrl+'/api/admin/empleados', { headers }).subscribe({
       next: (res: any) => this.empleados = res,
       error: (err) => console.error('Error al cargar listado global de usuarios', err)
     });
@@ -101,7 +102,7 @@ export class AdminPage {
     if (!this.nuevaEmpresa.nombre) return;
 
     const headers = this.getHeaders();
-    this.http.post('http://localhost:8080/api/admin/empresas', this.nuevaEmpresa, { headers }).subscribe({
+    this.http.post(environment.apiUrl+'/api/admin/empresas', this.nuevaEmpresa, { headers }).subscribe({
       next: () => {
         this.mostrarToast('Empresa creada con éxito', 'success');
         this.nuevaEmpresa = { nombre: '', sector: '', direccion: '', colorPrimario: '#0071ad', colorSecundario: '#3dc2ff', logoUrl: '' };
@@ -117,7 +118,7 @@ export class AdminPage {
     }
 
     const headers = this.getHeaders();
-    this.http.post('http://localhost:8080/api/admin/alta-empleado', this.nuevoEmpleado, { headers }).subscribe({
+    this.http.post(environment.apiUrl+'/api/admin/alta-empleado', this.nuevoEmpleado, { headers }).subscribe({
       next: () => {
         this.mostrarToast('Usuario dado de alta correctamente', 'success');
         this.nuevoEmpleado = { nombre: '', email: '', password: '', rol: 'EMPLEADO', idEmpresa: null, idManager: null, departamento: '', puesto: '' };

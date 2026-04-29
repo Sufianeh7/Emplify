@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
 import { addIcons } from 'ionicons';
 import { chevronDownOutline, chevronUpOutline, newspaperOutline } from 'ionicons/icons';
+import { environment } from 'src/environments/environment.prod';
 
 @Component({
   selector: 'app-noticias',
@@ -35,7 +36,7 @@ export class NoticiasPage {
     if (idEmpresa && token) {
       const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-      this.http.get<any[]>(`http://localhost:8080/api/noticias/empresa/${idEmpresa}`, { headers })
+      this.http.get<any[]>(environment.apiUrl+`/api/noticias/empresa/${idEmpresa}`, { headers })
         .subscribe({
           next: (res) => {
             // Añadimos 'expandida' en false por defecto para controlar el acordeón del HTML

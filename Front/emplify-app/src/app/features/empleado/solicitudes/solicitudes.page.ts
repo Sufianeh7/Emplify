@@ -10,6 +10,7 @@ import {
   closeOutline, checkmarkCircleOutline, timeOutline,
   closeCircleOutline, chatboxEllipsesOutline
 } from 'ionicons/icons';
+import { environment } from 'src/environments/environment.prod';
 
 @Component({
   selector: 'app-solicitudes',
@@ -66,7 +67,7 @@ export class SolicitudesPage implements OnInit {
     const token = localStorage.getItem('token');
     if (token) {
       const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
-      this.http.get('http://localhost:8080/api/empleados/perfil', { headers }).subscribe({
+      this.http.get(environment.apiUrl+'/api/empleados/perfil', { headers }).subscribe({
           next: (res: any) => {
             this.diasVacaciones = res.vacacionesDisponibles;
             this.diasAsuntos = res.asuntosPropiosDisponibles;
@@ -99,7 +100,7 @@ export class SolicitudesPage implements OnInit {
     const token = localStorage.getItem('token');
     if (token) {
       const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
-      this.http.get('http://localhost:8080/api/solicitudes/tipos', { headers }).subscribe({
+      this.http.get(environment.apiUrl+'/api/solicitudes/tipos', { headers }).subscribe({
           next: (res: any) => (this.tiposSolicitud = res),
           error: (err) => console.error('Error al cargar tipos', err),
         });
@@ -111,7 +112,7 @@ export class SolicitudesPage implements OnInit {
     const token = localStorage.getItem('token');
     if (token) {
       const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
-      this.http.get(`http://localhost:8080/api/solicitudes/mis-solicitudes`, { headers }).subscribe({
+      this.http.get(environment.apiUrl+`/api/solicitudes/mis-solicitudes`, { headers }).subscribe({
           next: (res: any) => (this.misSolicitudes = res),
           error: (err) => console.error('Error al cargar historial', err),
         });
@@ -140,7 +141,7 @@ export class SolicitudesPage implements OnInit {
       'Content-Type': 'application/json',
     });
 
-    this.http.post('http://localhost:8080/api/solicitudes/nueva', body, { headers }).subscribe({
+    this.http.post(environment.apiUrl+'/api/solicitudes/nueva', body, { headers }).subscribe({
         next: () => {
           this.mostrarToast('Solicitud enviada con éxito', 'success');
           this.cerrarModal();

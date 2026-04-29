@@ -10,6 +10,7 @@ import {
   closeOutline, megaphoneOutline
 } from 'ionicons/icons';
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
+import { environment } from 'src/environments/environment.prod';
 
 @Component({
   selector: 'app-voz-empleado',
@@ -58,7 +59,7 @@ export class VozEmpleadoPage {
 
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.get(`http://localhost:8080/api/voz-empleado/empresa/${this.idEmpresa}`, { headers })
+    this.http.get(environment.apiUrl+`/api/voz-empleado/empresa/${this.idEmpresa}`, { headers })
       .subscribe({
         next: (res: any) => {
           this.publicaciones = res.map((pub: any) => ({
@@ -90,7 +91,7 @@ export class VozEmpleadoPage {
       empresa: { idEmpresa: this.idEmpresa }
     };
 
-    this.http.post('http://localhost:8080/api/voz-empleado/publicar', body, { headers })
+    this.http.post(environment.apiUrl+'/api/voz-empleado/publicar', body, { headers })
       .subscribe({
         next: () => {
           this.mostrarMensaje('Publicado correctamente', 'success');
@@ -121,7 +122,7 @@ export class VozEmpleadoPage {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-    this.http.get(`http://localhost:8080/api/comentarios/publicacion/${pub.idPublicacion}`, { headers })
+    this.http.get(environment.apiUrl+`/api/comentarios/publicacion/${pub.idPublicacion}`, { headers })
       .subscribe({
         next: (res: any) => pub.comentarios = res,
         error: (err) => console.error('Error al cargar comentarios', err)
@@ -146,7 +147,7 @@ export class VozEmpleadoPage {
       empleado: { idEmpleado: this.idEmpleado }
     };
 
-    this.http.post('http://localhost:8080/api/comentarios/nuevo', body, { headers })
+    this.http.post(environment.apiUrl+'/api/comentarios/nuevo', body, { headers })
       .subscribe({
         next: (res: any) => {
           // Inyectamos nuestro nombre localmente para no hacer otra petición a BBDD

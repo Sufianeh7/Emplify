@@ -13,6 +13,7 @@ import {
 
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
 import { SolicitudesPage } from '../solicitudes/solicitudes.page';
+import { environment } from 'src/environments/environment.prod';
 
 @Component({
   selector: 'app-cuadrante',
@@ -75,7 +76,7 @@ export class CuadrantePage implements OnInit {
       const empleado = JSON.parse(empleadoStr);
       const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-      this.http.get(`http://localhost:8080/api/cuadrante/empleado/${empleado.idEmpleado}`, { headers })
+      this.http.get(environment.apiUrl+`/api/cuadrante/empleado/${empleado.idEmpleado}`, { headers })
         .subscribe({
           next: (res: any) => {
             this.turnos = res;
@@ -106,7 +107,7 @@ export class CuadrantePage implements OnInit {
       const empleado = JSON.parse(empleadoStr);
       const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
 
-      this.http.get(`http://localhost:8080/api/fichajes/historial/${empleado.idEmpleado}`, { headers })
+      this.http.get(environment.apiUrl+`/api/fichajes/historial/${empleado.idEmpleado}`, { headers })
         .subscribe({
           next: (res: any) => {
             this.fichajesTotales = res;
