@@ -48,7 +48,7 @@ export class HomePage {
       'Authorization': 'Basic ' + token
     });
 
-    this.http.get(environment.apiUrl+'/empleados/perfil', { headers }).subscribe({
+    this.http.get(environment.apiUrl+'/api/empleados/perfil', { headers }).subscribe({
       next: (res: any) => {
         localStorage.setItem('token', token);
         localStorage.setItem('empleadoLogueado', JSON.stringify(res));
