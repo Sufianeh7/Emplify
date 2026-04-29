@@ -13,7 +13,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // Este es el "puerto de entrada" al que se conectará la app de Ionic
         // setAllowedOriginPatterns("*") permite que el frontend se conecte sin problemas de CORS
-        registry.addEndpoint("/ws-endpoint").setAllowedOriginPatterns("*").withSockJS();
+        registry.addEndpoint("/api/ws-endpoint").setAllowedOriginPatterns("*").withSockJS();
     }
 
     @Override
