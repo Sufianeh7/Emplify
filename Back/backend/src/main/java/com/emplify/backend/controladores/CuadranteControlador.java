@@ -18,7 +18,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/cuadrante")
-@CrossOrigin(origins = "http://localhost:8100")
 public class CuadranteControlador {
 
     @Autowired

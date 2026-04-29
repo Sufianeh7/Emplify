@@ -20,7 +20,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tickets")
-@CrossOrigin(origins = "http://localhost:8100")
 public class TicketControlador {
 
     @Autowired

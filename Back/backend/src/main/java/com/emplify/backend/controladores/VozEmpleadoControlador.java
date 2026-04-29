@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/voz-empleado")
-@CrossOrigin(origins = "http://localhost:8100")
 public class VozEmpleadoControlador {
 
     @Autowired

@@ -18,7 +18,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/rrhh")
-@CrossOrigin(origins = "http://localhost:8100")
 public class RRHHControlador {
 
     @Autowired

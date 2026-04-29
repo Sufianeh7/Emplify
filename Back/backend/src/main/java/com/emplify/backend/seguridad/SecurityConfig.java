@@ -6,7 +6,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import jakarta.servlet.http.HttpServletResponse;
+
+import java.util.Arrays;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -26,7 +31,7 @@ public class SecurityConfig {
                         .requestMatchers("/ws-endpoint/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                // 2: Si falla la seguridad, devolvemos un 401 normal sin despertar al navegador
+                // 2: Si falla la seguridad, devolvemos un 401
                 .httpBasic(basic -> basic.authenticationEntryPoint((request, response, authException) -> {
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No autorizado");
                 }));
@@ -34,21 +39,30 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // 2. Le decimos a Spring qué encriptador usar
+    // 2. Indica a Spring qué encriptador usar
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    // 3. Configuración Global de CORS
     @Bean
-    public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
-        org.springframework.web.cors.CorsConfiguration configuration = new org.springframework.web.cors.CorsConfiguration();
-        configuration.setAllowedOrigins(java.util.Arrays.asList("http://localhost:8100"));
-        configuration.setAllowedMethods(java.util.Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(java.util.Arrays.asList("Authorization", "Content-Type"));
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        // Usamos OriginPatterns con "*" para permitir cualquier origen
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+
+        // Permitimos los métodos HTTP necesarios
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        // Permitimos las cabeceras necesarias para la autenticación y el contenido
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Cache-Control"));
+
+        // Permitimos el envío de credenciales
         configuration.setAllowCredentials(true);
 
-        org.springframework.web.cors.UrlBasedCorsConfigurationSource source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
