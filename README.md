@@ -1,4 +1,4 @@
-# Emplify - Guía de Inicio Rápido
+# Emplify - Guía de Inicio
 
 ![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=java&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
