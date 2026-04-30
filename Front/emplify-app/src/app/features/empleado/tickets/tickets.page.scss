@@ -1,11 +1,28 @@
-.app-background { --background: #f2f4f8; }
-.chat-background { --background: #e5ded8; } /* Fondo tipo WhatsApp */
+.app-background {
+  --background: #f2f4f8;
+
+  @media (prefers-color-scheme: dark) {
+    --background: var(--ion-background-color);
+  }
+}
+
+.chat-background {
+  --background: #e5ded8; 
+
+  @media (prefers-color-scheme: dark) {
+    --background: #0b141a;
+  }
+}
 
 .section-header {
   padding: 25px 20px 40px 20px; color: white;
   &.blue-bg { background: #0071ad; }
   h2 { margin: 0; font-size: 1.6rem; font-weight: 800; }
   p { margin: 5px 0 0 0; font-size: 0.95rem; opacity: 0.9; }
+
+  @media (prefers-color-scheme: dark) {
+    &.blue-bg { background: #005684; }
+  }
 }
 
 .dashboard-container { padding: 5px 15px 20px 15px; margin-top: -20px; }
@@ -13,80 +30,223 @@
 /* SEGMENTOS */
 .segment-container {
   background: #ffffff; padding: 5px; border-radius: 10px; margin-bottom: 15px;
+
+  @media (prefers-color-scheme: dark) {
+    background: var(--ion-color-step-50, #1e1e1e);
+  }
 }
 .custom-segment {
   background: #f2f4f8;
-  ion-segment-button { color: #565959; font-weight: 600; &::part(indicator-background) { background: #ffffff; } }
+
+  @media (prefers-color-scheme: dark) {
+    background: #121212;
+  }
+
+  ion-segment-button {
+    color: #565959; font-weight: 600;
+
+    @media (prefers-color-scheme: dark) {
+      color: #b0b0b0;
+    }
+
+    &::part(indicator-background) {
+      background: #ffffff;
+
+      @media (prefers-color-scheme: dark) {
+        background: #2a2a2a;
+      }
+    }
+  }
 }
 
 /* TARJETAS DE TICKETS */
 .flat-card {
   background: #ffffff; border: 1px solid #d5d9d9; border-radius: 8px; padding: 16px; margin-bottom: 12px;
+
+  @media (prefers-color-scheme: dark) {
+    background: var(--ion-color-step-50, #1e1e1e);
+    border-color: #333333;
+  }
 }
 .ticket-card {
   .ticket-header {
     display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
+
     .badge-estado {
       font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase;
+
+      /* Modo Claro */
       &.pendiente { background: #fff3e0; color: #e65100; }
       &.abierto { background: #e3f2fd; color: #0071ad; }
       &.cerrado, &.resuelto { background: #f2f4f8; color: #565959; }
+
+      /* Modo Oscuro*/
+      @media (prefers-color-scheme: dark) {
+        &.pendiente { background: rgba(230, 81, 0, 0.2); color: #ffcc80; }
+        &.abierto { background: rgba(0, 113, 173, 0.2); color: #90caf9; }
+        &.cerrado, &.resuelto { background: rgba(86, 89, 89, 0.2); color: #b0b0b0; }
+      }
     }
-    .ticket-date { font-size: 0.8rem; color: #565959; }
+    .ticket-date {
+      font-size: 0.8rem; color: #565959;
+
+      @media (prefers-color-scheme: dark) {
+        color: #b0b0b0;
+      }
+    }
   }
-  .ticket-title { margin: 0 0 5px 0; font-size: 1.05rem; font-weight: 800; color: #0f1111; }
-  .ticket-preview { margin: 0; font-size: 0.9rem; color: #565959; }
+  .ticket-title {
+    margin: 0 0 5px 0; font-size: 1.05rem; font-weight: 800; color: #0f1111;
+
+    @media (prefers-color-scheme: dark) {
+      color: var(--ion-text-color, #ffffff);
+    }
+  }
+  .ticket-preview {
+    margin: 0; font-size: 0.9rem; color: #565959;
+
+    @media (prefers-color-scheme: dark) {
+      color: #b0b0b0;
+    }
+  }
   .ticket-footer {
     display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px solid #f2f4f8;
-    .ticket-id { font-size: 0.8rem; font-weight: 700; color: #888c8c; }
-    ion-icon { color: #0071ad; }
+
+    @media (prefers-color-scheme: dark) {
+      border-top-color: #333333;
+    }
+
+    .ticket-id {
+      font-size: 0.8rem; font-weight: 700; color: #888c8c;
+
+      @media (prefers-color-scheme: dark) {
+        color: #666666;
+      }
+    }
+    ion-icon {
+      color: #0071ad;
+
+      @media (prefers-color-scheme: dark) {
+        color: #3880ff;
+      }
+    }
   }
 }
 
-.empty-state { padding: 40px 20px; ion-icon { font-size: 4rem; color: #d5d9d9; } }
+.empty-state {
+  padding: 40px 20px;
+  ion-icon {
+    font-size: 4rem; color: #d5d9d9;
+
+    @media (prefers-color-scheme: dark) {
+      color: #444444;
+    }
+  }
+}
 
 /* CHAT MODAL */
 .chat-container { display: flex; flex-direction: column; padding-bottom: 20px; }
 .message-wrapper {
   display: flex; flex-direction: column; margin-bottom: 10px; max-width: 85%;
 
-  /* BURBUJA DEL EMPLEADO (AZUL CORPORATIVO) */
+  /* BURBUJA DEL EMPLEADO */
   &.mine {
     align-self: flex-end;
     .message-bubble {
       background: #0071ad;
       color: #ffffff;
       border-radius: 12px 0 12px 12px;
+
+      @media (prefers-color-scheme: dark) {
+        background: #005684;
+      }
+
       p { margin: 0; font-size: 0.95rem; color: #ffffff; word-wrap: break-word; }
       .time { display: block; font-size: 0.65rem; color: rgba(255, 255, 255, 0.8); text-align: right; margin-top: 4px; }
     }
   }
 
-  /* BURBUJA DE RRHH (BLANCO/GRIS) */
+  /* BURBUJA DE RRHH */
   &.theirs {
     align-self: flex-start;
     .message-bubble {
       background: #ffffff;
       border-radius: 0 12px 12px 12px;
-      .sender-name { display: block; font-size: 0.75rem; font-weight: 700; color: #0071ad; margin-bottom: 2px; }
-      p { margin: 0; font-size: 0.95rem; color: #1a1a1a; word-wrap: break-word; }
-      .time { display: block; font-size: 0.65rem; color: #888c8c; text-align: right; margin-top: 4px; }
+
+      @media (prefers-color-scheme: dark) {
+        background: #1e1e1e;
+      }
+
+      .sender-name {
+        display: block; font-size: 0.75rem; font-weight: 700; color: #0071ad; margin-bottom: 2px;
+
+        @media (prefers-color-scheme: dark) {
+          color: #90caf9;
+        }
+      }
+      p {
+        margin: 0; font-size: 0.95rem; color: #1a1a1a; word-wrap: break-word;
+
+        @media (prefers-color-scheme: dark) {
+          color: #e0e0e0;
+        }
+      }
+      .time {
+        display: block; font-size: 0.65rem; color: #888c8c; text-align: right; margin-top: 4px;
+
+        @media (prefers-color-scheme: dark) {
+          color: #888c8c;
+        }
+      }
     }
   }
 
   .message-bubble {
     padding: 8px 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); position: relative;
+
+    @media (prefers-color-scheme: dark) {
+      box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    }
   }
 }
 
 /* ÁREA DE ESCRITURA */
 .chat-footer {
   background: #f2f4f8; padding: 8px 15px;
+
+  @media (prefers-color-scheme: dark) {
+    background: #121212; /* Fondo del footer oscuro */
+  }
+
   .input-container {
     display: flex; align-items: center; background: #ffffff; border-radius: 20px; padding: 2px 5px 2px 15px;
-    ion-button { color: #0071ad; margin: 0; }
+
+    @media (prefers-color-scheme: dark) {
+      background: #2a2a2a; /* Input oscuro */
+    }
+
+    ion-button {
+      color: #0071ad; margin: 0;
+
+      @media (prefers-color-scheme: dark) {
+        color: #3880ff;
+      }
+    }
   }
-  .closed-notice { text-align: center; font-size: 0.85rem; color: #565959; padding: 10px; font-weight: 500; font-style: italic;}
+  .closed-notice {
+    text-align: center; font-size: 0.85rem; color: #565959; padding: 10px; font-weight: 500; font-style: italic;
+
+    @media (prefers-color-scheme: dark) {
+      color: #b0b0b0;
+    }
+  }
 }
 
-.fab-corporativo { --background: #0071ad; --color: white; }
+.fab-corporativo {
+  --background: #0071ad;
+  --color: white;
+
+  @media (prefers-color-scheme: dark) {
+    --background: #3880ff;
+  }
+}

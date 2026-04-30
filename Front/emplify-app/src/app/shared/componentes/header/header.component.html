@@ -1,18 +1,18 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar style="--background: transparent;">
+  <ion-toolbar class="transparent-toolbar">
 
-    <ion-title (click)="goInicio()" style="font-weight: 800; font-size: 1.5rem; letter-spacing: -1px; color: #1a1a1a;">
-      emplify<span style="color: #0071ad;">.</span>
+    <ion-title (click)="goInicio()" class="app-logo">
+      emplify<span class="dot">.</span>
     </ion-title>
 
     <ion-buttons slot="end">
 
       <ion-button (click)="goTickets()">
-        <ion-icon slot="icon-only" name="chatbox-ellipses-outline" color="dark"></ion-icon>
+        <ion-icon slot="icon-only" name="chatbox-ellipses-outline" class="header-icon"></ion-icon>
       </ion-button>
 
       <ion-button (click)="goPerfil()">
-        <ion-icon slot="icon-only" name="person-circle-outline" color="dark"></ion-icon>
+        <ion-icon slot="icon-only" name="person-circle-outline" class="header-icon"></ion-icon>
       </ion-button>
 
     </ion-buttons>

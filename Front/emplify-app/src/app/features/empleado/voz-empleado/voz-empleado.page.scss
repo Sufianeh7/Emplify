@@ -1,5 +1,11 @@
 /* --- FONDOS Y CONTENEDORES BASE --- */
-.app-background { --background: #f2f4f8; }
+.app-background {
+  --background: #f2f4f8;
+
+  @media (prefers-color-scheme: dark) {
+    --background: var(--ion-background-color);
+  }
+}
 
 .dashboard-container {
   padding: 5px 15px 20px 15px;
@@ -10,7 +16,15 @@
 .section-header {
   padding: 25px 20px 40px 20px;
   color: white;
-  &.blue-bg { background: #0071ad; }
+
+  &.blue-bg {
+    background: #0071ad;
+
+    @media (prefers-color-scheme: dark) {
+      background: #005684;
+    }
+  }
+
   h2 { margin: 0; font-size: 1.6rem; font-weight: 800; }
   p { margin: 5px 0 0 0; font-size: 0.95rem; opacity: 0.9; }
 }
@@ -24,18 +38,45 @@
   margin-bottom: 15px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.02);
 
+  @media (prefers-color-scheme: dark) {
+    background: var(--ion-color-step-50, #1e1e1e);
+    border-color: #333333;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+  }
+
   &.text-center { text-align: center; }
 }
 
 /* --- EMPTY STATE --- */
 .empty-state {
   padding: 40px 20px;
-  ion-icon { font-size: 4rem; color: #d5d9d9; margin-bottom: 10px; }
-  h3 { margin: 0 0 5px 0; font-size: 1.2rem; color: #1a1a1a; font-weight: 700; }
-  p { margin: 0; color: #565959; font-size: 0.95rem; }
+
+  ion-icon {
+    font-size: 4rem; color: #d5d9d9; margin-bottom: 10px;
+
+    @media (prefers-color-scheme: dark) {
+      color: #444444;
+    }
+  }
+
+  h3 {
+    margin: 0 0 5px 0; font-size: 1.2rem; color: #1a1a1a; font-weight: 700;
+
+    @media (prefers-color-scheme: dark) {
+      color: var(--ion-text-color, #ffffff);
+    }
+  }
+
+  p {
+    margin: 0; color: #565959; font-size: 0.95rem;
+
+    @media (prefers-color-scheme: dark) {
+      color: #b0b0b0;
+    }
+  }
 }
 
-/* --- PUBLICACIÓN (POST) --- */
+/* --- PUBLICACIÓN --- */
 .post-card {
   padding: 0;
 
@@ -45,6 +86,10 @@
     padding: 16px;
     background: #ffffff;
 
+    @media (prefers-color-scheme: dark) {
+      background: transparent;
+    }
+
     .post-avatar {
       width: 40px;
       height: 40px;
@@ -52,20 +97,49 @@
       overflow: hidden;
       margin-right: 12px;
       border: 1px solid #e7e9e9;
+
+      @media (prefers-color-scheme: dark) {
+        border-color: #333333;
+      }
+
       img { width: 100%; height: 100%; object-fit: cover; }
     }
 
     .post-meta {
-      h4 { margin: 0 0 2px 0; font-size: 0.95rem; font-weight: 700; color: #0f1111; }
-      span { font-size: 0.8rem; color: #565959; }
+      h4 {
+        margin: 0 0 2px 0; font-size: 0.95rem; font-weight: 700; color: #0f1111;
+
+        @media (prefers-color-scheme: dark) {
+          color: var(--ion-text-color, #ffffff);
+        }
+      }
+      span {
+        font-size: 0.8rem; color: #565959;
+
+        @media (prefers-color-scheme: dark) {
+          color: #b0b0b0;
+        }
+      }
     }
   }
 
   .post-content {
     padding: 0 16px 16px 16px;
 
-    h3 { margin: 0 0 8px 0; font-size: 1.1rem; font-weight: 800; color: #0f1111; }
-    p { margin: 0; font-size: 0.95rem; color: #1a1a1a; line-height: 1.5; white-space: pre-line; }
+    h3 {
+      margin: 0 0 8px 0; font-size: 1.1rem; font-weight: 800; color: #0f1111;
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--ion-text-color, #ffffff);
+      }
+    }
+    p {
+      margin: 0; font-size: 0.95rem; color: #1a1a1a; line-height: 1.5; white-space: pre-line;
+
+      @media (prefers-color-scheme: dark) {
+        color: #e0e0e0;
+      }
+    }
   }
 
   .post-actions {
@@ -76,6 +150,11 @@
     position: relative;
     overflow: hidden;
 
+    @media (prefers-color-scheme: dark) {
+      border-top-color: #333333;
+      background: #232323;
+    }
+
     .btn-comentarios {
       color: #0071ad;
       font-size: 0.85rem;
@@ -83,6 +162,10 @@
       display: flex;
       align-items: center;
       gap: 6px;
+
+      @media (prefers-color-scheme: dark) {
+        color: #3880ff;
+      }
 
       ion-icon { font-size: 1.1rem; }
     }
@@ -95,7 +178,18 @@
   border-top: 1px solid #e7e9e9;
   padding: 16px;
 
-  .no-comments { margin: 0 0 10px 0; font-size: 0.85rem; color: #565959; text-align: center; font-style: italic; }
+  @media (prefers-color-scheme: dark) {
+    background: #121212;
+    border-top-color: #333333;
+  }
+
+  .no-comments {
+    margin: 0 0 10px 0; font-size: 0.85rem; color: #565959; text-align: center; font-style: italic;
+
+    @media (prefers-color-scheme: dark) {
+      color: #b0b0b0;
+    }
+  }
 
   .comment-bubble {
     background: #ffffff;
@@ -104,9 +198,32 @@
     padding: 12px;
     margin-bottom: 10px;
 
-    .comment-author { display: block; font-size: 0.85rem; font-weight: 700; color: #0f1111; margin-bottom: 4px; }
-    .comment-text { margin: 0 0 5px 0; font-size: 0.9rem; color: #1a1a1a; line-height: 1.4; }
-    .comment-date { font-size: 0.7rem; color: #565959; }
+    @media (prefers-color-scheme: dark) {
+      background: #2a2a2a;
+      border-color: #444444;
+    }
+
+    .comment-author {
+      display: block; font-size: 0.85rem; font-weight: 700; color: #0f1111; margin-bottom: 4px;
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--ion-text-color, #ffffff);
+      }
+    }
+    .comment-text {
+      margin: 0 0 5px 0; font-size: 0.9rem; color: #1a1a1a; line-height: 1.4;
+
+      @media (prefers-color-scheme: dark) {
+        color: #e0e0e0;
+      }
+    }
+    .comment-date {
+      font-size: 0.7rem; color: #565959;
+
+      @media (prefers-color-scheme: dark) {
+        color: #888888;
+      }
+    }
   }
 
   .comment-input-box {
@@ -118,8 +235,26 @@
     padding: 2px 5px 2px 15px;
     margin-top: 10px;
 
-    ion-input { --padding-start: 0; font-size: 0.9rem; }
-    ion-button { --padding-start: 10px; --padding-end: 10px; margin: 0; color: #0071ad; }
+    @media (prefers-color-scheme: dark) {
+      background: #1e1e1e;
+      border-color: #444444;
+    }
+
+    ion-input {
+      --padding-start: 0; font-size: 0.9rem;
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--ion-text-color, #ffffff);
+      }
+    }
+
+    ion-button {
+      --padding-start: 10px; --padding-end: 10px; margin: 0; color: #0071ad;
+
+      @media (prefers-color-scheme: dark) {
+        color: #3880ff;
+      }
+    }
   }
 }
 
@@ -127,14 +262,23 @@
 .fab-corporativo {
   --background: #0071ad;
   --color: white;
+
+  @media (prefers-color-scheme: dark) {
+    --background: #3880ff;
+  }
 }
 
 .btn-corporativo {
   --background: #0071ad;
+  --color: #ffffff;
   --border-radius: 8px;
   --box-shadow: none;
   font-weight: 700;
   height: 48px;
+
+  @media (prefers-color-scheme: dark) {
+    --background: #3880ff;
+  }
 }
 
 /* --- MODAL FORMULARIO --- */
@@ -143,11 +287,22 @@
   border-radius: 12px;
   border: 1px solid #e7e9e9;
   overflow: hidden;
+
+  @media (prefers-color-scheme: dark) {
+    background: var(--ion-color-step-50, #1e1e1e);
+    border-color: #333333;
+  }
 }
 
 .form-item {
   --padding-start: 16px;
   --inner-padding-end: 16px;
   border-bottom: 1px solid #f2f4f8;
+
+  @media (prefers-color-scheme: dark) {
+    --background: var(--ion-color-step-50, #1e1e1e);
+    border-bottom-color: #333333;
+  }
+
   &:last-child { border-bottom: none; }
 }

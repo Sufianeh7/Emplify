@@ -1,50 +1,153 @@
-.app-background { --background: #f2f4f8; }
+.app-background {
+  --background: #f2f4f8;
+
+  @media (prefers-color-scheme: dark) {
+    --background: var(--ion-background-color);
+  }
+}
 
 .section-header {
   padding: 25px 20px 40px 20px; color: white;
-  &.blue-bg { background: #0071ad; }
+
+  &.blue-bg {
+    background: #0071ad;
+
+    @media (prefers-color-scheme: dark) {
+      background: #005684;
+    }
+  }
+
   h2 { margin: 0; font-size: 1.6rem; font-weight: 800; }
   p { margin: 5px 0 0 0; font-size: 0.95rem; opacity: 0.9; }
 }
 
 .dashboard-container { padding: 5px 15px 20px 15px; margin-top: -20px; }
 
-.flat-card { background: #ffffff; border: 1px solid #d5d9d9; border-radius: 12px; padding: 16px; margin-bottom: 15px; }
+.flat-card {
+  background: #ffffff; border: 1px solid #d5d9d9; border-radius: 12px; padding: 16px; margin-bottom: 15px;
+
+  @media (prefers-color-scheme: dark) {
+    background: var(--ion-color-step-50, #1e1e1e);
+    border-color: #333333;
+  }
+}
 
 .card-title {
   font-size: 1.05rem; font-weight: 800; color: #0f1111; margin: 0 0 15px 0; display: flex; align-items: center;
-  ion-icon { color: #0071ad; font-size: 1.4rem; margin-right: 8px; }
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--ion-text-color, #ffffff);
+  }
+
+  ion-icon {
+    color: #0071ad; font-size: 1.4rem; margin-right: 8px;
+
+    @media (prefers-color-scheme: dark) {
+      color: #3880ff;
+    }
+  }
 }
 
-.form-container { background: #f8f9fa; border-radius: 8px; border: 1px solid #e7e9e9; }
+.form-container {
+  background: #f8f9fa; border-radius: 8px; border: 1px solid #e7e9e9;
+
+  @media (prefers-color-scheme: dark) {
+    background: var(--ion-color-step-50, #1e1e1e);
+    border-color: #333333;
+  }
+}
 .form-item { --padding-start: 10px; --inner-padding-end: 10px; --background: transparent; }
 
 /* RESUMEN TOTAL */
 .summary-card {
   background: #e3f2fd; border: 1px solid #bbdefb;
+
+  @media (prefers-color-scheme: dark) {
+    background: rgba(0, 113, 173, 0.15); 
+    border-color: rgba(56, 128, 255, 0.3);
+  }
+
   .summary-content {
     display: flex; align-items: center;
-    ion-icon { font-size: 2.5rem; color: #0071ad; margin-right: 15px; }
-    .text p { margin: 0; font-size: 0.85rem; color: #0071ad; font-weight: 600; text-transform: uppercase; }
-    .text h2 { margin: 0; font-size: 1.8rem; font-weight: 800; color: #1a1a1a; }
+
+    ion-icon {
+      font-size: 2.5rem; color: #0071ad; margin-right: 15px;
+
+      @media (prefers-color-scheme: dark) {
+        color: #90caf9;
+      }
+    }
+
+    .text p {
+      margin: 0; font-size: 0.85rem; color: #0071ad; font-weight: 600; text-transform: uppercase;
+
+      @media (prefers-color-scheme: dark) {
+        color: #90caf9;
+      }
+    }
+
+    .text h2 {
+      margin: 0; font-size: 1.8rem; font-weight: 800; color: #1a1a1a;
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--ion-text-color, #ffffff);
+      }
+    }
   }
 }
 
-.section-title { font-size: 1.1rem; font-weight: 800; color: #1a1a1a; margin: 20px 0 15px 0; }
+.section-title {
+  font-size: 1.1rem; font-weight: 800; color: #1a1a1a; margin: 20px 0 15px 0;
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--ion-text-color, #ffffff);
+  }
+}
 
 /* REGISTROS INDIVIDUALES */
 .log-card {
   .log-header {
     display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f2f4f8; padding-bottom: 10px; margin-bottom: 10px;
-    .log-date { font-weight: 700; color: #1a1a1a; text-transform: capitalize; }
-    .badge-horas { background: #e8f5e9; color: #2e7d32; padding: 4px 8px; border-radius: 6px; font-weight: 800; font-size: 0.85rem; }
+
+    @media (prefers-color-scheme: dark) {
+      border-bottom-color: #333333;
+    }
+
+    .log-date {
+      font-weight: 700; color: #1a1a1a; text-transform: capitalize;
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--ion-text-color, #ffffff);
+      }
+    }
+
+    .badge-horas {
+      background: #e8f5e9; color: #2e7d32; padding: 4px 8px; border-radius: 6px; font-weight: 800; font-size: 0.85rem;
+
+      @media (prefers-color-scheme: dark) {
+        background: rgba(46, 125, 50, 0.2);
+        color: #81c784;
+      }
+    }
   }
+
   .log-body {
     .log-row {
       display: flex; align-items: center; margin-bottom: 5px; font-size: 0.95rem; color: #565959;
+
+      @media (prefers-color-scheme: dark) {
+        color: #b0b0b0;
+      }
+
       ion-icon { margin-right: 8px; font-size: 1.2rem; }
     }
   }
 }
 
-.empty-state { padding: 40px 20px; }
+.empty-state {
+  padding: 40px 20px;
+
+  @media (prefers-color-scheme: dark) {
+    color: #b0b0b0;
+  }
+}

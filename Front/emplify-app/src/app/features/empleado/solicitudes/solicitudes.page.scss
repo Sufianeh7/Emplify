@@ -1,6 +1,10 @@
 /* --- FONDOS Y CONTENEDORES BASE --- */
 .app-background {
   --background: #f2f4f8;
+
+  @media (prefers-color-scheme: dark) {
+    --background: var(--ion-background-color);
+  }
 }
 
 .dashboard-container {
@@ -16,6 +20,12 @@
   position: relative;
   overflow: hidden;
   box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+
+  @media (prefers-color-scheme: dark) {
+    background: var(--ion-color-step-50, #1e1e1e);
+    border-color: #333333;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+  }
 
   &.text-center { text-align: center; }
 }
@@ -37,11 +47,19 @@
 .balance-value {
   font-size: 2.5rem;
   font-weight: 800;
-  color: #0071ad; /* Azul corporativo para vacaciones */
+  color: #0071ad; 
   line-height: 1.1;
 
+  @media (prefers-color-scheme: dark) {
+    color: #3880ff;
+  }
+
   &.asuntos {
-    color: #e67e22; /* Naranja/Bronce para asuntos propios */
+    color: #e67e22;
+
+    @media (prefers-color-scheme: dark) {
+      color: #ffcc80;
+    }
   }
 }
 
@@ -52,23 +70,36 @@
   margin-top: 4px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+
+  @media (prefers-color-scheme: dark) {
+    color: #b0b0b0;
+  }
 }
 
 .balance-divider {
   width: 1px;
   height: 50px;
   background-color: #e7e9e9;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: #333333;
+  }
 }
 
 /* --- BOTÓN --- */
 .btn-corporativo {
   --background: #0071ad;
+  --color: #ffffff;
   --border-radius: 8px;
   --box-shadow: none;
   font-weight: 700;
   letter-spacing: 0.5px;
   margin: 0;
   height: 48px;
+
+  @media (prefers-color-scheme: dark) {
+    --background: #3880ff;
+  }
 }
 
 /* --- HISTORIAL DE SOLICITUDES --- */
@@ -77,10 +108,15 @@
   font-weight: 800;
   color: #1a1a1a;
   margin: 20px 0 15px 5px;
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--ion-text-color, #ffffff);
+  }
 }
 
 .card-solicitud {
   padding: 0;
+
   .solicitud-header {
     display: flex;
     justify-content: space-between;
@@ -89,19 +125,52 @@
     background: #f7f9fa;
     border-bottom: 1px solid #e7e9e9;
 
+    @media (prefers-color-scheme: dark) {
+      background: #2a2a2a;
+      border-bottom-color: #333333;
+    }
+
     .titulo-tipo {
       display: flex;
       align-items: center;
       gap: 8px;
-      ion-icon { font-size: 1.2rem; color: #565959; }
-      h3 { margin: 0; font-size: 0.95rem; font-weight: 700; color: #0f1111; }
+
+      ion-icon {
+        font-size: 1.2rem; color: #565959;
+
+        @media (prefers-color-scheme: dark) {
+          color: #b0b0b0;
+        }
+      }
+
+      h3 {
+        margin: 0; font-size: 0.95rem; font-weight: 700; color: #0f1111;
+
+        @media (prefers-color-scheme: dark) {
+          color: var(--ion-text-color, #ffffff);
+        }
+      }
     }
   }
 
   .solicitud-body {
     padding: 16px;
-    p { margin: 0 0 4px 0; font-size: 0.95rem; color: #0f1111; }
-    .detalle { font-size: 0.85rem; color: #565959; margin: 0; }
+
+    p {
+      margin: 0 0 4px 0; font-size: 0.95rem; color: #0f1111;
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--ion-text-color, #ffffff);
+      }
+    }
+
+    .detalle {
+      font-size: 0.85rem; color: #565959; margin: 0;
+
+      @media (prefers-color-scheme: dark) {
+        color: #b0b0b0;
+      }
+    }
   }
 }
 
@@ -112,9 +181,17 @@
   padding: 4px 10px;
   border-radius: 20px;
 
+  /* Modo Claro */
   &.aprobada { background: #e3f2fd; color: #0d47a1; }
   &.pendiente { background: #fff8e1; color: #f57f17; }
   &.rechazada { background: #ffebee; color: #c62828; }
+
+  /* Modo Oscuro: Textos brillantes y fondos transparentes */
+  @media (prefers-color-scheme: dark) {
+    &.aprobada { background: rgba(13, 71, 161, 0.2); color: #90caf9; }
+    &.pendiente { background: rgba(245, 127, 23, 0.2); color: #ffe082; }
+    &.rechazada { background: rgba(198, 40, 40, 0.2); color: #ef9a9a; }
+  }
 }
 
 /* --- ESTILOS DEL NUEVO FORMULARIO (MODAL) --- */
@@ -124,6 +201,11 @@
   border: 1px solid #e7e9e9;
   overflow: hidden;
   box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+
+  @media (prefers-color-scheme: dark) {
+    background: var(--ion-color-step-50, #1e1e1e);
+    border-color: #333333;
+  }
 }
 
 .form-item {
@@ -131,11 +213,20 @@
   --inner-padding-end: 16px;
   border-bottom: 1px solid #f2f4f8;
 
+  @media (prefers-color-scheme: dark) {
+    --background: var(--ion-color-step-50, #1e1e1e);
+    border-bottom-color: #333333;
+  }
+
   &:last-child {
     border-bottom: none;
   }
 
   ion-input, ion-select, ion-textarea {
     font-size: 0.95rem;
+
+    @media (prefers-color-scheme: dark) {
+      color: var(--ion-text-color, #ffffff);
+    }
   }
 }

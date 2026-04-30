@@ -1,9 +1,50 @@
 ion-header {
   box-shadow: none;
+
+  /* Modo oscuro */
+  @media (prefers-color-scheme: dark) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
 }
 
 ion-toolbar {
-  /* Añade el espacio automático de la barra de estado + 10px extra de respiro */
   --padding-top: calc(env(safe-area-inset-top) + 20px);
   --padding-bottom: 5px;
+
+  /* Modo oscuro */
+  @media (prefers-color-scheme: dark) {
+    --background: var(--ion-color-step-50, #1e1e1e);
+  }
+}
+
+.transparent-toolbar {
+  --background: transparent;
+}
+
+.app-logo {
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: -1px;
+  color: #1a1a1a;
+  cursor: pointer;
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--ion-text-color, #ffffff);
+  }
+
+  .dot {
+    color: #0071ad;
+
+    @media (prefers-color-scheme: dark) {
+      color: #3880ff;
+    }
+  }
+}
+
+.header-icon {
+  color: #1a1a1a;
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--ion-text-color, #ffffff);
+  }
 }

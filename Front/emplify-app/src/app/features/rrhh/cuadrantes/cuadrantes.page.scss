@@ -1,29 +1,86 @@
-.app-background { --background: #f2f4f8; }
+.app-background {
+  --background: #f2f4f8;
+
+  @media (prefers-color-scheme: dark) {
+    --background: var(--ion-background-color);
+  }
+}
 
 .section-header {
   padding: 25px 20px 40px 20px; color: white;
-  &.blue-bg { background: #0071ad; }
+
+  &.blue-bg {
+    background: #0071ad;
+
+    @media (prefers-color-scheme: dark) {
+      background: #005684;
+    }
+  }
+
   h2 { margin: 0; font-size: 1.6rem; font-weight: 800; }
   p { margin: 5px 0 0 0; font-size: 0.95rem; opacity: 0.9; }
 }
 
 .dashboard-container { padding: 5px 15px 20px 15px; margin-top: -20px; }
 
-.flat-card { background: #ffffff; border: 1px solid #d5d9d9; border-radius: 8px; padding: 16px; margin-bottom: 15px; }
+.flat-card {
+  background: #ffffff; border: 1px solid #d5d9d9; border-radius: 8px; padding: 16px; margin-bottom: 15px;
+
+  @media (prefers-color-scheme: dark) {
+    background: var(--ion-color-step-50, #1e1e1e);
+    border-color: #333333;
+  }
+}
 
 .card-title {
   font-size: 1.05rem; font-weight: 800; color: #0f1111; margin: 0 0 15px 0; display: flex; align-items: center;
-  ion-icon { color: #0071ad; font-size: 1.4rem; margin-right: 8px; }
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--ion-text-color, #ffffff);
+  }
+
+  ion-icon {
+    color: #0071ad; font-size: 1.4rem; margin-right: 8px;
+
+    @media (prefers-color-scheme: dark) {
+      color: #3880ff;
+    }
+  }
 }
 
 /* CAJAS DE SELECT */
-.form-container { background: #f8f9fa; border-radius: 8px; border: 1px solid #e7e9e9; }
+.form-container {
+  background: #f8f9fa; border-radius: 8px; border: 1px solid #e7e9e9;
+
+  @media (prefers-color-scheme: dark) {
+    background: var(--ion-color-step-50, #1e1e1e);
+    border-color: #333333;
+  }
+}
 .form-item { --padding-start: 10px; --inner-padding-end: 10px; --background: transparent; }
 
 /* CALENDARIO MULTIPLE */
 .calendar-wrapper {
   border: 1px solid #e7e9e9; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-  ion-datetime { --background: #ffffff; width: 100%; }
+
+  @media (prefers-color-scheme: dark) {
+    border-color: #333333;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+  }
+
+  ion-datetime {
+    --background: #ffffff; width: 100%;
+
+    @media (prefers-color-scheme: dark) {
+      --background: var(--ion-color-step-50, #1e1e1e);
+    }
+  }
 }
 
-.btn-corporativo { --background: #0071ad; --color: white; --border-radius: 8px; font-weight: 700; height: 48px; }
+.btn-corporativo {
+  --background: #0071ad; --color: white; --border-radius: 8px; font-weight: 700; height: 48px;
+
+  @media (prefers-color-scheme: dark) {
+    --background: #3880ff;
+  }
+}
