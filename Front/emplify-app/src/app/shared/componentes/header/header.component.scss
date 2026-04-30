@@ -28,6 +28,7 @@ ion-toolbar {
   letter-spacing: -1px;
   color: #1a1a1a;
   cursor: pointer;
+  margin-left: 15px;
   display: flex;
   align-items: center;
 
@@ -36,9 +37,10 @@ ion-toolbar {
   }
 
   .header-logo-img {
-    height: 40px;
+    height: 35px;
     width: auto;
     margin-right: 5px;
+    transform: translateY(2px);
   }
 
   .dot {
