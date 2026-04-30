@@ -58,6 +58,8 @@ export class GestionEquipoPage {
         next: (res: any) => this.solicitudes = res,
         error: (err) => console.error('Error al cargar peticiones', err)
       });
+
+      console.log(this.solicitudes)
   }
 
   // Obtiene la lista de personas que reportan a este mánager (y su saldo de días)
