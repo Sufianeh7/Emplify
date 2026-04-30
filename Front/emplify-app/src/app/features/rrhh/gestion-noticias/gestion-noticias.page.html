@@ -12,14 +12,14 @@
 
     <div class="segment-container">
       <ion-segment [(ngModel)]="seccionActual" mode="ios" class="custom-segment">
-        <ion-segment-button value="carrusel"><ion-label>Carrusel (Inicio)</ion-label></ion-segment-button>
-        <ion-segment-button value="muro"><ion-label>Muro (Voz Empleado)</ion-label></ion-segment-button>
+        <ion-segment-button value="carrusel"><ion-label>Noticias</ion-label></ion-segment-button>
+        <ion-segment-button value="muro"><ion-label>Voz del empleado</ion-label></ion-segment-button>
       </ion-segment>
     </div>
 
     <div *ngIf="seccionActual === 'carrusel'">
       <div class="flat-card full">
-        <h3 class="card-title"><ion-icon name="images-outline"></ion-icon> Nueva Noticia Visual</h3>
+        <h3 class="card-title"><ion-icon name="images-outline"></ion-icon> Nueva Noticia</h3>
         <div class="form-container">
           <ion-item lines="none" class="form-item"><ion-input label="Título" labelPlacement="floating" [(ngModel)]="nuevaNoticia.titulo"></ion-input></ion-item>
           <ion-item lines="none" class="form-item"><ion-input label="Subtítulo" labelPlacement="floating" [(ngModel)]="nuevaNoticia.subtitulo"></ion-input></ion-item>
