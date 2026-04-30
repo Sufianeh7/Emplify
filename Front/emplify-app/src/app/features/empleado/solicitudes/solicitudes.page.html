@@ -1,4 +1,4 @@
-<div class="dashboard-container" style="padding-top: 15px;">
+<div class="dashboard-container padding-top-15">
 
   <div class="flat-card full text-center">
 
@@ -24,7 +24,7 @@
   <h3 class="historial-titulo">Historial de solicitudes</h3>
 
   <div class="flat-card full text-center" *ngIf="misSolicitudes.length === 0">
-    <p style="color: #565959; margin: 10px 0;">No tienes ninguna solicitud en tu historial.</p>
+    <p class="empty-history-text">No tienes ninguna solicitud en tu historial.</p>
   </div>
 
   <div class="flat-card full card-solicitud" *ngFor="let sol of misSolicitudes">
@@ -51,11 +51,14 @@
 <ion-modal [isOpen]="isModalOpen" (didDismiss)="cerrarModal()" [initialBreakpoint]="0.9" [breakpoints]="[0, 0.9, 1]">
   <ng-template>
     <ion-header class="ion-no-border">
-      <ion-toolbar style="--background: #f2f4f8;">
-        <ion-title style="font-weight: 700; color: #1a1a1a;">Nueva Solicitud</ion-title>
+      <!-- Añadida clase modal-toolbar -->
+      <ion-toolbar class="modal-toolbar">
+        <!-- Añadida clase modal-title -->
+        <ion-title class="modal-title">Nueva Solicitud</ion-title>
         <ion-buttons slot="end">
-          <ion-button (click)="cerrarModal()" color="dark">
-            <ion-icon name="close-outline" style="font-size: 1.5rem;"></ion-icon>
+          <!-- Quitamos el color="dark" y añadimos clase modal-close-btn -->
+          <ion-button (click)="cerrarModal()" class="modal-close-btn">
+            <ion-icon name="close-outline"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
@@ -89,7 +92,8 @@
 
       </div>
 
-      <ion-button expand="block" class="btn-corporativo ion-margin-top" style="margin-top: 25px;" (click)="enviarSolicitud()">
+      <!-- Pasado el margin-top al SCSS (ver clase form-submit-btn) -->
+      <ion-button expand="block" class="btn-corporativo ion-margin-top form-submit-btn" (click)="enviarSolicitud()">
         <ion-icon slot="start" name="send-outline"></ion-icon>
         Enviar Solicitud
       </ion-button>

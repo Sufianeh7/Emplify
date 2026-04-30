@@ -7,7 +7,7 @@
 }
 
 .chat-background {
-  --background: #e5ded8; 
+  --background: #e5ded8;
 
   @media (prefers-color-scheme: dark) {
     --background: #0b141a;
@@ -248,5 +248,83 @@
 
   @media (prefers-color-scheme: dark) {
     --background: #3880ff;
+  }
+}
+
+.fab-container {
+  margin-bottom: 20px;
+}
+
+.ticket-card {
+  cursor: pointer;
+}
+
+.form-submit-btn {
+  margin-top: 25px;
+}
+
+/* --- ESTILOS DE LOS MODALES --- */
+
+/* Cabecera del Modal (Nuevo Ticket) */
+.modal-toolbar {
+  --background: #f2f4f8;
+
+  @media (prefers-color-scheme: dark) {
+    --background: var(--ion-color-step-50, #1e1e1e);
+  }
+}
+
+/* Cabecera del Modal (Chat) */
+.chat-modal-toolbar {
+  --background: #ffffff;
+  border-bottom: 1px solid #e7e9e9;
+
+  @media (prefers-color-scheme: dark) {
+    --background: var(--ion-color-step-50, #1e1e1e);
+    border-bottom-color: #333333;
+  }
+}
+
+/* Títulos y Subtítulos de Modales */
+.modal-title {
+  font-weight: 700;
+  color: #1a1a1a;
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--ion-text-color, #ffffff);
+  }
+}
+
+.chat-modal-title {
+  font-weight: 700;
+  color: #1a1a1a;
+  font-size: 1rem;
+  line-height: 1.2;
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--ion-text-color, #ffffff);
+  }
+}
+
+.chat-modal-subtitle {
+  font-size: 0.75rem;
+  color: #565959;
+  font-weight: 500;
+
+  @media (prefers-color-scheme: dark) {
+    color: #b0b0b0;
+  }
+}
+
+/* Botón de cerrar modales (X) */
+.modal-close-btn {
+  color: #1a1a1a;
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--ion-text-color, #ffffff);
+  }
+
+  ion-icon {
+    font-size: 1.5rem;
   }
 }

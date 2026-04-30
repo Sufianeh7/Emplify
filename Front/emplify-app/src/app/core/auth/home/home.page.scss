@@ -17,6 +17,13 @@
 .brand-header {
   margin-bottom: 40px;
 
+  .logo-img {
+    width: 100px;
+    height: auto;
+    margin-bottom: 10px;
+    display: inline-block;
+  }
+
   .logo {
     font-size: 3.2rem;
     font-weight: 800;

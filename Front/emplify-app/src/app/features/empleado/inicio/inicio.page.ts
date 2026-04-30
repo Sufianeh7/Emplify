@@ -7,7 +7,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { addIcons } from 'ionicons';
 import {
   calendarOutline, airplaneOutline, megaphoneOutline,
-  timeOutline, informationCircleOutline, heartOutline,
+  timeOutline, informationCircleOutline,
   playCircleOutline, stopCircleOutline
 } from 'ionicons/icons';
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
@@ -45,7 +45,7 @@ export class InicioPage implements OnInit, OnDestroy {
   ) {
     addIcons({
       calendarOutline, airplaneOutline, megaphoneOutline,
-      timeOutline, informationCircleOutline, heartOutline,
+      timeOutline, informationCircleOutline,
       playCircleOutline, stopCircleOutline
     });
   }

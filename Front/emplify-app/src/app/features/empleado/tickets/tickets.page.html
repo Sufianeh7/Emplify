@@ -25,7 +25,7 @@
     </div>
 
     <div class="flat-card full ticket-card ion-activatable ripple-parent"
-         *ngFor="let ticket of ticketsFiltrados" (click)="abrirChat(ticket)" style="cursor: pointer;">
+         *ngFor="let ticket of ticketsFiltrados" (click)="abrirChat(ticket)">
 
       <div class="ticket-header">
         <span class="badge-estado" [ngClass]="ticket.estado?.toLowerCase() || 'pendiente'">
@@ -46,22 +46,23 @@
 
   </div>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" style="margin-bottom: 20px;">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="fab-container">
     <ion-fab-button class="fab-corporativo" id="modal-nuevo-ticket">
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
+  <!-- MODAL: NUEVO TICKET -->
   <ion-modal trigger="modal-nuevo-ticket" #modalNuevo [initialBreakpoint]="0.8" [breakpoints]="[0, 0.8, 1]">
     <ng-template>
       <ion-header class="ion-no-border">
-        <ion-toolbar style="--background: #f2f4f8;">
+        <ion-toolbar class="modal-toolbar">
           <ion-buttons slot="start">
-            <ion-button (click)="modalNuevo.dismiss()" color="dark">
-              <ion-icon name="close-outline" style="font-size: 1.5rem;"></ion-icon>
+            <ion-button (click)="modalNuevo.dismiss()" class="modal-close-btn">
+              <ion-icon name="close-outline"></ion-icon>
             </ion-button>
           </ion-buttons>
-          <ion-title style="font-weight: 700; color: #1a1a1a;">Nuevo Ticket</ion-title>
+          <ion-title class="modal-title">Nuevo Ticket</ion-title>
         </ion-toolbar>
       </ion-header>
 
@@ -75,7 +76,7 @@
           </ion-item>
         </div>
 
-        <ion-button expand="block" class="btn-corporativo ion-margin-top" style="margin-top: 25px;"
+        <ion-button expand="block" class="btn-corporativo ion-margin-top form-submit-btn"
           [disabled]="!nuevoTitulo || !nuevaDescripcion" (click)="crearTicket(modalNuevo)">
           <ion-icon slot="start" name="send-outline"></ion-icon>
           Abrir Ticket
@@ -84,19 +85,20 @@
     </ng-template>
   </ion-modal>
 
+  <!-- MODAL: CHAT DE TICKET -->
   <ion-modal [isOpen]="isChatOpen" (didDismiss)="cerrarChat()">
     <ng-template>
       <ion-header class="ion-no-border">
-        <ion-toolbar style="--background: #ffffff; border-bottom: 1px solid #e7e9e9;">
+        <ion-toolbar class="chat-modal-toolbar">
           <ion-buttons slot="start">
-            <ion-button (click)="cerrarChat()" color="dark">
-              <ion-icon name="close-outline" style="font-size: 1.5rem;"></ion-icon>
+            <ion-button (click)="cerrarChat()" class="modal-close-btn">
+              <ion-icon name="close-outline"></ion-icon>
             </ion-button>
           </ion-buttons>
-          <ion-title style="font-weight: 700; color: #1a1a1a; font-size: 1rem;">
+          <ion-title class="chat-modal-title">
             Ticket #{{ ticketSeleccionado?.idTicket }}
             <br>
-            <span style="font-size: 0.75rem; color: #565959; font-weight: 500;">
+            <span class="chat-modal-subtitle">
               {{ ticketSeleccionado?.asunto || ticketSeleccionado?.titulo }}
             </span>
           </ion-title>
@@ -112,7 +114,8 @@
             <div class="message-bubble">
               <span class="sender-name" *ngIf="msg.autor?.idEmpleado !== idEmpleado">RRHH Support</span>
               <p>{{ msg.contenido }}</p>
-              <span class="time">{{ msg.fechaEnvio | date:'HH:mm' }}</span> </div>
+              <span class="time">{{ msg.fechaEnvio | date:'HH:mm' }}</span>
+            </div>
           </div>
         </div>
       </ion-content>

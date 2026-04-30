@@ -25,7 +25,6 @@
         </ng-container>
 
         <ng-container *ngIf="noticia.tipoFondo === 'image-bg'">
-          <ion-icon name="heart-outline" class="like-icon"></ion-icon>
           <p class="bottom-text">{{ noticia.titulo }}</p>
         </ng-container>
 
@@ -46,7 +45,8 @@
 
     <div class="flat-card full ion-activatable ripple-parent" (click)="goCuadrante()">
       <h3>Próximo turno</h3>
-      <p *ngIf="proximoTurno" style="font-size: 1rem; color: #0f1111">
+      <!-- Creada clase shift-text -->
+      <p class="shift-text" *ngIf="proximoTurno">
         <strong>{{ proximoTurno.fecha }}</strong> • {{ proximoTurno.horario }}
       </p>
       <p *ngIf="!proximoTurno">No tienes turnos programados próximamente.</p>
@@ -62,8 +62,9 @@
     </div>
 
     <div class="flat-card full text-center">
-      <h3 style="margin-top: 0">Fichaje</h3>
-      <p style="font-size: 0.9rem; color: #565959; margin-bottom: 15px">
+      <!-- Creada clase shift-title y record-text -->
+      <h3 class="shift-title">Fichaje</h3>
+      <p class="record-text">
         {{ fichajesHoy.length }} registro(s) en tu ficha de hoy.
       </p>
 
@@ -83,24 +84,28 @@
     </div>
 
     <div class="flat-card full with-icon ion-activatable ripple-parent" (click)="goVozEmpleado()">
-      <div class="icon-box" style="background: #eef8fd">
-        <ion-icon name="megaphone-outline" style="color: #0071ad"></ion-icon>
+      <!-- NOTA: He pasado el background al SCSS también -->
+      <div class="icon-box megaphone-bg">
+        <ion-icon name="megaphone-outline" class="megaphone-icon"></ion-icon>
       </div>
 
       <div class="card-content">
-        <h3 style="margin-bottom: 4px">Voz del Empleado</h3>
+        <h3 class="voice-title">Voz del Empleado</h3>
 
         <ng-container *ngIf="ultimaPublicacion">
-          <p style="font-size: 0.9rem; color: #0f1111; font-weight: 600; margin-bottom: 2px;">
+          <!-- Creada clase post-title -->
+          <p class="post-title">
             {{ ultimaPublicacion?.titulo }}
           </p>
-          <p style="font-size: 0.85rem; margin-bottom: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+          <!-- Creada clase post-excerpt -->
+          <p class="post-excerpt">
             {{ ultimaPublicacion?.contenido }}
           </p>
         </ng-container>
 
         <ng-container *ngIf="!ultimaPublicacion">
-          <p style="font-size: 0.85rem; margin-bottom: 5px; color: #565959">
+          <!-- Creada clase post-empty -->
+          <p class="post-empty">
             Accede al tablón para ver comunicados o encuestas recientes.
           </p>
         </ng-container>

@@ -55,7 +55,7 @@ export class GestionEquipoPage {
 
     this.http.get(environment.apiUrl+'/solicitudes/equipo/pendientes', { headers })
       .subscribe({
-        next: (res: any) => {this.solicitudes = res, console.log(res)},
+        next: (res: any) => {this.solicitudes = res},
         error: (err) => console.error('Error al cargar peticiones', err)
       });
   }

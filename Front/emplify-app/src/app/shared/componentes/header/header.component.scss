@@ -21,15 +21,24 @@ ion-toolbar {
   --background: transparent;
 }
 
+/* --- LOGO EMPLIFY EN CABECERA --- */
 .app-logo {
   font-weight: 800;
   font-size: 1.5rem;
   letter-spacing: -1px;
   color: #1a1a1a;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 
   @media (prefers-color-scheme: dark) {
     color: var(--ion-text-color, #ffffff);
+  }
+
+  .header-logo-img {
+    height: 40px;
+    width: auto;
+    margin-right: 20px; 
   }
 
   .dot {
