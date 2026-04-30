@@ -1,5 +1,9 @@
 .app-background {
-  --background: #f2f4f8; /* El fondo gris claro de Amazon */
+  --background: #f2f4f8;
+
+  @media (prefers-color-scheme: dark) {
+    --background: var(--ion-background-color);
+  }
 }
 
 /* =======================================
@@ -9,6 +13,10 @@
   background: #ffffff;
   padding: 15px 0 10px 0;
   margin-bottom: 10px;
+
+  @media (prefers-color-scheme: dark) {
+    background: var(--ion-background-color);
+  }
 }
 
 .news-scroll {
@@ -41,8 +49,12 @@
   background-position: center;
 
   &.blue-bg {
-    background: #0071ad; /* Azul corporativo */
+    background: #0071ad;
     justify-content: flex-start;
+
+    @media (prefers-color-scheme: dark) {
+      background: #005684;
+    }
 
     .badge {
       background: white;
@@ -53,6 +65,11 @@
       border-radius: 20px;
       align-self: flex-end;
       margin-bottom: 15px;
+
+      @media (prefers-color-scheme: dark) {
+        background: #e3f2fd;
+        color: #005684;
+      }
     }
 
     h2 {
@@ -95,14 +112,22 @@
     background: #dcdcdc;
     border-radius: 2px;
 
+    @media (prefers-color-scheme: dark) {
+      background: #444444;
+    }
+
     &.active {
       background: #565959;
+
+      @media (prefers-color-scheme: dark) {
+        background: #ffffff;
+      }
     }
   }
 }
 
 /* =======================================
-   TARJETAS DASHBOARD (Estilo Amazon)
+   TARJETAS DASHBOARD
    ======================================= */
 .dashboard-container {
   padding: 5px 15px 20px 15px;
@@ -111,18 +136,27 @@
 .flat-card {
   background: #ffffff;
   border: 1px solid #d5d9d9;
-  border-radius: 8px; /* Bordes menos redondeados, más sobrios */
+  border-radius: 8px;
   padding: 16px;
   margin-bottom: 12px;
   position: relative;
   overflow: hidden;
   cursor: pointer; /* Cambia el cursor para indicar que son clicables */
 
+  @media (prefers-color-scheme: dark) {
+    background: var(--ion-color-step-50, #1e1e1e);
+    border-color: #333333;
+  }
+
   h3 {
     margin: 0 0 4px 0;
     font-size: 1.05rem;
     font-weight: 700;
     color: #0f1111;
+
+    @media (prefers-color-scheme: dark) {
+      color: var(--ion-text-color, #ffffff);
+    }
   }
 
   p {
@@ -130,17 +164,25 @@
     font-size: 0.9rem;
     color: #565959;
     line-height: 1.3;
+
+    @media (prefers-color-scheme: dark) {
+      color: #b0b0b0;
+    }
   }
 }
 
-/* --- ENLACES DE ACCIÓN (NUEVO) --- */
+/* --- ENLACES DE ACCIÓN--- */
 .action-link {
   margin-top: 12px;
-  color: #0071ad; /* Azul corporativo para indicar que se puede hacer clic */
+  color: #0071ad;
   font-size: 0.9rem;
   font-weight: 600;
   display: flex;
   align-items: center;
+
+  @media (prefers-color-scheme: dark) {
+    color: #3880ff;
+  }
 
   ion-icon {
     margin-right: 6px;
@@ -164,9 +206,17 @@
     align-items: center;
     justify-content: center;
 
+    @media (prefers-color-scheme: dark) {
+      background: #2a2a2a;
+    }
+
     ion-icon {
       font-size: 1.5rem;
       color: #565959;
+
+      @media (prefers-color-scheme: dark) {
+        color: #b0b0b0;
+      }
     }
   }
 
@@ -186,13 +236,22 @@
   margin-bottom: 15px;
   border: 1px solid #e7e9e9;
 
+  @media (prefers-color-scheme: dark) {
+    background: #2a2a2a;
+    border-color: #333333;
+  }
+
   .tiempo {
     display: block;
     font-size: 2.2rem;
     font-weight: 800;
     color: #0071ad;
-    font-variant-numeric: tabular-nums; /* Evita que los números salten */
+    font-variant-numeric: tabular-nums;
     margin-top: 5px;
+
+    @media (prefers-color-scheme: dark) {
+      color: #3880ff;
+    }
   }
 
   .hora-entrada {
@@ -200,12 +259,20 @@
     font-size: 0.85rem;
     color: #565959;
     font-weight: 600;
+
+    @media (prefers-color-scheme: dark) {
+      color: #b0b0b0;
+    }
   }
 
   .spin-icon {
     font-size: 1.5rem;
-    color: #0071ad; /* <-- Cambiado al azul corporativo */
+    color: #0071ad; 
     animation: pulse 2s infinite;
+
+    @media (prefers-color-scheme: dark) {
+      color: #3880ff;
+    }
   }
 }
 
@@ -221,6 +288,10 @@
 .btn-entrada {
   --background: #0071ad;
   --color: #ffffff;
+
+  @media (prefers-color-scheme: dark) {
+    --background: #3880ff;
+  }
 }
 
 .btn-salida {
@@ -228,6 +299,12 @@
   --border-width: 2px;
   --color: #0071ad;
   --background-activated: rgba(0, 113, 173, 0.1);
+
+  @media (prefers-color-scheme: dark) {
+    --border-color: #3880ff;
+    --color: #3880ff;
+    --background-activated: rgba(56, 128, 255, 0.1);
+  }
 }
 
 @keyframes pulse {

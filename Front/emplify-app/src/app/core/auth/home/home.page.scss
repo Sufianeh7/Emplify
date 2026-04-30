@@ -1,5 +1,10 @@
 .login-content {
   --background: #f4f6f9;
+
+  /* Modo oscuro: Fondo general de la app */
+  @media (prefers-color-scheme: dark) {
+    --background: var(--ion-background-color);
+  }
 }
 
 .login-container {
@@ -19,6 +24,11 @@
     margin: 0;
     letter-spacing: -1.5px;
 
+    /* Modo oscuro: Título principal en blanco */
+    @media (prefers-color-scheme: dark) {
+      color: var(--ion-text-color);
+    }
+
     .dot { color: #3880ff; }
   }
 
@@ -27,6 +37,11 @@
     margin-top: 5px;
     font-size: 1rem;
     font-weight: 500;
+
+    /* Modo oscuro: Subtítulo gris claro */
+    @media (prefers-color-scheme: dark) {
+      color: #B0B0B0;
+    }
   }
 }
 
@@ -38,12 +53,24 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
   border: 1px solid rgba(0,0,0,0.02);
 
+  /* Modo oscuro: Tarjeta gris oscura para separar del fondo */
+  @media (prefers-color-scheme: dark) {
+    background: #1e1e1e;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
   .form-title {
     font-size: 1.4rem;
     font-weight: 700;
     color: #1a1a1a;
     margin-top: 0;
     margin-bottom: 25px;
+
+    /* Modo oscuro: Título formulario en blanco */
+    @media (prefers-color-scheme: dark) {
+      color: var(--ion-text-color);
+    }
   }
 }
 
@@ -57,9 +84,19 @@
   border: 1px solid transparent;
   transition: all 0.3s ease;
 
+  /* Modo oscuro: Input un poco más claro que la tarjeta para que se note */
+  @media (prefers-color-scheme: dark) {
+    --background: #2a2a2a;
+  }
+
   &:focus-within {
     border: 1px solid #3880ff;
     --background: #ffffff;
+
+    /* Modo oscuro: Input enfocado un poco más brillante */
+    @media (prefers-color-scheme: dark) {
+      --background: #333333;
+    }
   }
 
   ion-label {
@@ -67,6 +104,10 @@
     font-size: 0.9rem !important;
     font-weight: 600;
     margin-top: 10px !important;
+
+    @media (prefers-color-scheme: dark) {
+      color: #B0B0B0 !important;
+    }
   }
 
   ion-input {
@@ -75,6 +116,10 @@
     font-size: 1.05rem;
     font-weight: 500;
     color: #1a1a1a;
+
+    @media (prefers-color-scheme: dark) {
+      color: var(--ion-text-color);
+    }
   }
 
   .eye-icon {
@@ -84,6 +129,10 @@
     cursor: pointer;
     transition: color 0.2s;
 
+    @media (prefers-color-scheme: dark) {
+      color: #B0B0B0;
+    }
+
     &:hover { color: #3880ff; }
   }
 }
@@ -91,6 +140,7 @@
 /* --- BOTÓN --- */
 .login-btn {
   --background: #3880ff;
+  --color: #ffffff;
   --border-radius: 12px;
   --box-shadow: 0 4px 12px rgba(56, 128, 255, 0.25);
   height: 52px;

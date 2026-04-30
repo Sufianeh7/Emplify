@@ -1,6 +1,10 @@
 /* --- FONDOS Y CONTENEDORES --- */
 .app-background {
   --background: #f2f4f8;
+
+  @media (prefers-color-scheme: dark) {
+    --background: var(--ion-background-color);
+  }
 }
 
 .dashboard-container {
@@ -16,6 +20,11 @@
   margin-bottom: 20px;
   position: relative;
   overflow: hidden;
+
+  @media (prefers-color-scheme: dark) {
+    background: var(--ion-color-step-50, #1e1e1e);
+    border-color: #333333;
+  }
 }
 
 .profile-link-card {
@@ -37,6 +46,10 @@
     overflow: hidden;
     border: 1px solid #e7e9e9;
 
+    @media (prefers-color-scheme: dark) {
+      border-color: #333333;
+    }
+
     img {
       width: 100%;
       height: 100%;
@@ -45,14 +58,36 @@
   }
 
   .profile-text {
-    h2 { margin: 0 0 2px 0; font-size: 1.15rem; font-weight: 800; color: #0f1111; }
-    p { margin: 0; font-size: 0.85rem; color: #565959; font-weight: 500; }
-    .correo { color: #0071ad; margin-top: 2px; }
+    h2 {
+      margin: 0 0 2px 0; font-size: 1.15rem; font-weight: 800; color: #0f1111;
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--ion-text-color, #ffffff);
+      }
+    }
+    p {
+      margin: 0; font-size: 0.85rem; color: #565959; font-weight: 500;
+
+      @media (prefers-color-scheme: dark) {
+        color: #b0b0b0;
+      }
+    }
+    .correo {
+      color: #0071ad; margin-top: 2px;
+
+      @media (prefers-color-scheme: dark) {
+        color: #3880ff;
+      }
+    }
   }
 
   .arrow-icon {
     font-size: 1.2rem;
     color: #0071ad;
+
+    @media (prefers-color-scheme: dark) {
+      color: #3880ff;
+    }
   }
 }
 
@@ -64,6 +99,11 @@
   box-shadow: 0 2px 5px rgba(0,0,0,0.02);
   margin-bottom: 20px;
   overflow: hidden;
+
+  @media (prefers-color-scheme: dark) {
+    background: var(--ion-color-step-50, #1e1e1e);
+    border-color: #333333;
+  }
 }
 
 .menu-item {
@@ -72,6 +112,10 @@
   padding: 16px;
   border-bottom: 1px solid #f2f4f8;
   position: relative;
+
+  @media (prefers-color-scheme: dark) {
+    border-bottom-color: #333333;
+  }
 
   &:last-child {
     border-bottom: none;
@@ -87,11 +131,19 @@
     font-size: 1rem;
     font-weight: 600;
     color: #0f1111;
+
+    @media (prefers-color-scheme: dark) {
+      color: var(--ion-text-color, #ffffff);
+    }
   }
 
   .arrow-icon {
     font-size: 1.2rem;
     color: #565959;
+
+    @media (prefers-color-scheme: dark) {
+      color: #b0b0b0;
+    }
   }
 }
 
@@ -101,10 +153,18 @@
   font-weight: 800;
   color: #1a1a1a;
   margin: 10px 0 10px 5px;
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--ion-text-color, #ffffff);
+  }
 }
 
 .admin-card {
   .item-icon {
     color: #565959;
+
+    @media (prefers-color-scheme: dark) {
+      color: #b0b0b0;
+    }
   }
 }
