@@ -34,7 +34,45 @@ public class EmpleadoControlador {
         Optional<Empleado> empleadoOpt = empleadoRepo.findByUsuarioEmail(principal.getName());
 
         if (empleadoOpt.isPresent()) {
-            return ResponseEntity.ok(empleadoOpt.get());
+            Empleado emp = empleadoOpt.get();
+
+            // Construimos un DTO (Data Transfer Object) con un Map
+            java.util.Map<String, Object> perfilDto = new java.util.HashMap<>();
+
+            perfilDto.put("idEmpleado", emp.getIdEmpleado());
+            perfilDto.put("nombreUsuario", emp.getNombreUsuario()); // Tu getter especial
+            perfilDto.put("puesto", emp.getPuesto());
+            perfilDto.put("departamento", emp.getDepartamento());
+            perfilDto.put("vacacionesDisponibles", emp.getVacacionesDisponibles());
+            perfilDto.put("asuntosPropiosDisponibles", emp.getAsuntosPropiosDisponibles());
+
+            // Datos del Usuario (Email)
+            if (emp.getUsuario() != null) {
+                java.util.Map<String, Object> usuarioDto = new java.util.HashMap<>();
+                usuarioDto.put("email", emp.getUsuario().getEmail());
+                perfilDto.put("usuario", usuarioDto);
+            }
+
+            // Datos de la Empresa
+            if (emp.getEmpresa() != null) {
+                java.util.Map<String, Object> empresaDto = new java.util.HashMap<>();
+                empresaDto.put("nombre", emp.getEmpresa().getNombre());
+                empresaDto.put("direccion", emp.getEmpresa().getDireccion());
+                perfilDto.put("empresa", empresaDto);
+            }
+
+            // Datos del Mánager
+            if (emp.getManager() != null) {
+                java.util.Map<String, Object> managerDto = new java.util.HashMap<>();
+                managerDto.put("idEmpleado", emp.getManager().getIdEmpleado());
+                managerDto.put("nombreUsuario", emp.getManager().getNombreUsuario());
+                managerDto.put("puesto", emp.getManager().getPuesto());
+                perfilDto.put("manager", managerDto);
+            } else {
+                perfilDto.put("manager", null);
+            }
+
+            return ResponseEntity.ok(perfilDto);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\": \"Perfil de empleado no encontrado\"}");
         }
