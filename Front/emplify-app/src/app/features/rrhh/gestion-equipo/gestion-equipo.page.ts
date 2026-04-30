@@ -55,11 +55,9 @@ export class GestionEquipoPage {
 
     this.http.get(environment.apiUrl+'/solicitudes/equipo/pendientes', { headers })
       .subscribe({
-        next: (res: any) => this.solicitudes = res,
+        next: (res: any) => {this.solicitudes = res, console.log(res)},
         error: (err) => console.error('Error al cargar peticiones', err)
       });
-
-      console.log(this.solicitudes)
   }
 
   // Obtiene la lista de personas que reportan a este mánager (y su saldo de días)
