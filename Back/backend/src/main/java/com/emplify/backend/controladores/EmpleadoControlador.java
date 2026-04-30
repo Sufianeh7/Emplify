@@ -51,6 +51,7 @@ public class EmpleadoControlador {
                 java.util.Map<String, Object> usuarioDto = new java.util.HashMap<>();
                 usuarioDto.put("email", emp.getUsuario().getEmail());
                 perfilDto.put("usuario", usuarioDto);
+                usuarioDto.put("rol", emp.getUsuario().getRol());
             }
 
             // Datos de la Empresa
@@ -58,6 +59,7 @@ public class EmpleadoControlador {
                 java.util.Map<String, Object> empresaDto = new java.util.HashMap<>();
                 empresaDto.put("nombre", emp.getEmpresa().getNombre());
                 empresaDto.put("direccion", emp.getEmpresa().getDireccion());
+                empresaDto.put("id_empresa", emp.getEmpresa().getIdEmpresa());
                 perfilDto.put("empresa", empresaDto);
             }
 
