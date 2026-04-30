@@ -1,7 +1,5 @@
 <div class="dashboard-container padding-top-15">
-
   <div class="flat-card full text-center">
-
     <div class="balances-grid">
       <div class="balance-item">
         <span class="balance-value">{{ diasVacaciones || 0 }}</span>
@@ -16,7 +14,11 @@
       </div>
     </div>
 
-    <ion-button expand="block" class="btn-corporativo ion-margin-top" (click)="nuevaSolicitud()">
+    <ion-button
+      expand="block"
+      class="btn-corporativo ion-margin-top"
+      (click)="nuevaSolicitud()"
+    >
       Solicitar tiempo libre
     </ion-button>
   </div>
@@ -24,31 +26,56 @@
   <h3 class="historial-titulo">Historial de solicitudes</h3>
 
   <div class="flat-card full text-center" *ngIf="misSolicitudes.length === 0">
-    <p class="empty-history-text">No tienes ninguna solicitud en tu historial.</p>
+    <p class="empty-history-text">
+      No tienes ninguna solicitud en tu historial.
+    </p>
   </div>
 
   <div class="flat-card full card-solicitud" *ngFor="let sol of misSolicitudes">
     <div class="solicitud-header">
       <div class="titulo-tipo">
-        <ion-icon name="checkmark-circle-outline" *ngIf="sol.estado === 'APROBADA'" color="success"></ion-icon>
-        <ion-icon name="time-outline" *ngIf="sol.estado === 'PENDIENTE'" color="warning"></ion-icon>
-        <ion-icon name="close-circle-outline" *ngIf="sol.estado === 'RECHAZADA'" color="danger"></ion-icon>
+        <ion-icon
+          name="checkmark-circle-outline"
+          *ngIf="sol.estado === 'APROBADA'"
+          color="success"
+        ></ion-icon>
+        <ion-icon
+          name="time-outline"
+          *ngIf="sol.estado === 'PENDIENTE'"
+          color="warning"
+        ></ion-icon>
+        <ion-icon
+          name="close-circle-outline"
+          *ngIf="sol.estado === 'RECHAZADA'"
+          color="danger"
+        ></ion-icon>
         <h3>{{ sol.tipo?.nombre || 'Solicitud' }}</h3>
       </div>
-      <span class="badge-estado"
-            [ngClass]="{'aprobada': sol.estado === 'APROBADA', 'pendiente': sol.estado === 'PENDIENTE', 'rechazada': sol.estado === 'RECHAZADA'}">
+      <span
+        class="badge-estado"
+        [ngClass]="{'aprobada': sol.estado === 'APROBADA', 'pendiente': sol.estado === 'PENDIENTE', 'rechazada': sol.estado === 'RECHAZADA'}"
+      >
         {{ sol.estado | titlecase }}
       </span>
     </div>
     <div class="solicitud-body">
-      <p><strong>{{ sol.fechaInicio | date:'dd MMM yyyy' }} - {{ sol.fechaFin | date:'dd MMM yyyy' }}</strong></p>
+      <p>
+        <strong
+          >{{ sol.fechaInicio | date:'dd MMM yyyy' }} - {{ sol.fechaFin |
+          date:'dd MMM yyyy' }}</strong
+        >
+      </p>
       <p class="detalle" *ngIf="sol.comentarios">Nota: {{ sol.comentarios }}</p>
     </div>
   </div>
-
 </div>
 
-<ion-modal [isOpen]="isModalOpen" (didDismiss)="cerrarModal()" [initialBreakpoint]="0.9" [breakpoints]="[0, 0.9, 1]">
+<ion-modal
+  [isOpen]="isModalOpen"
+  (didDismiss)="cerrarModal()"
+  [initialBreakpoint]="0.9"
+  [breakpoints]="[0, 0.9, 1]"
+>
   <ng-template>
     <ion-header class="ion-no-border">
       <!-- Añadida clase modal-toolbar -->
@@ -65,39 +92,83 @@
     </ion-header>
 
     <ion-content class="app-background ion-padding">
-
       <div class="form-container">
-
         <ion-item lines="none" class="form-item">
-          <ion-icon name="document-text-outline" slot="start" color="primary"></ion-icon>
-          <ion-select label="Tipo de permiso" label-placement="floating" [(ngModel)]="tipoSeleccionado" cancelText="Cancelar" okText="Aceptar">
-            <ion-select-option *ngFor="let tipo of tiposSolicitud" [value]="tipo.idTipo">{{ tipo.nombre }}</ion-select-option>
+          <ion-icon
+            name="document-text-outline"
+            slot="start"
+            color="primary"
+          ></ion-icon>
+          <ion-select
+            label="Tipo de permiso"
+            label-placement="floating"
+            [(ngModel)]="tipoSeleccionado"
+            cancelText="Cancelar"
+            okText="Aceptar"
+          >
+            <ion-select-option
+              *ngFor="let tipo of tiposSolicitud"
+              [value]="tipo.idTipo"
+              >{{ tipo.nombre }}</ion-select-option
+            >
           </ion-select>
         </ion-item>
 
         <ion-item lines="none" class="form-item">
-          <ion-icon name="calendar-outline" slot="start" color="primary"></ion-icon>
-          <ion-input type="date" label="Día de inicio" label-placement="floating" [(ngModel)]="fechaInicio" [min]="hoyISO" (ionChange)="onFechaInicioChange()"></ion-input>
+          <ion-icon
+            name="calendar-outline"
+            slot="start"
+            color="primary"
+          ></ion-icon>
+          <ion-input
+            type="date"
+            label="Día de inicio"
+            label-placement="floating"
+            [(ngModel)]="fechaInicio"
+            [min]="hoyISO"
+            (ionChange)="onFechaInicioChange()"
+          ></ion-input>
         </ion-item>
 
         <ion-item lines="none" class="form-item" *ngIf="fechaInicio">
-          <ion-icon name="calendar-outline" slot="start" color="primary"></ion-icon>
-          <ion-input type="date" label="Día de fin" label-placement="floating" [(ngModel)]="fechaFin" [min]="fechaInicio"></ion-input>
+          <ion-icon
+            name="calendar-outline"
+            slot="start"
+            color="primary"
+          ></ion-icon>
+          <ion-input
+            type="date"
+            label="Día de fin"
+            label-placement="floating"
+            [(ngModel)]="fechaFin"
+            [min]="fechaInicio"
+          ></ion-input>
         </ion-item>
 
         <ion-item lines="none" class="form-item">
-          <ion-icon name="chatbox-ellipses-outline" slot="start" color="primary"></ion-icon>
-          <ion-textarea label="Comentarios (opcional)" label-placement="floating" [(ngModel)]="comentarios" rows="2"></ion-textarea>
+          <ion-icon
+            name="chatbox-ellipses-outline"
+            slot="start"
+            color="primary"
+          ></ion-icon>
+          <ion-textarea
+            label="Comentarios (opcional)"
+            label-placement="floating"
+            [(ngModel)]="comentarios"
+            rows="2"
+          ></ion-textarea>
         </ion-item>
-
       </div>
 
       <!-- Pasado el margin-top al SCSS (ver clase form-submit-btn) -->
-      <ion-button expand="block" class="btn-corporativo ion-margin-top form-submit-btn" (click)="enviarSolicitud()">
+      <ion-button
+        expand="block"
+        class="btn-corporativo ion-margin-top form-submit-btn"
+        (click)="enviarSolicitud()"
+      >
         <ion-icon slot="start" name="send-outline"></ion-icon>
         Enviar Solicitud
       </ion-button>
-
     </ion-content>
   </ng-template>
 </ion-modal>

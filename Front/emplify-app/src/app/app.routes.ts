@@ -12,7 +12,7 @@ export const routes: Routes = [
   },
 
   // ==========================================
-  // ESTRUCTURA TABS (TODO VA AQUÍ DENTRO AHORA)
+  // ESTRUCTURA TABS
   // ==========================================
   {
     path: '',

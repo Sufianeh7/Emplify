@@ -6,7 +6,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { addIcons } from 'ionicons';
 import {
-  addOutline, chatbubblesOutline, closeOutline, sendOutline, chevronForwardOutline
+  addOutline,
+  chatbubblesOutline,
+  closeOutline,
+  sendOutline,
+  chevronForwardOutline,
 } from 'ionicons/icons';
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
 
@@ -20,10 +24,9 @@ import { environment } from 'src/environments/environment.prod';
   templateUrl: './tickets.page.html',
   styleUrls: ['./tickets.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, HeaderComponent]
+  imports: [IonicModule, CommonModule, FormsModule, HeaderComponent],
 })
 export class TicketsPage implements OnDestroy {
-
   @ViewChild('contentChat') contentChat: any;
 
   tickets: any[] = [];
@@ -44,10 +47,14 @@ export class TicketsPage implements OnDestroy {
 
   constructor(
     private http: HttpClient,
-    private toastController: ToastController
+    private toastController: ToastController,
   ) {
     addIcons({
-      addOutline, chatbubblesOutline, closeOutline, sendOutline, chevronForwardOutline
+      addOutline,
+      chatbubblesOutline,
+      closeOutline,
+      sendOutline,
+      chevronForwardOutline,
     });
   }
 
@@ -70,12 +77,13 @@ export class TicketsPage implements OnDestroy {
   cargarTickets() {
     const token = localStorage.getItem('token');
     if (!token) return;
-    const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
+    const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
 
-    this.http.get(environment.apiUrl+`/tickets/mis-tickets`, { headers })
+    this.http
+      .get(environment.apiUrl + `/tickets/mis-tickets`, { headers })
       .subscribe({
-        next: (res: any) => this.tickets = res,
-        error: (err) => console.error('Error cargando tickets', err)
+        next: (res: any) => (this.tickets = res),
+        error: (err) => console.error('Error cargando tickets', err),
       });
   }
 
@@ -88,25 +96,26 @@ export class TicketsPage implements OnDestroy {
   // Getter dinámico para los segmentos del HTML
   get ticketsFiltrados() {
     if (this.filtroActual === 'abiertos') {
-      return this.tickets.filter(t => !this.esTicketCerrado(t.estado));
+      return this.tickets.filter((t) => !this.esTicketCerrado(t.estado));
     } else {
-      return this.tickets.filter(t => this.esTicketCerrado(t.estado));
+      return this.tickets.filter((t) => this.esTicketCerrado(t.estado));
     }
   }
 
   crearTicket(modal: any) {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
-      'Authorization': 'Basic ' + token,
-      'Content-Type': 'application/json'
+      Authorization: 'Basic ' + token,
+      'Content-Type': 'application/json',
     });
 
     const body = {
       titulo: this.nuevoTitulo,
-      descripcion: this.nuevaDescripcion
+      descripcion: this.nuevaDescripcion,
     };
 
-    this.http.post(environment.apiUrl+'/tickets/nuevo', body, { headers })
+    this.http
+      .post(environment.apiUrl + '/tickets/nuevo', body, { headers })
       .subscribe({
         next: () => {
           this.mostrarToast('Ticket creado correctamente', 'success');
@@ -115,7 +124,7 @@ export class TicketsPage implements OnDestroy {
           this.nuevaDescripcion = '';
           modal.dismiss();
         },
-        error: (err) => console.error('Error al crear ticket', err)
+        error: (err) => console.error('Error al crear ticket', err),
       });
   }
 
@@ -141,7 +150,7 @@ export class TicketsPage implements OnDestroy {
 
   conectarWebSocket(idTicket: number) {
     this.stompClient = new Client({
-      webSocketFactory: () => new SockJS(environment.apiUrl+'/ws-endpoint'),
+      webSocketFactory: () => new SockJS(environment.apiUrl + '/ws-endpoint'),
       reconnectDelay: 5000, // Reintento si se cae la red
     });
 
@@ -170,18 +179,24 @@ export class TicketsPage implements OnDestroy {
 
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
-      'Authorization': 'Basic ' + token,
-      'Content-Type': 'application/json'
+      Authorization: 'Basic ' + token,
+      'Content-Type': 'application/json',
     });
 
     const body = { contenido: this.nuevoMensaje };
 
-    this.http.post(environment.apiUrl+`/tickets/${this.ticketSeleccionado.idTicket}/enviar-mensaje`, body, { headers })
+    this.http
+      .post(
+        environment.apiUrl +
+          `/tickets/${this.ticketSeleccionado.idTicket}/enviar-mensaje`,
+        body,
+        { headers },
+      )
       .subscribe({
         next: () => {
           this.nuevoMensaje = ''; // Limpiamos la caja. El mensaje se pintará cuando el WebSocket avise.
         },
-        error: (err) => console.error('Error enviando mensaje', err)
+        error: (err) => console.error('Error enviando mensaje', err),
       });
   }
 
@@ -192,7 +207,12 @@ export class TicketsPage implements OnDestroy {
   }
 
   async mostrarToast(mensaje: string, color: string) {
-    const toast = await this.toastController.create({ message: mensaje, duration: 2000, color, position: 'bottom' });
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: 2000,
+      color,
+      position: 'bottom',
+    });
     toast.present();
   }
 }

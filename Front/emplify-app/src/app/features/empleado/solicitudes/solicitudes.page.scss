@@ -19,15 +19,17 @@
   margin-bottom: 12px;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
 
   @media (prefers-color-scheme: dark) {
     background: var(--ion-color-step-50, #1e1e1e);
     border-color: #333333;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   }
 
-  &.text-center { text-align: center; }
+  &.text-center {
+    text-align: center;
+  }
 }
 
 /* --- BALANCE DUAL DE DÍAS --- */
@@ -136,7 +138,8 @@
       gap: 8px;
 
       ion-icon {
-        font-size: 1.2rem; color: #565959;
+        font-size: 1.2rem;
+        color: #565959;
 
         @media (prefers-color-scheme: dark) {
           color: #b0b0b0;
@@ -144,7 +147,10 @@
       }
 
       h3 {
-        margin: 0; font-size: 0.95rem; font-weight: 700; color: #0f1111;
+        margin: 0;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #0f1111;
 
         @media (prefers-color-scheme: dark) {
           color: var(--ion-text-color, #ffffff);
@@ -157,7 +163,9 @@
     padding: 16px;
 
     p {
-      margin: 0 0 4px 0; font-size: 0.95rem; color: #0f1111;
+      margin: 0 0 4px 0;
+      font-size: 0.95rem;
+      color: #0f1111;
 
       @media (prefers-color-scheme: dark) {
         color: var(--ion-text-color, #ffffff);
@@ -165,7 +173,9 @@
     }
 
     .detalle {
-      font-size: 0.85rem; color: #565959; margin: 0;
+      font-size: 0.85rem;
+      color: #565959;
+      margin: 0;
 
       @media (prefers-color-scheme: dark) {
         color: #b0b0b0;
@@ -182,15 +192,33 @@
   border-radius: 20px;
 
   /* Modo Claro */
-  &.aprobada { background: #e3f2fd; color: #0d47a1; }
-  &.pendiente { background: #fff8e1; color: #f57f17; }
-  &.rechazada { background: #ffebee; color: #c62828; }
+  &.aprobada {
+    background: #e3f2fd;
+    color: #0d47a1;
+  }
+  &.pendiente {
+    background: #fff8e1;
+    color: #f57f17;
+  }
+  &.rechazada {
+    background: #ffebee;
+    color: #c62828;
+  }
 
   /* Modo Oscuro: Textos brillantes y fondos transparentes */
   @media (prefers-color-scheme: dark) {
-    &.aprobada { background: rgba(13, 71, 161, 0.2); color: #90caf9; }
-    &.pendiente { background: rgba(245, 127, 23, 0.2); color: #ffe082; }
-    &.rechazada { background: rgba(198, 40, 40, 0.2); color: #ef9a9a; }
+    &.aprobada {
+      background: rgba(13, 71, 161, 0.2);
+      color: #90caf9;
+    }
+    &.pendiente {
+      background: rgba(245, 127, 23, 0.2);
+      color: #ffe082;
+    }
+    &.rechazada {
+      background: rgba(198, 40, 40, 0.2);
+      color: #ef9a9a;
+    }
   }
 }
 
@@ -200,7 +228,7 @@
   border-radius: 12px;
   border: 1px solid #e7e9e9;
   overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
 
   @media (prefers-color-scheme: dark) {
     background: var(--ion-color-step-50, #1e1e1e);
@@ -222,7 +250,9 @@
     border-bottom: none;
   }
 
-  ion-input, ion-select, ion-textarea {
+  ion-input,
+  ion-select,
+  ion-textarea {
     font-size: 0.95rem;
 
     @media (prefers-color-scheme: dark) {

@@ -9,10 +9,18 @@
   </div>
 
   <div class="dashboard-container">
-
-    <div *ngIf="noticias.length === 0" class="flat-card full text-center" style="padding: 40px 20px;">
-      <ion-icon name="newspaper-outline" style="font-size: 3rem; color: #d5d9d9;"></ion-icon>
-      <p style="color: #888c8c; font-style: italic; margin-top: 10px;">No hay noticias publicadas.</p>
+    <div
+      *ngIf="noticias.length === 0"
+      class="flat-card full text-center"
+      style="padding: 40px 20px"
+    >
+      <ion-icon
+        name="newspaper-outline"
+        style="font-size: 3rem; color: #d5d9d9"
+      ></ion-icon>
+      <p style="color: #888c8c; font-style: italic; margin-top: 10px">
+        No hay noticias publicadas.
+      </p>
     </div>
 
     <div
@@ -20,25 +28,33 @@
       *ngFor="let noticia of noticias"
       (click)="toggleNoticia(noticia)"
     >
-
-      <div class="article-image" *ngIf="noticia.imagenUrl" [ngStyle]="{'background-image': 'url(' + noticia.imagenUrl + ')'}"></div>
+      <div
+        class="article-image"
+        *ngIf="noticia.imagenUrl"
+        [ngStyle]="{'background-image': 'url(' + noticia.imagenUrl + ')'}"
+      ></div>
 
       <div class="article-header">
         <div class="text-content">
-          <span class="date">{{ noticia.fechaCreacion | date:'dd MMM yyyy' }}</span>
+          <span class="date"
+            >{{ noticia.fechaCreacion | date:'dd MMM yyyy' }}</span
+          >
           <h3>{{ noticia.titulo }}</h3>
           <p class="subtitle">{{ noticia.subtitulo }}</p>
         </div>
-        <ion-icon [name]="noticia.expandida ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+        <ion-icon
+          [name]="noticia.expandida ? 'chevron-up-outline' : 'chevron-down-outline'"
+        ></ion-icon>
       </div>
 
       <div class="article-body" *ngIf="noticia.expandida">
         <div class="divider"></div>
-        <p class="full-text">{{ noticia.contenido || 'Sin contenido adicional.' }}</p>
+        <p class="full-text">
+          {{ noticia.contenido || 'Sin contenido adicional.' }}
+        </p>
       </div>
 
       <ion-ripple-effect></ion-ripple-effect>
     </div>
-
   </div>
 </ion-content>

@@ -3,22 +3,29 @@
 </ion-header>
 
 <ion-content class="app-background">
-
   <div class="section-header blue-bg">
     <h2>Control Horario</h2>
     <p>Audita los registros de jornada de los empleados</p>
   </div>
 
   <div class="dashboard-container">
-
     <div class="flat-card full">
-      <h3 class="card-title"><ion-icon name="search-outline"></ion-icon> Seleccionar Empleado</h3>
+      <h3 class="card-title">
+        <ion-icon name="search-outline"></ion-icon> Seleccionar Empleado
+      </h3>
       <div class="form-container">
         <ion-item lines="none" class="form-item">
-          <ion-select label="Empleados" label-placement="floating"
-                      (ionChange)="buscarHistorial($event)"
-                      cancelText="Cancelar" okText="Ver Fichajes">
-            <ion-select-option *ngFor="let emp of empleados" [value]="emp.idEmpleado">
+          <ion-select
+            label="Empleados"
+            label-placement="floating"
+            (ionChange)="buscarHistorial($event)"
+            cancelText="Cancelar"
+            okText="Ver Fichajes"
+          >
+            <ion-select-option
+              *ngFor="let emp of empleados"
+              [value]="emp.idEmpleado"
+            >
               {{ emp.usuario?.nombre || emp.usuario?.email }}
             </ion-select-option>
           </ion-select>
@@ -36,13 +43,24 @@
       </div>
     </div>
 
-    <div *ngIf="empleadoSeleccionado && historialFichajes.length > 0" class="fichajes-list">
+    <div
+      *ngIf="empleadoSeleccionado && historialFichajes.length > 0"
+      class="fichajes-list"
+    >
       <h3 class="section-title">Historial de Registros</h3>
 
-      <div class="flat-card full log-card" *ngFor="let fichaje of historialFichajes">
+      <div
+        class="flat-card full log-card"
+        *ngFor="let fichaje of historialFichajes"
+      >
         <div class="log-header">
-          <span class="log-date">{{ fichaje.horaEntrada | date:'EEEE, dd MMM yyyy' }}</span>
-          <span class="log-hours badge-horas" [ngStyle]="{'background': fichaje.horaSalida ? '#e8f5e9' : '#fff3e0', 'color': fichaje.horaSalida ? '#2e7d32' : '#e65100'}">
+          <span class="log-date"
+            >{{ fichaje.horaEntrada | date:'EEEE, dd MMM yyyy' }}</span
+          >
+          <span
+            class="log-hours badge-horas"
+            [ngStyle]="{'background': fichaje.horaSalida ? '#e8f5e9' : '#fff3e0', 'color': fichaje.horaSalida ? '#2e7d32' : '#e65100'}"
+          >
             {{ calcularHorasTurno(fichaje.horaEntrada, fichaje.horaSalida) }}
           </span>
         </div>
@@ -50,23 +68,37 @@
         <div class="log-body">
           <div class="log-row">
             <ion-icon name="log-in-outline" color="primary"></ion-icon>
-            <span>Entrada: <strong>{{ fichaje.horaEntrada | date:'HH:mm' }}</strong></span>
+            <span
+              >Entrada:
+              <strong>{{ fichaje.horaEntrada | date:'HH:mm' }}</strong></span
+            >
           </div>
           <div class="log-row">
             <ion-icon name="log-out-outline" color="warning"></ion-icon>
-            <span *ngIf="fichaje.horaSalida">Salida: <strong>{{ fichaje.horaSalida | date:'HH:mm' }}</strong></span>
-            <span *ngIf="!fichaje.horaSalida" style="color: #e65100; font-style: italic;">Sin cerrar</span>
+            <span *ngIf="fichaje.horaSalida"
+              >Salida:
+              <strong>{{ fichaje.horaSalida | date:'HH:mm' }}</strong></span
+            >
+            <span
+              *ngIf="!fichaje.horaSalida"
+              style="color: #e65100; font-style: italic"
+              >Sin cerrar</span
+            >
           </div>
         </div>
       </div>
     </div>
 
-    <div *ngIf="empleadoSeleccionado && historialFichajes.length === 0" class="flat-card full empty-state text-center">
-      <ion-icon name="document-text-outline" style="font-size: 3rem; color: #d5d9d9;"></ion-icon>
+    <div
+      *ngIf="empleadoSeleccionado && historialFichajes.length === 0"
+      class="flat-card full empty-state text-center"
+    >
+      <ion-icon
+        name="document-text-outline"
+        style="font-size: 3rem; color: #d5d9d9"
+      ></ion-icon>
       <h3>Sin Registros</h3>
       <p>Este empleado no ha realizado ningún fichaje todavía.</p>
     </div>
-
   </div>
-
 </ion-content>

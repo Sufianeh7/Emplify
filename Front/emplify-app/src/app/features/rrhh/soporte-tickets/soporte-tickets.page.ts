@@ -6,8 +6,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
 import { addIcons } from 'ionicons';
 import {
-  checkmarkDoneOutline, timeOutline, sendOutline,
-  closeOutline, checkmarkCircleOutline, chevronForwardOutline
+  checkmarkDoneOutline,
+  timeOutline,
+  sendOutline,
+  closeOutline,
+  checkmarkCircleOutline,
+  chevronForwardOutline,
 } from 'ionicons/icons';
 
 // WebSockets
@@ -23,7 +27,6 @@ import { environment } from 'src/environments/environment.prod';
   imports: [IonicModule, CommonModule, FormsModule, HeaderComponent],
 })
 export class SoporteTicketsPage implements OnDestroy {
-
   @ViewChild('contentChat') contentChat: any;
 
   tickets: any[] = [];
@@ -40,11 +43,15 @@ export class SoporteTicketsPage implements OnDestroy {
 
   constructor(
     private http: HttpClient,
-    private toastController: ToastController
+    private toastController: ToastController,
   ) {
     addIcons({
-      checkmarkDoneOutline, timeOutline, sendOutline,
-      closeOutline, checkmarkCircleOutline, chevronForwardOutline
+      checkmarkDoneOutline,
+      timeOutline,
+      sendOutline,
+      closeOutline,
+      checkmarkCircleOutline,
+      chevronForwardOutline,
     });
   }
 
@@ -69,9 +76,10 @@ export class SoporteTicketsPage implements OnDestroy {
     if (!token) return;
     const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
 
-    this.http.get(environment.apiUrl+'/tickets/todos', { headers })
+    this.http
+      .get(environment.apiUrl + '/tickets/todos', { headers })
       .subscribe({
-        next: (res: any) => this.tickets = res,
+        next: (res: any) => (this.tickets = res),
         error: (err) => {
           console.error('Error al cargar tickets globales', err);
           this.mostrarToast('Error al obtener los tickets', 'danger');
@@ -88,9 +96,9 @@ export class SoporteTicketsPage implements OnDestroy {
   // Getter inteligente para los segmentos
   get ticketsFiltrados() {
     if (this.filtroActual === 'abiertos') {
-      return this.tickets.filter(t => !this.esTicketCerrado(t.estado));
+      return this.tickets.filter((t) => !this.esTicketCerrado(t.estado));
     } else {
-      return this.tickets.filter(t => this.esTicketCerrado(t.estado));
+      return this.tickets.filter((t) => this.esTicketCerrado(t.estado));
     }
   }
 
@@ -118,7 +126,7 @@ export class SoporteTicketsPage implements OnDestroy {
 
   conectarWebSocket(idTicket: number) {
     this.stompClient = new Client({
-      webSocketFactory: () => new SockJS(environment.apiUrl+'/ws-endpoint'),
+      webSocketFactory: () => new SockJS(environment.apiUrl + '/ws-endpoint'),
       reconnectDelay: 5000,
     });
 
@@ -150,31 +158,44 @@ export class SoporteTicketsPage implements OnDestroy {
 
     const body = { contenido: this.nuevoMensaje };
 
-    this.http.post(environment.apiUrl+`/tickets/${this.ticketSeleccionado.idTicket}/enviar-mensaje`, body, { headers })
+    this.http
+      .post(
+        environment.apiUrl +
+          `/tickets/${this.ticketSeleccionado.idTicket}/enviar-mensaje`,
+        body,
+        { headers },
+      )
       .subscribe({
         next: () => {
           this.nuevoMensaje = ''; // El mensaje volverá a través del WebSocket y se pintará
         },
-        error: (err) => console.error('Error enviando mensaje de RRHH', err)
+        error: (err) => console.error('Error enviando mensaje de RRHH', err),
       });
   }
 
   // --- 3. CAMBIOS DE ESTADO ---
   async resolverTicket(idTicket: number) {
-    if(!idTicket) return;
+    if (!idTicket) return;
 
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({ Authorization: 'Basic ' + token, 'Content-Type': 'application/json' });
+    const headers = new HttpHeaders({
+      Authorization: 'Basic ' + token,
+      'Content-Type': 'application/json',
+    });
     const body = { estado: 'RESUELTO' };
 
-    this.http.put(environment.apiUrl+`/tickets/${idTicket}/responder`, body, { headers })
+    this.http
+      .put(environment.apiUrl + `/tickets/${idTicket}/responder`, body, {
+        headers,
+      })
       .subscribe({
         next: () => {
           this.mostrarToast('¡Ticket resuelto con éxito!', 'success');
           this.ticketSeleccionado.estado = 'RESUELTO'; // Actualización instantánea UI
           this.cargarTickets(); // Sincronización en segundo plano
         },
-        error: () => this.mostrarToast('No se pudo actualizar el ticket', 'danger'),
+        error: () =>
+          this.mostrarToast('No se pudo actualizar el ticket', 'danger'),
       });
   }
 

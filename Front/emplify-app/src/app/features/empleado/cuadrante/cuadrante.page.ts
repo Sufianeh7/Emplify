@@ -7,8 +7,12 @@ import { ActivatedRoute } from '@angular/router';
 
 import { addIcons } from 'ionicons';
 import {
-  partlySunnyOutline, sunnyOutline, moonOutline, happyOutline,
-  logInOutline, logOutOutline
+  partlySunnyOutline,
+  sunnyOutline,
+  moonOutline,
+  happyOutline,
+  logInOutline,
+  logOutOutline,
 } from 'ionicons/icons';
 
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
@@ -20,10 +24,15 @@ import { environment } from 'src/environments/environment.prod';
   templateUrl: './cuadrante.page.html',
   styleUrls: ['./cuadrante.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, HeaderComponent, SolicitudesPage]
+  imports: [
+    IonicModule,
+    CommonModule,
+    FormsModule,
+    HeaderComponent,
+    SolicitudesPage,
+  ],
 })
 export class CuadrantePage implements OnInit {
-
   vistaActual: string = 'horario';
 
   // --- DATOS DEL CUADRANTE ---
@@ -39,17 +48,21 @@ export class CuadrantePage implements OnInit {
   constructor(
     private http: HttpClient,
     private toastController: ToastController,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {
     addIcons({
-      partlySunnyOutline, sunnyOutline, moonOutline, happyOutline,
-      logInOutline, logOutOutline
+      partlySunnyOutline,
+      sunnyOutline,
+      moonOutline,
+      happyOutline,
+      logInOutline,
+      logOutOutline,
     });
   }
 
   // Se ejecuta SOLO LA PRIMERA VEZ. Escucha los parámetros de la URL de forma continua.
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       if (params['tab']) {
         this.vistaActual = params['tab'];
       }
@@ -74,15 +87,19 @@ export class CuadrantePage implements OnInit {
 
     if (token && empleadoStr) {
       const empleado = JSON.parse(empleadoStr);
-      const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
+      const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
 
-      this.http.get(environment.apiUrl+`/cuadrante/empleado/${empleado.idEmpleado}`, { headers })
+      this.http
+        .get(
+          environment.apiUrl + `/cuadrante/empleado/${empleado.idEmpleado}`,
+          { headers },
+        )
         .subscribe({
           next: (res: any) => {
             this.turnos = res;
             this.procesarTurnosParaCalendario();
           },
-          error: (err) => console.error('Error cuadrante', err)
+          error: (err) => console.error('Error cuadrante', err),
         });
     }
   }
@@ -90,11 +107,11 @@ export class CuadrantePage implements OnInit {
   // Pinta los puntitos azules en el calendario para los días que tienen turno de trabajo
   procesarTurnosParaCalendario() {
     this.diasDestacados = this.turnos
-      .filter(t => t.turno !== 'LIBRE' && t.turno !== 'VACACIONES')
-      .map(turno => ({
+      .filter((t) => t.turno !== 'LIBRE' && t.turno !== 'VACACIONES')
+      .map((turno) => ({
         date: turno.fecha,
         textColor: '#0071ad',
-        backgroundColor: 'rgba(0, 113, 173, 0.1)'
+        backgroundColor: 'rgba(0, 113, 173, 0.1)',
       }));
   }
 
@@ -105,9 +122,13 @@ export class CuadrantePage implements OnInit {
 
     if (token && empleadoStr) {
       const empleado = JSON.parse(empleadoStr);
-      const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
+      const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
 
-      this.http.get(environment.apiUrl+`/fichajes/historial/${empleado.idEmpleado}`, { headers })
+      this.http
+        .get(
+          environment.apiUrl + `/fichajes/historial/${empleado.idEmpleado}`,
+          { headers },
+        )
         .subscribe({
           next: (res: any) => {
             this.fichajesTotales = res;
@@ -117,7 +138,8 @@ export class CuadrantePage implements OnInit {
               this.filtrarFichajesPorDia(this.fechaElegidaNormal);
             }
           },
-          error: (err) => console.error('Error cargando historial de fichajes', err)
+          error: (err) =>
+            console.error('Error cargando historial de fichajes', err),
         });
     }
   }
@@ -127,11 +149,13 @@ export class CuadrantePage implements OnInit {
     if (!event.detail.value) return;
 
     // Extraemos solo la fecha (YYYY-MM-DD)
-    const valorPulsado = Array.isArray(event.detail.value) ? event.detail.value[0] : event.detail.value;
+    const valorPulsado = Array.isArray(event.detail.value)
+      ? event.detail.value[0]
+      : event.detail.value;
     const fechaTocada = valorPulsado.split('T')[0];
 
     // Buscamos si hay turno para ese día
-    const turnoEncontrado = this.turnos.find(t => t.fecha === fechaTocada);
+    const turnoEncontrado = this.turnos.find((t) => t.fecha === fechaTocada);
 
     this.fechaElegidaNormal = fechaTocada;
     this.turnoElegido = turnoEncontrado || null;
@@ -141,7 +165,7 @@ export class CuadrantePage implements OnInit {
 
   // Filtra de la lista total de fichajes solo los que coinciden con el día seleccionado
   filtrarFichajesPorDia(fechaSeleccionada: string) {
-    this.fichajesDelDiaElegido = this.fichajesTotales.filter(f => {
+    this.fichajesDelDiaElegido = this.fichajesTotales.filter((f) => {
       const fechaFichaje = f.horaEntrada.split('T')[0];
       return fechaFichaje === fechaSeleccionada;
     });

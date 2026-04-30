@@ -3,18 +3,25 @@
 </ion-header>
 
 <ion-content class="app-background">
-
   <div class="section-header blue-bg">
     <h2>Mi Equipo</h2>
     <p>Gestiona las ausencias de tus empleados a cargo</p>
   </div>
 
   <div class="dashboard-container">
-
     <div class="segment-container">
-      <ion-segment [(ngModel)]="segmentoActual" mode="ios" class="custom-segment">
+      <ion-segment
+        [(ngModel)]="segmentoActual"
+        mode="ios"
+        class="custom-segment"
+      >
         <ion-segment-button value="peticiones">
-          <ion-label>Peticiones <ion-badge color="danger" *ngIf="solicitudes.length > 0">{{ solicitudes.length }}</ion-badge></ion-label>
+          <ion-label
+            >Peticiones
+            <ion-badge color="danger" *ngIf="solicitudes.length > 0"
+              >{{ solicitudes.length }}</ion-badge
+            ></ion-label
+          >
         </ion-segment-button>
         <ion-segment-button value="Equipo">
           <ion-label>Equipo</ion-label>
@@ -23,9 +30,14 @@
     </div>
 
     <div *ngIf="segmentoActual === 'peticiones'">
-
-      <div *ngIf="solicitudes.length === 0" class="flat-card full text-center empty-state">
-        <ion-icon name="checkmark-circle-outline" style="color: #4caf50;"></ion-icon>
+      <div
+        *ngIf="solicitudes.length === 0"
+        class="flat-card full text-center empty-state"
+      >
+        <ion-icon
+          name="checkmark-circle-outline"
+          style="color: #4caf50"
+        ></ion-icon>
         <h3>¡Todo al día!</h3>
         <p>No tienes peticiones pendientes de revisar.</p>
       </div>
@@ -34,10 +46,14 @@
         <div class="request-header">
           <div class="employee-info">
             <div class="avatar-circle small">
-              {{ getInicial(sol.empleado?.nombreUsuario || sol.empleado?.usuario?.email) }}
+              {{ getInicial(sol.empleado?.nombreUsuario ||
+              sol.empleado?.usuario?.email) }}
             </div>
             <div>
-              <h3 class="name">{{ sol.empleado?.nombreUsuario || sol.empleado?.usuario?.email || 'Sin nombre' }}</h3>
+              <h3 class="name">
+                {{ sol.empleado?.nombreUsuario || sol.empleado?.usuario?.email
+                || 'Sin nombre' }}
+              </h3>
               <p class="role">{{ sol.empleado?.puesto || 'Empleado' }}</p>
             </div>
           </div>
@@ -47,9 +63,13 @@
         <div class="request-dates">
           <div class="date-box">
             <span class="label">Desde</span>
-            <span class="value">{{ sol.fechaInicio | date:'dd MMM yyyy' }}</span>
+            <span class="value"
+              >{{ sol.fechaInicio | date:'dd MMM yyyy' }}</span
+            >
           </div>
-          <div class="date-divider"><ion-icon name="calendar-outline"></ion-icon></div>
+          <div class="date-divider">
+            <ion-icon name="calendar-outline"></ion-icon>
+          </div>
           <div class="date-box">
             <span class="label">Hasta</span>
             <span class="value">{{ sol.fechaFin | date:'dd MMM yyyy' }}</span>
@@ -61,21 +81,32 @@
         </div>
 
         <div class="request-actions">
-          <ion-button fill="clear" color="danger" class="btn-action" (click)="cambiarEstado(sol.idSolicitud, 'RECHAZADA')">
+          <ion-button
+            fill="clear"
+            color="danger"
+            class="btn-action"
+            (click)="cambiarEstado(sol.idSolicitud, 'RECHAZADA')"
+          >
             <ion-icon name="close-outline" slot="start"></ion-icon> Rechazar
           </ion-button>
           <div class="vertical-divider"></div>
-          <ion-button fill="clear" color="success" class="btn-action" (click)="cambiarEstado(sol.idSolicitud, 'APROBADA')">
+          <ion-button
+            fill="clear"
+            color="success"
+            class="btn-action"
+            (click)="cambiarEstado(sol.idSolicitud, 'APROBADA')"
+          >
             <ion-icon name="checkmark-outline" slot="start"></ion-icon> Aprobar
           </ion-button>
         </div>
       </div>
-
     </div>
 
     <div *ngIf="segmentoActual === 'Equipo'">
-
-      <div *ngIf="miEquipo.length === 0" class="flat-card full text-center empty-state">
+      <div
+        *ngIf="miEquipo.length === 0"
+        class="flat-card full text-center empty-state"
+      >
         <ion-icon name="person-circle-outline"></ion-icon>
         <h3>Sin equipo</h3>
         <p>No tienes empleados asignados a tu cargo.</p>
@@ -84,10 +115,13 @@
       <div class="flat-card full team-card" *ngFor="let empleado of miEquipo">
         <div class="team-header">
           <div class="avatar-circle">
-            {{ getInicial(empleado.usuario?.nombre || empleado.usuario?.email) }}
+            {{ getInicial(empleado.usuario?.nombre || empleado.usuario?.email)
+            }}
           </div>
           <div class="team-info">
-            <h3 class="name">{{ empleado.usuario?.nombre || empleado.usuario?.email }}</h3>
+            <h3 class="name">
+              {{ empleado.usuario?.nombre || empleado.usuario?.email }}
+            </h3>
             <p class="role">{{ empleado.puesto || 'Miembro del equipo' }}</p>
           </div>
         </div>
@@ -103,8 +137,6 @@
           </div>
         </div>
       </div>
-
     </div>
-
   </div>
 </ion-content>

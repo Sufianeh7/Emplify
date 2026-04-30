@@ -15,7 +15,8 @@
 }
 
 .section-header {
-  padding: 25px 20px 40px 20px; color: white;
+  padding: 25px 20px 40px 20px;
+  color: white;
 
   &.blue-bg {
     background: #0071ad;
@@ -25,15 +26,29 @@
     }
   }
 
-  h2 { margin: 0; font-size: 1.6rem; font-weight: 800; }
-  p { margin: 5px 0 0 0; font-size: 0.95rem; opacity: 0.9; }
+  h2 {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 800;
+  }
+  p {
+    margin: 5px 0 0 0;
+    font-size: 0.95rem;
+    opacity: 0.9;
+  }
 }
 
-.dashboard-container { padding: 5px 15px 20px 15px; margin-top: -20px; }
+.dashboard-container {
+  padding: 5px 15px 20px 15px;
+  margin-top: -20px;
+}
 
 /* SEGMENTOS */
 .segment-container {
-  background: #ffffff; padding: 5px; border-radius: 10px; margin-bottom: 15px;
+  background: #ffffff;
+  padding: 5px;
+  border-radius: 10px;
+  margin-bottom: 15px;
 
   @media (prefers-color-scheme: dark) {
     background: var(--ion-color-step-50, #1e1e1e);
@@ -48,7 +63,8 @@
   }
 
   ion-segment-button {
-    color: #565959; font-weight: 600;
+    color: #565959;
+    font-weight: 600;
 
     @media (prefers-color-scheme: dark) {
       color: #b0b0b0;
@@ -66,7 +82,11 @@
 
 /* TARJETAS DE TICKETS */
 .flat-card {
-  background: #ffffff; border: 1px solid #d5d9d9; border-radius: 8px; padding: 16px; margin-bottom: 12px;
+  background: #ffffff;
+  border: 1px solid #d5d9d9;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
 
   @media (prefers-color-scheme: dark) {
     background: var(--ion-color-step-50, #1e1e1e);
@@ -76,13 +96,27 @@
 
 .ticket-card {
   .ticket-header {
-    display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
 
     .employee-basic {
-      display: flex; align-items: center;
+      display: flex;
+      align-items: center;
 
       .avatar-mini {
-        width: 24px; height: 24px; background: #e3f2fd; color: #0071ad; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 0.7rem; font-weight: 800; margin-right: 8px;
+        width: 24px;
+        height: 24px;
+        background: #e3f2fd;
+        color: #0071ad;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 0.7rem;
+        font-weight: 800;
+        margin-right: 8px;
 
         @media (prefers-color-scheme: dark) {
           background: rgba(0, 113, 173, 0.2);
@@ -91,7 +125,9 @@
       }
 
       .emp-name {
-        font-size: 0.85rem; color: #565959; font-weight: 600;
+        font-size: 0.85rem;
+        color: #565959;
+        font-weight: 600;
 
         @media (prefers-color-scheme: dark) {
           color: #b0b0b0;
@@ -100,7 +136,8 @@
     }
 
     .ticket-date {
-      font-size: 0.75rem; color: #888c8c;
+      font-size: 0.75rem;
+      color: #888c8c;
 
       @media (prefers-color-scheme: dark) {
         color: #777777;
@@ -109,7 +146,10 @@
   }
 
   .ticket-title {
-    margin: 0 0 12px 0; font-size: 1.05rem; font-weight: 800; color: #0f1111;
+    margin: 0 0 12px 0;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #0f1111;
 
     @media (prefers-color-scheme: dark) {
       color: var(--ion-text-color, #ffffff);
@@ -117,23 +157,51 @@
   }
 
   .ticket-footer {
-    display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f2f4f8; padding-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #f2f4f8;
+    padding-top: 12px;
 
     @media (prefers-color-scheme: dark) {
       border-top-color: #333333;
     }
 
     .badge-estado {
-      font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
 
-      &.pendiente { background: #fff3e0; color: #e65100; }
-      &.abierto { background: #e3f2fd; color: #0071ad; }
-      &.cerrado, &.resuelto { background: #f2f4f8; color: #565959; }
+      &.pendiente {
+        background: #fff3e0;
+        color: #e65100;
+      }
+      &.abierto {
+        background: #e3f2fd;
+        color: #0071ad;
+      }
+      &.cerrado,
+      &.resuelto {
+        background: #f2f4f8;
+        color: #565959;
+      }
 
       @media (prefers-color-scheme: dark) {
-        &.pendiente { background: rgba(230, 81, 0, 0.2); color: #ffcc80; }
-        &.abierto { background: rgba(0, 113, 173, 0.2); color: #90caf9; }
-        &.cerrado, &.resuelto { background: rgba(255, 255, 255, 0.1); color: #e0e0e0; }
+        &.pendiente {
+          background: rgba(230, 81, 0, 0.2);
+          color: #ffcc80;
+        }
+        &.abierto {
+          background: rgba(0, 113, 173, 0.2);
+          color: #90caf9;
+        }
+        &.cerrado,
+        &.resuelto {
+          background: rgba(255, 255, 255, 0.1);
+          color: #e0e0e0;
+        }
       }
     }
 
@@ -151,7 +219,8 @@
   padding: 40px 20px;
 
   ion-icon {
-    font-size: 4rem; color: #d5d9d9;
+    font-size: 4rem;
+    color: #d5d9d9;
 
     @media (prefers-color-scheme: dark) {
       color: #444444;
@@ -161,41 +230,72 @@
 
 /* CHAT MODAL */
 .resolve-banner {
-  background: #ffffff; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  background: #ffffff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 
   @media (prefers-color-scheme: dark) {
     background: #2a2a2a;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   }
 
   span {
-    font-weight: 700; color: #1a1a1a; font-size: 0.9rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    font-size: 0.9rem;
 
     @media (prefers-color-scheme: dark) {
       color: var(--ion-text-color, #ffffff);
     }
   }
 
-  ion-button { margin: 0; }
+  ion-button {
+    margin: 0;
+  }
 }
 
-.chat-container { display: flex; flex-direction: column; padding-bottom: 20px; }
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 20px;
+}
 
 .message-wrapper {
-  display: flex; flex-direction: column; margin-bottom: 10px; max-width: 85%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  max-width: 85%;
 
   /* RRHH (AZUL CORPORATIVO) */
   &.mine {
     align-self: flex-end;
     .message-bubble {
-      background: #0071ad; color: #ffffff; border-radius: 12px 0 12px 12px;
+      background: #0071ad;
+      color: #ffffff;
+      border-radius: 12px 0 12px 12px;
 
       @media (prefers-color-scheme: dark) {
         background: #005684; /* Azul un poco más oscuro para no quemar la vista */
       }
 
-      p { margin: 0; font-size: 0.95rem; color: #ffffff; word-wrap: break-word; }
-      .time { display: block; font-size: 0.65rem; color: rgba(255, 255, 255, 0.8); text-align: right; margin-top: 4px; }
+      p {
+        margin: 0;
+        font-size: 0.95rem;
+        color: #ffffff;
+        word-wrap: break-word;
+      }
+      .time {
+        display: block;
+        font-size: 0.65rem;
+        color: rgba(255, 255, 255, 0.8);
+        text-align: right;
+        margin-top: 4px;
+      }
     }
   }
 
@@ -203,14 +303,19 @@
   &.theirs {
     align-self: flex-start;
     .message-bubble {
-      background: #ffffff; border-radius: 0 12px 12px 12px;
+      background: #ffffff;
+      border-radius: 0 12px 12px 12px;
 
       @media (prefers-color-scheme: dark) {
         background: #2a2a2a;
       }
 
       .sender-name {
-        display: block; font-size: 0.75rem; font-weight: 700; color: #e65100; margin-bottom: 2px;
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #e65100;
+        margin-bottom: 2px;
 
         @media (prefers-color-scheme: dark) {
           color: #ffcc80; /* Naranja más brillante sobre fondo oscuro */
@@ -218,7 +323,10 @@
       }
 
       p {
-        margin: 0; font-size: 0.95rem; color: #1a1a1a; word-wrap: break-word;
+        margin: 0;
+        font-size: 0.95rem;
+        color: #1a1a1a;
+        word-wrap: break-word;
 
         @media (prefers-color-scheme: dark) {
           color: #e0e0e0;
@@ -226,7 +334,11 @@
       }
 
       .time {
-        display: block; font-size: 0.65rem; color: #888c8c; text-align: right; margin-top: 4px;
+        display: block;
+        font-size: 0.65rem;
+        color: #888c8c;
+        text-align: right;
+        margin-top: 4px;
 
         @media (prefers-color-scheme: dark) {
           color: #777777;
@@ -235,12 +347,17 @@
     }
   }
 
-  .message-bubble { padding: 8px 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); position: relative; }
+  .message-bubble {
+    padding: 8px 12px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
 }
 
 /* ÁREA DE ESCRITURA */
 .chat-footer {
-  background: #f2f4f8; padding: 8px 15px;
+  background: #f2f4f8;
+  padding: 8px 15px;
 
   @media (prefers-color-scheme: dark) {
     background: #121212;
@@ -248,7 +365,11 @@
   }
 
   .input-container {
-    display: flex; align-items: center; background: #ffffff; border-radius: 20px; padding: 2px 5px 2px 15px;
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 2px 5px 2px 15px;
 
     @media (prefers-color-scheme: dark) {
       background: #1e1e1e;
@@ -256,7 +377,8 @@
     }
 
     ion-button {
-      color: #0071ad; margin: 0;
+      color: #0071ad;
+      margin: 0;
 
       @media (prefers-color-scheme: dark) {
         color: #3880ff;
@@ -264,7 +386,8 @@
     }
 
     /* Opcional si usas un ion-input directamente aquí */
-    ion-input, ion-textarea {
+    ion-input,
+    ion-textarea {
       @media (prefers-color-scheme: dark) {
         color: var(--ion-text-color, #ffffff);
       }
@@ -272,7 +395,12 @@
   }
 
   .closed-notice {
-    text-align: center; font-size: 0.85rem; color: #565959; padding: 10px; font-weight: 500; font-style: italic;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #565959;
+    padding: 10px;
+    font-weight: 500;
+    font-style: italic;
 
     @media (prefers-color-scheme: dark) {
       color: #b0b0b0;

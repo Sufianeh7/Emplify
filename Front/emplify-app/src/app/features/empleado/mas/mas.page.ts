@@ -6,9 +6,16 @@ import { Router } from '@angular/router';
 
 import { addIcons } from 'ionicons';
 import {
-  calendarOutline, chevronForwardOutline, airplaneOutline, megaphoneOutline,
-  chatbubblesOutline, peopleOutline, briefcaseOutline, shieldCheckmarkOutline,
-  headsetOutline, timeOutline
+  calendarOutline,
+  chevronForwardOutline,
+  airplaneOutline,
+  megaphoneOutline,
+  chatbubblesOutline,
+  peopleOutline,
+  briefcaseOutline,
+  shieldCheckmarkOutline,
+  headsetOutline,
+  timeOutline,
 } from 'ionicons/icons';
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
 
@@ -17,10 +24,9 @@ import { HeaderComponent } from 'src/app/shared/componentes/header/header.compon
   templateUrl: './mas.page.html',
   styleUrls: ['./mas.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, HeaderComponent]
+  imports: [IonicModule, CommonModule, FormsModule, HeaderComponent],
 })
 export class MasPage implements OnInit {
-
   empleado: any = null;
 
   // Control de roles para renderizar el menú condicionalmente
@@ -30,9 +36,16 @@ export class MasPage implements OnInit {
 
   constructor(private router: Router) {
     addIcons({
-      calendarOutline, chevronForwardOutline, airplaneOutline, megaphoneOutline,
-      chatbubblesOutline, peopleOutline, briefcaseOutline, shieldCheckmarkOutline,
-      headsetOutline, timeOutline
+      calendarOutline,
+      chevronForwardOutline,
+      airplaneOutline,
+      megaphoneOutline,
+      chatbubblesOutline,
+      peopleOutline,
+      briefcaseOutline,
+      shieldCheckmarkOutline,
+      headsetOutline,
+      timeOutline,
     });
   }
 
@@ -45,9 +58,9 @@ export class MasPage implements OnInit {
       this.empleado = JSON.parse(datos);
 
       const rol = this.empleado?.usuario?.rol;
-      this.esManager = (rol === 'MANAGER');
-      this.esRRHH = (rol === 'RRHH' || rol === 'ADMIN');
-      this.esAdmin = (rol === 'ADMIN');
+      this.esManager = rol === 'MANAGER';
+      this.esRRHH = rol === 'RRHH' || rol === 'ADMIN';
+      this.esAdmin = rol === 'ADMIN';
     }
   }
 
@@ -55,21 +68,43 @@ export class MasPage implements OnInit {
   // --- NAVEGACIÓN ---
   // ==========================================
   // Perfil del empleado
-  goPerfil() { this.router.navigate(['/perfil']); }
+  goPerfil() {
+    this.router.navigate(['/perfil']);
+  }
 
   // Herramientas básicas
-  goAusencias() { this.router.navigate(['/cuadrante'], { queryParams: { tab: 'ausencias' } }); }
-  goVozEmpleado() { this.router.navigate(['/voz-empleado']); }
-  goTickets() { this.router.navigate(['/tickets']); }
+  goAusencias() {
+    this.router.navigate(['/cuadrante'], { queryParams: { tab: 'ausencias' } });
+  }
+  goVozEmpleado() {
+    this.router.navigate(['/voz-empleado']);
+  }
+  goTickets() {
+    this.router.navigate(['/tickets']);
+  }
 
   // Herramientas de Mánager/RRHH
-  goGestionEquipo() { this.router.navigate(['/gestion-equipo']); }
-  goGestionEmpleados() { this.router.navigate(['/gestion-empleados']); }
-  goGestionNoticias() { this.router.navigate(['/gestion-noticias']); }
-  goControlFichajes() { this.router.navigate(['/control-fichajes']); }
-  goSoporteTickets() { this.router.navigate(['/soporte-tickets']); }
-  goGestionCuadrantes() { this.router.navigate(['/cuadrantes']); }
+  goGestionEquipo() {
+    this.router.navigate(['/gestion-equipo']);
+  }
+  goGestionEmpleados() {
+    this.router.navigate(['/gestion-empleados']);
+  }
+  goGestionNoticias() {
+    this.router.navigate(['/gestion-noticias']);
+  }
+  goControlFichajes() {
+    this.router.navigate(['/control-fichajes']);
+  }
+  goSoporteTickets() {
+    this.router.navigate(['/soporte-tickets']);
+  }
+  goGestionCuadrantes() {
+    this.router.navigate(['/cuadrantes']);
+  }
 
   // Herramientas de Admin
-  goAdmin() { this.router.navigate(['/admin']); }
+  goAdmin() {
+    this.router.navigate(['/admin']);
+  }
 }

@@ -4,7 +4,11 @@ import { IonicModule } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
 import { addIcons } from 'ionicons';
-import { chevronDownOutline, chevronUpOutline, newspaperOutline } from 'ionicons/icons';
+import {
+  chevronDownOutline,
+  chevronUpOutline,
+  newspaperOutline,
+} from 'ionicons/icons';
 import { environment } from 'src/environments/environment.prod';
 
 @Component({
@@ -12,10 +16,9 @@ import { environment } from 'src/environments/environment.prod';
   templateUrl: './noticias.page.html',
   styleUrls: ['./noticias.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, HeaderComponent]
+  imports: [IonicModule, CommonModule, HeaderComponent],
 })
 export class NoticiasPage {
-
   noticias: any[] = [];
 
   constructor(private http: HttpClient) {
@@ -29,20 +32,26 @@ export class NoticiasPage {
 
   // Descarga las noticias de la empresa logueada
   cargarNoticias() {
-    const empleado = JSON.parse(localStorage.getItem('empleadoLogueado') || '{}');
+    const empleado = JSON.parse(
+      localStorage.getItem('empleadoLogueado') || '{}',
+    );
     const idEmpresa = empleado?.empresa?.id_empresa;
     const token = localStorage.getItem('token');
 
     if (idEmpresa && token) {
-      const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
+      const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
 
-      this.http.get<any[]>(environment.apiUrl+`/noticias/empresa/${idEmpresa}`, { headers })
+      this.http
+        .get<
+          any[]
+        >(environment.apiUrl + `/noticias/empresa/${idEmpresa}`, { headers })
         .subscribe({
           next: (res) => {
             // Añadimos 'expandida' en false por defecto para controlar el acordeón del HTML
-            this.noticias = res.map(n => ({ ...n, expandida: false }));
+            this.noticias = res.map((n) => ({ ...n, expandida: false }));
           },
-          error: (err) => console.error('Error al cargar noticias corporativas:', err)
+          error: (err) =>
+            console.error('Error al cargar noticias corporativas:', err),
         });
     }
   }

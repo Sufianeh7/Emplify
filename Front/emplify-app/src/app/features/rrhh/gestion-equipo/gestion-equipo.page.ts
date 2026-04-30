@@ -6,8 +6,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
 import { addIcons } from 'ionicons';
 import {
-  checkmarkOutline, closeOutline, calendarOutline,
-  personCircleOutline, checkmarkCircleOutline
+  checkmarkOutline,
+  closeOutline,
+  calendarOutline,
+  personCircleOutline,
+  checkmarkCircleOutline,
 } from 'ionicons/icons';
 import { environment } from 'src/environments/environment.prod';
 
@@ -16,10 +19,9 @@ import { environment } from 'src/environments/environment.prod';
   templateUrl: './gestion-equipo.page.html',
   styleUrls: ['./gestion-equipo.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, HeaderComponent]
+  imports: [IonicModule, CommonModule, FormsModule, HeaderComponent],
 })
 export class GestionEquipoPage {
-
   segmentoActual: string = 'peticiones';
 
   solicitudes: any[] = [];
@@ -27,11 +29,14 @@ export class GestionEquipoPage {
 
   constructor(
     private http: HttpClient,
-    private toastController: ToastController
+    private toastController: ToastController,
   ) {
     addIcons({
-      checkmarkOutline, closeOutline, calendarOutline,
-      personCircleOutline, checkmarkCircleOutline
+      checkmarkOutline,
+      closeOutline,
+      calendarOutline,
+      personCircleOutline,
+      checkmarkCircleOutline,
     });
   }
 
@@ -51,24 +56,29 @@ export class GestionEquipoPage {
   // Obtiene las ausencias que requieren revisión por parte de este mánager
   cargarSolicitudes() {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
+    const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
 
-    this.http.get(environment.apiUrl+'/solicitudes/equipo/pendientes', { headers })
+    this.http
+      .get(environment.apiUrl + '/solicitudes/equipo/pendientes', { headers })
       .subscribe({
-        next: (res: any) => {this.solicitudes = res},
-        error: (err) => console.error('Error al cargar peticiones', err)
+        next: (res: any) => {
+          this.solicitudes = res;
+        },
+        error: (err) => console.error('Error al cargar peticiones', err),
       });
   }
 
   // Obtiene la lista de personas que reportan a este mánager (y su saldo de días)
   cargarEquipo() {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
+    const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
 
-    this.http.get(environment.apiUrl+'/empleados/mi-equipo', { headers })
+    this.http
+      .get(environment.apiUrl + '/empleados/mi-equipo', { headers })
       .subscribe({
-        next: (res: any) => this.miEquipo = res,
-        error: (err) => console.error('Error al cargar el directorio del equipo', err)
+        next: (res: any) => (this.miEquipo = res),
+        error: (err) =>
+          console.error('Error al cargar el directorio del equipo', err),
       });
   }
 
@@ -77,18 +87,21 @@ export class GestionEquipoPage {
   async cambiarEstado(idSolicitud: number, nuevoEstado: string) {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
-      'Authorization': 'Basic ' + token,
-      'Content-Type': 'application/json'
+      Authorization: 'Basic ' + token,
+      'Content-Type': 'application/json',
     });
 
     const body = { estado: nuevoEstado };
 
-    this.http.put(environment.apiUrl+`/solicitudes/${idSolicitud}/estado`, body, { headers })
+    this.http
+      .put(environment.apiUrl + `/solicitudes/${idSolicitud}/estado`, body, {
+        headers,
+      })
       .subscribe({
         next: async () => {
           this.mostrarToast(
             `Solicitud ${nuevoEstado.toLowerCase()} con éxito`,
-            nuevoEstado === 'APROBADA' ? 'success' : 'danger'
+            nuevoEstado === 'APROBADA' ? 'success' : 'danger',
           );
 
           // Refrescamos la lista de peticiones para que desaparezca la que acabamos de revisar
@@ -100,9 +113,10 @@ export class GestionEquipoPage {
           }
         },
         error: (err) => {
-          const msg = err.error?.error || 'Error al cambiar el estado de la solicitud';
+          const msg =
+            err.error?.error || 'Error al cambiar el estado de la solicitud';
           this.mostrarToast(msg, 'danger');
-        }
+        },
       });
   }
 
@@ -112,7 +126,7 @@ export class GestionEquipoPage {
       message: mensaje,
       duration: 3000,
       color: color,
-      position: 'bottom'
+      position: 'bottom',
     });
     toast.present();
   }

@@ -3,19 +3,27 @@
 </ion-header>
 
 <ion-content class="app-background">
-
   <div class="section-header blue-bg">
     <h2>Centro de Mandos</h2>
     <p>Administración Global del Sistema</p>
   </div>
 
   <div class="dashboard-container">
-
     <div class="segment-container">
-      <ion-segment [(ngModel)]="seccionActual" mode="ios" class="custom-segment">
-        <ion-segment-button value="dashboard"><ion-label>Dashboard</ion-label></ion-segment-button>
-        <ion-segment-button value="empresas"><ion-label>Empresas</ion-label></ion-segment-button>
-        <ion-segment-button value="usuarios"><ion-label>Usuarios</ion-label></ion-segment-button>
+      <ion-segment
+        [(ngModel)]="seccionActual"
+        mode="ios"
+        class="custom-segment"
+      >
+        <ion-segment-button value="dashboard"
+          ><ion-label>Dashboard</ion-label></ion-segment-button
+        >
+        <ion-segment-button value="empresas"
+          ><ion-label>Empresas</ion-label></ion-segment-button
+        >
+        <ion-segment-button value="usuarios"
+          ><ion-label>Usuarios</ion-label></ion-segment-button
+        >
       </ion-segment>
     </div>
 
@@ -35,95 +43,207 @@
     </div>
 
     <div *ngIf="seccionActual === 'empresas'">
-
       <div class="flat-card full">
-        <h3 class="card-title"><ion-icon name="add-circle-outline"></ion-icon> Crear Nueva Empresa</h3>
+        <h3 class="card-title">
+          <ion-icon name="add-circle-outline"></ion-icon> Crear Nueva Empresa
+        </h3>
         <div class="form-container">
-          <ion-item lines="none" class="form-item"><ion-input label="Nombre" labelPlacement="floating" [(ngModel)]="nuevaEmpresa.nombre"></ion-input></ion-item>
-          <ion-item lines="none" class="form-item"><ion-input label="Sector" labelPlacement="floating" [(ngModel)]="nuevaEmpresa.sector"></ion-input></ion-item>
-          <ion-item lines="none" class="form-item"><ion-input label="Dirección" labelPlacement="floating" [(ngModel)]="nuevaEmpresa.direccion"></ion-input></ion-item>
-          <ion-item lines="none" class="form-item"><ion-input label="Color Hex (#000000)" labelPlacement="floating" [(ngModel)]="nuevaEmpresa.colorPrimario"></ion-input></ion-item>
+          <ion-item lines="none" class="form-item"
+            ><ion-input
+              label="Nombre"
+              labelPlacement="floating"
+              [(ngModel)]="nuevaEmpresa.nombre"
+            ></ion-input
+          ></ion-item>
+          <ion-item lines="none" class="form-item"
+            ><ion-input
+              label="Sector"
+              labelPlacement="floating"
+              [(ngModel)]="nuevaEmpresa.sector"
+            ></ion-input
+          ></ion-item>
+          <ion-item lines="none" class="form-item"
+            ><ion-input
+              label="Dirección"
+              labelPlacement="floating"
+              [(ngModel)]="nuevaEmpresa.direccion"
+            ></ion-input
+          ></ion-item>
+          <ion-item lines="none" class="form-item"
+            ><ion-input
+              label="Color Hex (#000000)"
+              labelPlacement="floating"
+              [(ngModel)]="nuevaEmpresa.colorPrimario"
+            ></ion-input
+          ></ion-item>
         </div>
-        <ion-button expand="block" class="btn-corporativo ion-margin-top" [disabled]="!nuevaEmpresa.nombre" (click)="crearEmpresa()">Dar de Alta</ion-button>
+        <ion-button
+          expand="block"
+          class="btn-corporativo ion-margin-top"
+          [disabled]="!nuevaEmpresa.nombre"
+          (click)="crearEmpresa()"
+          >Dar de Alta</ion-button
+        >
       </div>
 
       <div class="flat-card full">
-        <h3 class="card-title"><ion-icon name="list-outline"></ion-icon> Listado de Empresas</h3>
+        <h3 class="card-title">
+          <ion-icon name="list-outline"></ion-icon> Listado de Empresas
+        </h3>
         <ion-list lines="full" class="clean-list">
           <ion-item *ngFor="let emp of empresas">
-            <ion-avatar slot="start" class="company-avatar" [style.background]="emp.colorPrimario || '#0071ad'">
+            <ion-avatar
+              slot="start"
+              class="company-avatar"
+              [style.background]="emp.colorPrimario || '#0071ad'"
+            >
               {{ emp.nombre.charAt(0) | uppercase }}
             </ion-avatar>
             <ion-label>
               <h2><b>{{ emp.nombre }}</b></h2>
               <p>{{ emp.sector || 'Sin sector especificado' }}</p>
             </ion-label>
-            <ion-note slot="end" color="primary">ID: {{ emp.idEmpresa }}</ion-note>
+            <ion-note slot="end" color="primary"
+              >ID: {{ emp.idEmpresa }}</ion-note
+            >
           </ion-item>
-          <div *ngIf="empresas.length === 0" class="empty-state">No hay empresas en el sistema.</div>
+          <div *ngIf="empresas.length === 0" class="empty-state">
+            No hay empresas en el sistema.
+          </div>
         </ion-list>
       </div>
-
     </div>
 
     <div *ngIf="seccionActual === 'usuarios'">
-
       <div class="flat-card full">
-        <h3 class="card-title"><ion-icon name="person-add-outline"></ion-icon> Crear Nuevo Usuario</h3>
+        <h3 class="card-title">
+          <ion-icon name="person-add-outline"></ion-icon> Crear Nuevo Usuario
+        </h3>
         <div class="form-container">
-          <ion-item lines="none" class="form-item"><ion-input label="Nombre Completo" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.nombre"></ion-input></ion-item>
-          <ion-item lines="none" class="form-item"><ion-input label="Email" labelPlacement="floating" type="email" [(ngModel)]="nuevoEmpleado.email"></ion-input></ion-item>
-          <ion-item lines="none" class="form-item"><ion-input label="Contraseña (Provisional)" labelPlacement="floating" type="password" [(ngModel)]="nuevoEmpleado.password"></ion-input></ion-item>
+          <ion-item lines="none" class="form-item"
+            ><ion-input
+              label="Nombre Completo"
+              labelPlacement="floating"
+              [(ngModel)]="nuevoEmpleado.nombre"
+            ></ion-input
+          ></ion-item>
+          <ion-item lines="none" class="form-item"
+            ><ion-input
+              label="Email"
+              labelPlacement="floating"
+              type="email"
+              [(ngModel)]="nuevoEmpleado.email"
+            ></ion-input
+          ></ion-item>
+          <ion-item lines="none" class="form-item"
+            ><ion-input
+              label="Contraseña (Provisional)"
+              labelPlacement="floating"
+              type="password"
+              [(ngModel)]="nuevoEmpleado.password"
+            ></ion-input
+          ></ion-item>
 
           <ion-item lines="none" class="form-item">
-            <ion-select label="Asignar a Empresa" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.idEmpresa">
-              <ion-select-option *ngFor="let emp of empresas" [value]="emp.idEmpresa">{{ emp.nombre }}</ion-select-option>
+            <ion-select
+              label="Asignar a Empresa"
+              labelPlacement="floating"
+              [(ngModel)]="nuevoEmpleado.idEmpresa"
+            >
+              <ion-select-option
+                *ngFor="let emp of empresas"
+                [value]="emp.idEmpresa"
+                >{{ emp.nombre }}</ion-select-option
+              >
             </ion-select>
           </ion-item>
 
-          <ion-item lines="none" class="form-item" *ngIf="nuevoEmpleado.idEmpresa">
-            <ion-select label="Asignar Mánager (Opcional)" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.idManager">
-              <ion-select-option [value]="null">Sin Mánager superior</ion-select-option>
-              <ion-select-option *ngFor="let mgr of posiblesManagers" [value]="mgr.idEmpleado">
-                {{ mgr.usuario?.nombre || mgr.usuario?.email }} ({{ mgr.usuario?.rol }})
+          <ion-item
+            lines="none"
+            class="form-item"
+            *ngIf="nuevoEmpleado.idEmpresa"
+          >
+            <ion-select
+              label="Asignar Mánager (Opcional)"
+              labelPlacement="floating"
+              [(ngModel)]="nuevoEmpleado.idManager"
+            >
+              <ion-select-option [value]="null"
+                >Sin Mánager superior</ion-select-option
+              >
+              <ion-select-option
+                *ngFor="let mgr of posiblesManagers"
+                [value]="mgr.idEmpleado"
+              >
+                {{ mgr.usuario?.nombre || mgr.usuario?.email }} ({{
+                mgr.usuario?.rol }})
               </ion-select-option>
             </ion-select>
           </ion-item>
 
           <ion-item lines="none" class="form-item">
-            <ion-select label="Rol del Sistema" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.rol">
-              <ion-select-option value="EMPLEADO">Empleado Normal</ion-select-option>
-              <ion-select-option value="MANAGER">Mánager (Supervisor)</ion-select-option>
-              <ion-select-option value="RRHH">Recursos Humanos</ion-select-option>
-              <ion-select-option value="ADMIN">Super Administrador</ion-select-option>
+            <ion-select
+              label="Rol del Sistema"
+              labelPlacement="floating"
+              [(ngModel)]="nuevoEmpleado.rol"
+            >
+              <ion-select-option value="EMPLEADO"
+                >Empleado Normal</ion-select-option
+              >
+              <ion-select-option value="MANAGER"
+                >Mánager (Supervisor)</ion-select-option
+              >
+              <ion-select-option value="RRHH"
+                >Recursos Humanos</ion-select-option
+              >
+              <ion-select-option value="ADMIN"
+                >Super Administrador</ion-select-option
+              >
             </ion-select>
           </ion-item>
         </div>
 
-        <ion-button expand="block" class="btn-corporativo ion-margin-top"
+        <ion-button
+          expand="block"
+          class="btn-corporativo ion-margin-top"
           [disabled]="!nuevoEmpleado.nombre || !nuevoEmpleado.email || !nuevoEmpleado.password || !nuevoEmpleado.idEmpresa"
-          (click)="crearEmpleado()">Registrar Usuario</ion-button>
+          (click)="crearEmpleado()"
+          >Registrar Usuario</ion-button
+        >
       </div>
 
       <div class="flat-card full">
-        <h3 class="card-title"><ion-icon name="people-outline"></ion-icon> Listado de Usuarios</h3>
+        <h3 class="card-title">
+          <ion-icon name="people-outline"></ion-icon> Listado de Usuarios
+        </h3>
         <ion-list lines="full" class="clean-list">
           <ion-item *ngFor="let emp of empleados">
-            <ion-icon name="person-circle-outline" slot="start" color="medium" style="font-size: 2rem;"></ion-icon>
+            <ion-icon
+              name="person-circle-outline"
+              slot="start"
+              color="medium"
+              style="font-size: 2rem"
+            ></ion-icon>
             <ion-label>
               <h2><b>{{ emp.usuario?.nombre || emp.usuario?.email }}</b></h2>
-              <p><ion-icon name="business-outline"></ion-icon> {{ emp.empresa?.nombre }}</p>
+              <p>
+                <ion-icon name="business-outline"></ion-icon> {{
+                emp.empresa?.nombre }}
+              </p>
             </ion-label>
-            <div slot="end" class="badge-rol" [ngClass]="emp.usuario?.rol?.toLowerCase()">
+            <div
+              slot="end"
+              class="badge-rol"
+              [ngClass]="emp.usuario?.rol?.toLowerCase()"
+            >
               {{ emp.usuario?.rol }}
             </div>
           </ion-item>
-          <div *ngIf="empleados.length === 0" class="empty-state">No hay usuarios en el sistema.</div>
+          <div *ngIf="empleados.length === 0" class="empty-state">
+            No hay usuarios en el sistema.
+          </div>
         </ion-list>
       </div>
-
     </div>
-
   </div>
-
 </ion-content>

@@ -3,40 +3,47 @@
 </ion-header>
 
 <ion-content class="app-background">
-
   <div class="section-header blue-bg">
     <h2>Empleados</h2>
     <p>Gestiona el equipo de la empresa</p>
   </div>
 
   <div class="dashboard-container">
-
     <ion-searchbar
       placeholder="Buscar por nombre, email o departamento..."
       mode="ios"
       class="custom-searchbar"
-      (ionInput)="buscarEmpleado($event)">
+      (ionInput)="buscarEmpleado($event)"
+    >
     </ion-searchbar>
 
-    <div *ngIf="empleadosFiltrados.length === 0" class="flat-card full text-center empty-state">
+    <div
+      *ngIf="empleadosFiltrados.length === 0"
+      class="flat-card full text-center empty-state"
+    >
       <ion-icon name="people-outline"></ion-icon>
       <h3>No hay empleados</h3>
       <p>No se encontraron resultados o la lista está vacía.</p>
     </div>
 
-    <div class="flat-card full employee-card" *ngFor="let emp of empleadosFiltrados">
+    <div
+      class="flat-card full employee-card"
+      *ngFor="let emp of empleadosFiltrados"
+    >
       <div class="employee-header">
-
-        <div class="avatar-circle">
-          {{ getInicial(emp.usuario?.nombre) }}
-        </div>
+        <div class="avatar-circle">{{ getInicial(emp.usuario?.nombre) }}</div>
 
         <div class="employee-info">
-          <h3 class="employee-name">{{ emp.usuario?.nombre || 'Sin nombre' }}</h3>
+          <h3 class="employee-name">
+            {{ emp.usuario?.nombre || 'Sin nombre' }}
+          </h3>
           <p class="employee-role">{{ emp.puesto || 'Sin puesto asignado' }}</p>
         </div>
 
-        <span class="badge-rol" [ngClass]="emp.usuario?.rol?.toLowerCase() || 'empleado'">
+        <span
+          class="badge-rol"
+          [ngClass]="emp.usuario?.rol?.toLowerCase() || 'empleado'"
+        >
           {{ emp.usuario?.rol || 'EMPLEADO' }}
         </span>
       </div>
@@ -52,17 +59,26 @@
         </div>
       </div>
     </div>
-
   </div>
 
   <!-- Reemplazado style por clase fab-container -->
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="fab-container">
+  <ion-fab
+    vertical="bottom"
+    horizontal="end"
+    slot="fixed"
+    class="fab-container"
+  >
     <ion-fab-button class="fab-corporativo" id="modal-nuevo-empleado">
       <ion-icon name="person-add-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
-  <ion-modal trigger="modal-nuevo-empleado" #modalNuevo [initialBreakpoint]="0.9" [breakpoints]="[0, 0.9, 1]">
+  <ion-modal
+    trigger="modal-nuevo-empleado"
+    #modalNuevo
+    [initialBreakpoint]="0.9"
+    [breakpoints]="[0, 0.9, 1]"
+  >
     <ng-template>
       <ion-header class="ion-no-border">
         <!-- Reemplazados los styles en línea por clases -->
@@ -78,55 +94,101 @@
 
       <ion-content class="app-background ion-padding">
         <div class="form-container">
-
           <ion-item lines="none" class="form-item">
-            <ion-input label="Nombre Completo" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.nombre" type="text" placeholder="Ej: Ana Gómez"></ion-input>
+            <ion-input
+              label="Nombre Completo"
+              labelPlacement="floating"
+              [(ngModel)]="nuevoEmpleado.nombre"
+              type="text"
+              placeholder="Ej: Ana Gómez"
+            ></ion-input>
           </ion-item>
 
           <ion-item lines="none" class="form-item">
-            <ion-input label="Correo Electrónico" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.email" type="email"></ion-input>
+            <ion-input
+              label="Correo Electrónico"
+              labelPlacement="floating"
+              [(ngModel)]="nuevoEmpleado.email"
+              type="email"
+            ></ion-input>
           </ion-item>
 
           <ion-item lines="none" class="form-item">
-            <ion-input label="Contraseña temporal" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.password" type="password"></ion-input>
+            <ion-input
+              label="Contraseña temporal"
+              labelPlacement="floating"
+              [(ngModel)]="nuevoEmpleado.password"
+              type="password"
+            ></ion-input>
           </ion-item>
 
           <ion-item lines="none" class="form-item">
-            <ion-select label="Rol del Sistema" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.rol">
-              <ion-select-option value="EMPLEADO">Empleado Normal</ion-select-option>
-              <ion-select-option value="MANAGER">Mánager (Responsable de equipo)</ion-select-option>
-              <ion-select-option value="RRHH">Recursos Humanos</ion-select-option>
+            <ion-select
+              label="Rol del Sistema"
+              labelPlacement="floating"
+              [(ngModel)]="nuevoEmpleado.rol"
+            >
+              <ion-select-option value="EMPLEADO"
+                >Empleado Normal</ion-select-option
+              >
+              <ion-select-option value="MANAGER"
+                >Mánager (Responsable de equipo)</ion-select-option
+              >
+              <ion-select-option value="RRHH"
+                >Recursos Humanos</ion-select-option
+              >
             </ion-select>
           </ion-item>
 
           <ion-item lines="none" class="form-item">
-            <ion-input label="Departamento" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.departamento" type="text"></ion-input>
+            <ion-input
+              label="Departamento"
+              labelPlacement="floating"
+              [(ngModel)]="nuevoEmpleado.departamento"
+              type="text"
+            ></ion-input>
           </ion-item>
 
           <ion-item lines="none" class="form-item">
-            <ion-input label="Puesto" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.puesto" type="text"></ion-input>
+            <ion-input
+              label="Puesto"
+              labelPlacement="floating"
+              [(ngModel)]="nuevoEmpleado.puesto"
+              type="text"
+            ></ion-input>
           </ion-item>
 
           <ion-item lines="none" class="form-item">
-            <ion-select label="Asignar Mánager (Opcional)" labelPlacement="floating" [(ngModel)]="nuevoEmpleado.idManager">
-              <ion-select-option [value]="null">Sin mánager asignado</ion-select-option>
-              <ion-select-option *ngFor="let emp of posiblesManagers" [value]="emp.idEmpleado">
-                {{ emp.usuario?.nombre || emp.usuario?.email }} ({{ emp.puesto || 'Sin puesto' }})
+            <ion-select
+              label="Asignar Mánager (Opcional)"
+              labelPlacement="floating"
+              [(ngModel)]="nuevoEmpleado.idManager"
+            >
+              <ion-select-option [value]="null"
+                >Sin mánager asignado</ion-select-option
+              >
+              <ion-select-option
+                *ngFor="let emp of posiblesManagers"
+                [value]="emp.idEmpleado"
+              >
+                {{ emp.usuario?.nombre || emp.usuario?.email }} ({{ emp.puesto
+                || 'Sin puesto' }})
               </ion-select-option>
             </ion-select>
           </ion-item>
-
         </div>
 
         <!-- Reemplazado style por clase form-submit-btn -->
-        <ion-button expand="block" class="btn-corporativo ion-margin-top form-submit-btn"
+        <ion-button
+          expand="block"
+          class="btn-corporativo ion-margin-top form-submit-btn"
           [disabled]="!nuevoEmpleado.nombre || !nuevoEmpleado.email || !nuevoEmpleado.password"
-          (click)="crearEmpleado(modalNuevo)">
+          (click)="crearEmpleado(modalNuevo)"
+        >
           <ion-icon slot="start" name="person-add-outline"></ion-icon>
           Dar de Alta
         </ion-button>
       </ion-content>
     </ng-template>
   </ion-modal>
-
 </ion-content>

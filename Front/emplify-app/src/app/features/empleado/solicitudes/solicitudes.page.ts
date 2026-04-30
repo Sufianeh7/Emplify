@@ -6,9 +6,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { addIcons } from 'ionicons';
 import {
-  sendOutline, calendarOutline, documentTextOutline,
-  closeOutline, checkmarkCircleOutline, timeOutline,
-  closeCircleOutline, chatboxEllipsesOutline
+  sendOutline,
+  calendarOutline,
+  documentTextOutline,
+  closeOutline,
+  checkmarkCircleOutline,
+  timeOutline,
+  closeCircleOutline,
+  chatboxEllipsesOutline,
 } from 'ionicons/icons';
 import { environment } from 'src/environments/environment.prod';
 
@@ -20,7 +25,6 @@ import { environment } from 'src/environments/environment.prod';
   imports: [IonicModule, CommonModule, FormsModule],
 })
 export class SolicitudesPage implements OnInit {
-
   // Listados de datos
   tiposSolicitud: any[] = [];
   misSolicitudes: any[] = [];
@@ -44,9 +48,14 @@ export class SolicitudesPage implements OnInit {
     private toastController: ToastController,
   ) {
     addIcons({
-      sendOutline, calendarOutline, documentTextOutline,
-      closeOutline, checkmarkCircleOutline, timeOutline,
-      closeCircleOutline, chatboxEllipsesOutline
+      sendOutline,
+      calendarOutline,
+      documentTextOutline,
+      closeOutline,
+      checkmarkCircleOutline,
+      timeOutline,
+      closeCircleOutline,
+      chatboxEllipsesOutline,
     });
   }
 
@@ -67,12 +76,15 @@ export class SolicitudesPage implements OnInit {
     const token = localStorage.getItem('token');
     if (token) {
       const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
-      this.http.get(environment.apiUrl+'/empleados/perfil', { headers }).subscribe({
+      this.http
+        .get(environment.apiUrl + '/empleados/perfil', { headers })
+        .subscribe({
           next: (res: any) => {
             this.diasVacaciones = res.vacacionesDisponibles;
             this.diasAsuntos = res.asuntosPropiosDisponibles;
           },
-          error: (err) => console.error('Error al cargar datos del empleado', err),
+          error: (err) =>
+            console.error('Error al cargar datos del empleado', err),
         });
     }
   }
@@ -100,7 +112,9 @@ export class SolicitudesPage implements OnInit {
     const token = localStorage.getItem('token');
     if (token) {
       const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
-      this.http.get(environment.apiUrl+'/solicitudes/tipos', { headers }).subscribe({
+      this.http
+        .get(environment.apiUrl + '/solicitudes/tipos', { headers })
+        .subscribe({
           next: (res: any) => (this.tiposSolicitud = res),
           error: (err) => console.error('Error al cargar tipos', err),
         });
@@ -112,7 +126,9 @@ export class SolicitudesPage implements OnInit {
     const token = localStorage.getItem('token');
     if (token) {
       const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
-      this.http.get(environment.apiUrl+`/solicitudes/mis-solicitudes`, { headers }).subscribe({
+      this.http
+        .get(environment.apiUrl + `/solicitudes/mis-solicitudes`, { headers })
+        .subscribe({
           next: (res: any) => (this.misSolicitudes = res),
           error: (err) => console.error('Error al cargar historial', err),
         });
@@ -141,7 +157,9 @@ export class SolicitudesPage implements OnInit {
       'Content-Type': 'application/json',
     });
 
-    this.http.post(environment.apiUrl+'/solicitudes/nueva', body, { headers }).subscribe({
+    this.http
+      .post(environment.apiUrl + '/solicitudes/nueva', body, { headers })
+      .subscribe({
         next: () => {
           this.mostrarToast('Solicitud enviada con éxito', 'success');
           this.cerrarModal();

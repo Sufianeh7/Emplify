@@ -5,7 +5,13 @@ import { IonicModule, ToastController } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
 import { addIcons } from 'ionicons';
-import { timeOutline, searchOutline, logInOutline, logOutOutline, documentTextOutline } from 'ionicons/icons';
+import {
+  timeOutline,
+  searchOutline,
+  logInOutline,
+  logOutOutline,
+  documentTextOutline,
+} from 'ionicons/icons';
 import { environment } from 'src/environments/environment.prod';
 
 @Component({
@@ -13,10 +19,9 @@ import { environment } from 'src/environments/environment.prod';
   templateUrl: './control-fichajes.page.html',
   styleUrls: ['./control-fichajes.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, HeaderComponent]
+  imports: [IonicModule, CommonModule, FormsModule, HeaderComponent],
 })
 export class ControlFichajesPage {
-
   empleados: any[] = [];
   empleadoSeleccionado: any = null;
   historialFichajes: any[] = [];
@@ -24,9 +29,15 @@ export class ControlFichajesPage {
 
   constructor(
     private http: HttpClient,
-    private toastController: ToastController
+    private toastController: ToastController,
   ) {
-    addIcons({ timeOutline, searchOutline, logInOutline, logOutOutline, documentTextOutline });
+    addIcons({
+      timeOutline,
+      searchOutline,
+      logInOutline,
+      logOutOutline,
+      documentTextOutline,
+    });
   }
 
   // Se ejecuta al entrar a la vista para asegurar que la lista de empleados está fresca
@@ -37,12 +48,13 @@ export class ControlFichajesPage {
   // Descarga la lista de empleados disponibles
   cargarEmpleados() {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
+    const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
 
-    this.http.get(environment.apiUrl+'/cuadrante/mis-empleados', { headers })
+    this.http
+      .get(environment.apiUrl + '/cuadrante/mis-empleados', { headers })
       .subscribe({
-        next: (res: any) => this.empleados = res,
-        error: (err) => console.error('Error cargando empleados', err)
+        next: (res: any) => (this.empleados = res),
+        error: (err) => console.error('Error cargando empleados', err),
       });
   }
 
@@ -51,31 +63,37 @@ export class ControlFichajesPage {
     const idEmpleado = event.detail.value;
     if (!idEmpleado) return;
 
-    this.empleadoSeleccionado = this.empleados.find(e => e.idEmpleado === idEmpleado);
+    this.empleadoSeleccionado = this.empleados.find(
+      (e) => e.idEmpleado === idEmpleado,
+    );
 
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
+    const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
 
-    this.http.get(environment.apiUrl+`/fichajes/historial/${idEmpleado}`, { headers })
+    this.http
+      .get(environment.apiUrl + `/fichajes/historial/${idEmpleado}`, {
+        headers,
+      })
       .subscribe({
         next: (res: any) => {
           // Ya no hacemos el .sort() aquí porque el Backend ya lo envía ordenado cronológicamente
           this.historialFichajes = res;
           this.calcularTotalHoras();
         },
-        error: (err) => this.mostrarToast('Error al obtener el historial', 'danger')
+        error: (err) =>
+          this.mostrarToast('Error al obtener el historial', 'danger'),
       });
   }
 
   // Suma todas las horas completadas por el empleado
   calcularTotalHoras() {
     let totalMs = 0;
-    this.historialFichajes.forEach(fichaje => {
+    this.historialFichajes.forEach((fichaje) => {
       // Solo sumamos los turnos cerrados
       if (fichaje.horaEntrada && fichaje.horaSalida) {
         const entrada = new Date(fichaje.horaEntrada).getTime();
         const salida = new Date(fichaje.horaSalida).getTime();
-        totalMs += (salida - entrada);
+        totalMs += salida - entrada;
       }
     });
     // Convertimos de milisegundos a formato horas decimales
@@ -99,7 +117,7 @@ export class ControlFichajesPage {
       message: mensaje,
       duration: 3000,
       color: color,
-      position: 'bottom'
+      position: 'bottom',
     });
     toast.present();
   }

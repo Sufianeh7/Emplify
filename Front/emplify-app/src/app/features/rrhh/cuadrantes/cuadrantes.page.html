@@ -3,24 +3,32 @@
 </ion-header>
 
 <ion-content class="app-background">
-
   <div class="section-header blue-bg">
     <h2>Gestión de Cuadrantes</h2>
     <p>Asigna turnos y horarios a tu equipo de forma masiva</p>
   </div>
 
   <div class="dashboard-container">
-
     <div class="flat-card full">
-      <h3 class="card-title"><ion-icon name="people-outline"></ion-icon> 1. Elige Empleados</h3>
+      <h3 class="card-title">
+        <ion-icon name="people-outline"></ion-icon> 1. Elige Empleados
+      </h3>
       <div class="form-container">
         <ion-item lines="none" class="form-item">
-          <ion-select label="Selecciona uno o varios" label-placement="floating"
-                      [multiple]="true"
-                      [(ngModel)]="empleadosSeleccionados"
-                      cancelText="Cancelar" okText="Aceptar">
-            <ion-select-option *ngFor="let emp of empleados" [value]="emp.idEmpleado">
-              {{ emp.usuario?.nombre || emp.usuario?.email }} ({{ emp.departamento || 'Sin Dept.' }})
+          <ion-select
+            label="Selecciona uno o varios"
+            label-placement="floating"
+            [multiple]="true"
+            [(ngModel)]="empleadosSeleccionados"
+            cancelText="Cancelar"
+            okText="Aceptar"
+          >
+            <ion-select-option
+              *ngFor="let emp of empleados"
+              [value]="emp.idEmpleado"
+            >
+              {{ emp.usuario?.nombre || emp.usuario?.email }} ({{
+              emp.departamento || 'Sin Dept.' }})
             </ion-select-option>
           </ion-select>
         </ion-item>
@@ -28,13 +36,25 @@
     </div>
 
     <div class="flat-card full">
-      <h3 class="card-title"><ion-icon name="time-outline"></ion-icon> 2. Tipo de Turno</h3>
+      <h3 class="card-title">
+        <ion-icon name="time-outline"></ion-icon> 2. Tipo de Turno
+      </h3>
       <div class="form-container">
         <ion-item lines="none" class="form-item">
-          <ion-select label="Horario a asignar" label-placement="floating" [(ngModel)]="tipoTurno">
-            <ion-select-option value="MAÑANA">Mañana (08:00 - 16:00)</ion-select-option>
-            <ion-select-option value="TARDE">Tarde (16:00 - 00:00)</ion-select-option>
-            <ion-select-option value="NOCHE">Noche (00:00 - 08:00)</ion-select-option>
+          <ion-select
+            label="Horario a asignar"
+            label-placement="floating"
+            [(ngModel)]="tipoTurno"
+          >
+            <ion-select-option value="MAÑANA"
+              >Mañana (08:00 - 16:00)</ion-select-option
+            >
+            <ion-select-option value="TARDE"
+              >Tarde (16:00 - 00:00)</ion-select-option
+            >
+            <ion-select-option value="NOCHE"
+              >Noche (00:00 - 08:00)</ion-select-option
+            >
             <ion-select-option value="LIBRE">Día Libre</ion-select-option>
           </ion-select>
         </ion-item>
@@ -42,24 +62,34 @@
     </div>
 
     <div class="flat-card full">
-      <h3 class="card-title"><ion-icon name="calendar-outline"></ion-icon> 3. Marca los días</h3>
-      <p style="font-size: 0.85rem; color: #565959; margin-top: 0;">Toca los días en el calendario para aplicarles el turno seleccionado arriba.</p>
+      <h3 class="card-title">
+        <ion-icon name="calendar-outline"></ion-icon> 3. Marca los días
+      </h3>
+      <p style="font-size: 0.85rem; color: #565959; margin-top: 0">
+        Toca los días en el calendario para aplicarles el turno seleccionado
+        arriba.
+      </p>
 
       <div class="calendar-wrapper">
-        <ion-datetime presentation="date"
-                      [multiple]="true"
-                      [(ngModel)]="fechasSeleccionadas"
-                      size="cover"
-                      color="primary">
+        <ion-datetime
+          presentation="date"
+          [multiple]="true"
+          [(ngModel)]="fechasSeleccionadas"
+          size="cover"
+          color="primary"
+        >
         </ion-datetime>
       </div>
     </div>
 
-    <ion-button expand="block" class="btn-corporativo ion-margin-top" style="margin-top: 25px; margin-bottom: 40px;" (click)="guardarCuadrante()">
+    <ion-button
+      expand="block"
+      class="btn-corporativo ion-margin-top"
+      style="margin-top: 25px; margin-bottom: 40px"
+      (click)="guardarCuadrante()"
+    >
       <ion-icon name="save-outline" slot="start"></ion-icon>
       Guardar Cuadrante
     </ion-button>
-
   </div>
-
 </ion-content>

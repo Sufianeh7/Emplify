@@ -3,38 +3,52 @@
 </ion-header>
 
 <ion-content class="app-background">
-
   <div class="section-header blue-bg">
     <h2>Ayuda y Asistencia</h2>
     <p>Consulta tus dudas con Recursos Humanos</p>
   </div>
 
   <div class="dashboard-container">
-
     <div class="segment-container">
       <ion-segment [(ngModel)]="filtroActual" mode="ios" class="custom-segment">
-        <ion-segment-button value="abiertos"><ion-label>Abiertos</ion-label></ion-segment-button>
-        <ion-segment-button value="cerrados"><ion-label>Cerrados</ion-label></ion-segment-button>
+        <ion-segment-button value="abiertos"
+          ><ion-label>Abiertos</ion-label></ion-segment-button
+        >
+        <ion-segment-button value="cerrados"
+          ><ion-label>Cerrados</ion-label></ion-segment-button
+        >
       </ion-segment>
     </div>
 
-    <div *ngIf="ticketsFiltrados.length === 0" class="flat-card full text-center empty-state">
+    <div
+      *ngIf="ticketsFiltrados.length === 0"
+      class="flat-card full text-center empty-state"
+    >
       <ion-icon name="chatbubbles-outline"></ion-icon>
       <h3>No hay tickets</h3>
       <p>Pulsa el botón + para crear una nueva consulta.</p>
     </div>
 
-    <div class="flat-card full ticket-card ion-activatable ripple-parent"
-         *ngFor="let ticket of ticketsFiltrados" (click)="abrirChat(ticket)">
-
+    <div
+      class="flat-card full ticket-card ion-activatable ripple-parent"
+      *ngFor="let ticket of ticketsFiltrados"
+      (click)="abrirChat(ticket)"
+    >
       <div class="ticket-header">
-        <span class="badge-estado" [ngClass]="ticket.estado?.toLowerCase() || 'pendiente'">
+        <span
+          class="badge-estado"
+          [ngClass]="ticket.estado?.toLowerCase() || 'pendiente'"
+        >
           {{ ticket.estado || 'PENDIENTE' }}
         </span>
-        <span class="ticket-date">{{ ticket.fechaCreacion | date:'dd MMM yyyy' }}</span>
+        <span class="ticket-date"
+          >{{ ticket.fechaCreacion | date:'dd MMM yyyy' }}</span
+        >
       </div>
 
-      <h3 class="ticket-title">{{ ticket.asunto || ticket.titulo || 'Consulta General' }}</h3>
+      <h3 class="ticket-title">
+        {{ ticket.asunto || ticket.titulo || 'Consulta General' }}
+      </h3>
       <p class="ticket-preview">Toca para abrir la conversación...</p>
 
       <div class="ticket-footer">
@@ -43,17 +57,26 @@
       </div>
       <ion-ripple-effect></ion-ripple-effect>
     </div>
-
   </div>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="fab-container">
+  <ion-fab
+    vertical="bottom"
+    horizontal="end"
+    slot="fixed"
+    class="fab-container"
+  >
     <ion-fab-button class="fab-corporativo" id="modal-nuevo-ticket">
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
   <!-- MODAL: NUEVO TICKET -->
-  <ion-modal trigger="modal-nuevo-ticket" #modalNuevo [initialBreakpoint]="0.8" [breakpoints]="[0, 0.8, 1]">
+  <ion-modal
+    trigger="modal-nuevo-ticket"
+    #modalNuevo
+    [initialBreakpoint]="0.8"
+    [breakpoints]="[0, 0.8, 1]"
+  >
     <ng-template>
       <ion-header class="ion-no-border">
         <ion-toolbar class="modal-toolbar">
@@ -69,15 +92,30 @@
       <ion-content class="app-background ion-padding">
         <div class="form-container">
           <ion-item lines="none" class="form-item">
-            <ion-input label="Asunto" label-placement="floating" [(ngModel)]="nuevoTitulo" placeholder="Ej: Duda con mi nómina"></ion-input>
+            <ion-input
+              label="Asunto"
+              label-placement="floating"
+              [(ngModel)]="nuevoTitulo"
+              placeholder="Ej: Duda con mi nómina"
+            ></ion-input>
           </ion-item>
           <ion-item lines="none" class="form-item">
-            <ion-textarea label="Descripción" label-placement="floating" [(ngModel)]="nuevaDescripcion" [autoGrow]="true" rows="4"></ion-textarea>
+            <ion-textarea
+              label="Descripción"
+              label-placement="floating"
+              [(ngModel)]="nuevaDescripcion"
+              [autoGrow]="true"
+              rows="4"
+            ></ion-textarea>
           </ion-item>
         </div>
 
-        <ion-button expand="block" class="btn-corporativo ion-margin-top form-submit-btn"
-          [disabled]="!nuevoTitulo || !nuevaDescripcion" (click)="crearTicket(modalNuevo)">
+        <ion-button
+          expand="block"
+          class="btn-corporativo ion-margin-top form-submit-btn"
+          [disabled]="!nuevoTitulo || !nuevaDescripcion"
+          (click)="crearTicket(modalNuevo)"
+        >
           <ion-icon slot="start" name="send-outline"></ion-icon>
           Abrir Ticket
         </ion-button>
@@ -97,7 +135,7 @@
           </ion-buttons>
           <ion-title class="chat-modal-title">
             Ticket #{{ ticketSeleccionado?.idTicket }}
-            <br>
+            <br />
             <span class="chat-modal-subtitle">
               {{ ticketSeleccionado?.asunto || ticketSeleccionado?.titulo }}
             </span>
@@ -107,12 +145,17 @@
 
       <ion-content class="chat-background ion-padding" #contentChat>
         <div class="chat-container">
-          <div *ngFor="let msg of mensajesChat"
-               class="message-wrapper"
-               [ngClass]="{'mine': msg.autor?.idEmpleado === idEmpleado, 'theirs': msg.autor?.idEmpleado !== idEmpleado}">
-
+          <div
+            *ngFor="let msg of mensajesChat"
+            class="message-wrapper"
+            [ngClass]="{'mine': msg.autor?.idEmpleado === idEmpleado, 'theirs': msg.autor?.idEmpleado !== idEmpleado}"
+          >
             <div class="message-bubble">
-              <span class="sender-name" *ngIf="msg.autor?.idEmpleado !== idEmpleado">RRHH Support</span>
+              <span
+                class="sender-name"
+                *ngIf="msg.autor?.idEmpleado !== idEmpleado"
+                >RRHH Support</span
+              >
               <p>{{ msg.contenido }}</p>
               <span class="time">{{ msg.fechaEnvio | date:'HH:mm' }}</span>
             </div>
@@ -121,17 +164,32 @@
       </ion-content>
 
       <ion-footer class="ion-no-border chat-footer">
-        <div *ngIf="!esTicketCerrado(ticketSeleccionado?.estado)" class="input-container">
-          <ion-textarea autoGrow="true" rows="1" placeholder="Mensaje..." [(ngModel)]="nuevoMensaje"></ion-textarea>
-          <ion-button fill="clear" (click)="enviarMensaje()" [disabled]="!nuevoMensaje.trim()">
+        <div
+          *ngIf="!esTicketCerrado(ticketSeleccionado?.estado)"
+          class="input-container"
+        >
+          <ion-textarea
+            autoGrow="true"
+            rows="1"
+            placeholder="Mensaje..."
+            [(ngModel)]="nuevoMensaje"
+          ></ion-textarea>
+          <ion-button
+            fill="clear"
+            (click)="enviarMensaje()"
+            [disabled]="!nuevoMensaje.trim()"
+          >
             <ion-icon name="send-outline" slot="icon-only"></ion-icon>
           </ion-button>
         </div>
-        <div *ngIf="esTicketCerrado(ticketSeleccionado?.estado)" class="closed-notice">
-          Este ticket ha sido marcado como {{ ticketSeleccionado?.estado | lowercase }}.
+        <div
+          *ngIf="esTicketCerrado(ticketSeleccionado?.estado)"
+          class="closed-notice"
+        >
+          Este ticket ha sido marcado como {{ ticketSeleccionado?.estado |
+          lowercase }}.
         </div>
       </ion-footer>
     </ng-template>
   </ion-modal>
-
 </ion-content>

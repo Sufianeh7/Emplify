@@ -5,7 +5,12 @@ import { IonicModule, ToastController } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
 import { addIcons } from 'ionicons';
-import { calendarOutline, peopleOutline, saveOutline, timeOutline } from 'ionicons/icons';
+import {
+  calendarOutline,
+  peopleOutline,
+  saveOutline,
+  timeOutline,
+} from 'ionicons/icons';
 import { environment } from 'src/environments/environment.prod';
 
 @Component({
@@ -13,10 +18,9 @@ import { environment } from 'src/environments/environment.prod';
   templateUrl: './cuadrantes.page.html',
   styleUrls: ['./cuadrantes.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, HeaderComponent]
+  imports: [IonicModule, CommonModule, FormsModule, HeaderComponent],
 })
 export class CuadrantesPage {
-
   empleados: any[] = [];
 
   // Modelos del formulario interactivo
@@ -26,7 +30,7 @@ export class CuadrantesPage {
 
   constructor(
     private http: HttpClient,
-    private toastController: ToastController
+    private toastController: ToastController,
   ) {
     addIcons({ calendarOutline, peopleOutline, saveOutline, timeOutline });
   }
@@ -39,12 +43,14 @@ export class CuadrantesPage {
   // Descarga la lista completa de empleados bajo la supervisión del usuario logueado
   cargarEmpleados() {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
+    const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
 
-    this.http.get(environment.apiUrl+'/cuadrante/mis-empleados', { headers })
+    this.http
+      .get(environment.apiUrl + '/cuadrante/mis-empleados', { headers })
       .subscribe({
-        next: (res: any) => this.empleados = res,
-        error: (err) => console.error('Error cargando la lista de empleados', err)
+        next: (res: any) => (this.empleados = res),
+        error: (err) =>
+          console.error('Error cargando la lista de empleados', err),
       });
   }
 
@@ -56,18 +62,21 @@ export class CuadrantesPage {
       : [this.fechasSeleccionadas];
 
     // Limpiamos elementos vacíos por seguridad
-    fechasArray = fechasArray.filter(f => f);
+    fechasArray = fechasArray.filter((f) => f);
 
     // 2. Validación de campos obligatorios
     if (this.empleadosSeleccionados.length === 0 || fechasArray.length === 0) {
-      this.mostrarToast('Selecciona al menos un empleado y una fecha', 'warning');
+      this.mostrarToast(
+        'Selecciona al menos un empleado y una fecha',
+        'warning',
+      );
       return;
     }
 
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
-      'Authorization': 'Basic ' + token,
-      'Content-Type': 'application/json'
+      Authorization: 'Basic ' + token,
+      'Content-Type': 'application/json',
     });
 
     // 3. Transformamos la selección múltiple en una lista plana de asignaciones 1 a 1
@@ -78,16 +87,20 @@ export class CuadrantesPage {
         peticiones.push({
           empleado: { idEmpleado: idEmp },
           fecha: fechaISO.split('T')[0], // Extraemos solo el YYYY-MM-DD
-          turno: this.tipoTurno
+          turno: this.tipoTurno,
         });
       }
     }
 
     // 4. Enviamos el paquete masivo
-    this.http.post(environment.apiUrl+'/cuadrante/asignar-masivo', peticiones, { headers })
+    this.http
+      .post(environment.apiUrl + '/cuadrante/asignar-masivo', peticiones, {
+        headers,
+      })
       .subscribe({
         next: (res: any) => {
-          const mensajeExito = res.mensaje || `¡${peticiones.length} turnos asignados con éxito!`;
+          const mensajeExito =
+            res.mensaje || `¡${peticiones.length} turnos asignados con éxito!`;
           this.mostrarToast(mensajeExito, 'success');
 
           // Reseteamos el formulario tras guardar
@@ -97,7 +110,7 @@ export class CuadrantesPage {
         error: (err) => {
           console.error('Error del backend al asignar turnos:', err);
           this.mostrarToast('Error al guardar en la base de datos', 'danger');
-        }
+        },
       });
   }
 
@@ -107,7 +120,7 @@ export class CuadrantesPage {
       message: mensaje,
       duration: 3000,
       color: color,
-      position: 'bottom'
+      position: 'bottom',
     });
     toast.present();
   }

@@ -3,21 +3,24 @@
 </ion-header>
 
 <ion-content class="app-background">
-
   <div class="profile-hero">
     <div class="avatar-container">
-      <img src="https://ionicframework.com/docs/img/demos/avatar.svg" alt="Avatar" />
+      <img
+        src="https://ionicframework.com/docs/img/demos/avatar.svg"
+        alt="Avatar"
+      />
     </div>
 
     <div class="main-info">
       <h2>{{ empleado?.nombreUsuario || 'Cargando...' }}</h2>
       <p class="subtitle">{{ empleado?.puesto || 'Puesto no asignado' }}</p>
-      <p class="subtitle-dept">{{ empleado?.departamento || 'Sin departamento' }}</p>
+      <p class="subtitle-dept">
+        {{ empleado?.departamento || 'Sin departamento' }}
+      </p>
     </div>
   </div>
 
   <div class="dashboard-container">
-
     <div class="flat-card full supervisor-section">
       <div class="section-title-row">
         <h3>Mánager</h3>
@@ -25,11 +28,21 @@
 
       <div class="supervisor-info">
         <div class="sup-avatar">
-          <img *ngIf="empleado?.manager" src="https://i.pravatar.cc/150?img=11" alt="Manager" />
-          <ion-icon *ngIf="!empleado?.manager" name="person-circle-outline" style="font-size: 50px; color: #d5d9d9;"></ion-icon>
+          <img
+            *ngIf="empleado?.manager"
+            src="https://i.pravatar.cc/150?img=11"
+            alt="Manager"
+          />
+          <ion-icon
+            *ngIf="!empleado?.manager"
+            name="person-circle-outline"
+            style="font-size: 50px; color: #d5d9d9"
+          ></ion-icon>
         </div>
         <div class="sup-details">
-          <h4>{{ empleado?.manager?.nombreUsuario || 'Pendiente de asignar' }}</h4>
+          <h4>
+            {{ empleado?.manager?.nombreUsuario || 'Pendiente de asignar' }}
+          </h4>
           <p>{{ empleado?.manager?.puesto || 'Puesto sin definir' }}</p>
         </div>
       </div>
@@ -39,7 +52,6 @@
       <h3>Detalles del trabajo</h3>
 
       <div class="detail-list">
-
         <div class="detail-item">
           <label>Login / Correo</label>
           <span>{{ empleado?.usuario?.email }}</span>
@@ -59,7 +71,6 @@
           <label>Ubicación</label>
           <span>{{ empleado?.empresa?.direccion || 'Sede Principal' }}</span>
         </div>
-
       </div>
     </div>
 
@@ -69,52 +80,86 @@
         Cambiar Contraseña
       </ion-button>
 
-      <ion-button expand="block" fill="clear" color="danger" class="btn-logout" (click)="cerrarSesion()">
+      <ion-button
+        expand="block"
+        fill="clear"
+        color="danger"
+        class="btn-logout"
+        (click)="cerrarSesion()"
+      >
         <ion-icon name="log-out-outline" slot="start"></ion-icon>
         Cerrar Sesión
       </ion-button>
     </div>
-
   </div>
 
-  <ion-modal trigger="modal-password" #modalPass [initialBreakpoint]="0.8" [breakpoints]="[0, 0.8, 1]">
+  <ion-modal
+    trigger="modal-password"
+    #modalPass
+    [initialBreakpoint]="0.8"
+    [breakpoints]="[0, 0.8, 1]"
+  >
     <ng-template>
       <ion-header class="ion-no-border">
-        <ion-toolbar style="--background: #f2f4f8;">
-          <ion-title style="font-weight: 700; color: #1a1a1a;">Seguridad</ion-title>
+        <ion-toolbar style="--background: #f2f4f8">
+          <ion-title style="font-weight: 700; color: #1a1a1a"
+            >Seguridad</ion-title
+          >
           <ion-buttons slot="end">
             <ion-button (click)="modalPass.dismiss()" color="dark">
-              <ion-icon name="close-outline" style="font-size: 1.5rem;"></ion-icon>
+              <ion-icon
+                name="close-outline"
+                style="font-size: 1.5rem"
+              ></ion-icon>
             </ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
 
       <ion-content class="app-background ion-padding">
-        <p style="color: #565959; font-size: 0.95rem; margin-bottom: 20px;">
-          Introduce tu contraseña actual y la nueva para actualizar tus credenciales.
+        <p style="color: #565959; font-size: 0.95rem; margin-bottom: 20px">
+          Introduce tu contraseña actual y la nueva para actualizar tus
+          credenciales.
         </p>
 
         <div class="form-container">
           <ion-item lines="none" class="form-item">
-            <ion-input type="password" label="Contraseña Actual" label-placement="floating" [(ngModel)]="passActual"></ion-input>
+            <ion-input
+              type="password"
+              label="Contraseña Actual"
+              label-placement="floating"
+              [(ngModel)]="passActual"
+            ></ion-input>
           </ion-item>
           <ion-item lines="none" class="form-item">
-            <ion-input type="password" label="Nueva Contraseña" label-placement="floating" [(ngModel)]="passNueva"></ion-input>
+            <ion-input
+              type="password"
+              label="Nueva Contraseña"
+              label-placement="floating"
+              [(ngModel)]="passNueva"
+            ></ion-input>
           </ion-item>
           <ion-item lines="none" class="form-item">
-            <ion-input type="password" label="Repite la Nueva" label-placement="floating" [(ngModel)]="passConfirmar"></ion-input>
+            <ion-input
+              type="password"
+              label="Repite la Nueva"
+              label-placement="floating"
+              [(ngModel)]="passConfirmar"
+            ></ion-input>
           </ion-item>
         </div>
 
-        <ion-button expand="block" class="btn-corporativo ion-margin-top" style="margin-top: 25px;"
+        <ion-button
+          expand="block"
+          class="btn-corporativo ion-margin-top"
+          style="margin-top: 25px"
           [disabled]="!passActual || !passNueva || !passConfirmar"
-          (click)="cambiarPassword(modalPass)">
+          (click)="cambiarPassword(modalPass)"
+        >
           <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
           Guardar Contraseña
         </ion-button>
       </ion-content>
     </ng-template>
   </ion-modal>
-
 </ion-content>

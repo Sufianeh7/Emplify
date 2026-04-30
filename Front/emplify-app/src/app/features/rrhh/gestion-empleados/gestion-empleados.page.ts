@@ -6,8 +6,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
 import { addIcons } from 'ionicons';
 import {
-  personAddOutline, peopleOutline, searchOutline,
-  closeOutline, businessOutline, mailOutline
+  personAddOutline,
+  peopleOutline,
+  searchOutline,
+  closeOutline,
+  businessOutline,
+  mailOutline,
 } from 'ionicons/icons';
 import { environment } from 'src/environments/environment.prod';
 
@@ -16,10 +20,9 @@ import { environment } from 'src/environments/environment.prod';
   templateUrl: './gestion-empleados.page.html',
   styleUrls: ['./gestion-empleados.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, HeaderComponent]
+  imports: [IonicModule, CommonModule, FormsModule, HeaderComponent],
 })
 export class GestionEmpleadosPage {
-
   // Listados
   empleados: any[] = [];
   empleadosFiltrados: any[] = [];
@@ -34,16 +37,20 @@ export class GestionEmpleadosPage {
     rol: 'EMPLEADO',
     departamento: '',
     puesto: '',
-    idManager: null
+    idManager: null,
   };
 
   constructor(
     private http: HttpClient,
-    private toastController: ToastController
+    private toastController: ToastController,
   ) {
     addIcons({
-      personAddOutline, peopleOutline, searchOutline,
-      closeOutline, businessOutline, mailOutline
+      personAddOutline,
+      peopleOutline,
+      searchOutline,
+      closeOutline,
+      businessOutline,
+      mailOutline,
     });
   }
 
@@ -65,15 +72,16 @@ export class GestionEmpleadosPage {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
+    const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
 
-    this.http.get(environment.apiUrl+'/rrhh/empleados', { headers })
+    this.http
+      .get(environment.apiUrl + '/rrhh/empleados', { headers })
       .subscribe({
         next: (res: any) => {
           this.empleados = res;
           this.empleadosFiltrados = [...this.empleados]; // Inicializamos la vista filtrada
         },
-        error: (err) => console.error('Error al cargar empleados', err)
+        error: (err) => console.error('Error al cargar empleados', err),
       });
   }
 
@@ -87,10 +95,13 @@ export class GestionEmpleadosPage {
       return;
     }
 
-    this.empleadosFiltrados = this.empleados.filter(emp =>
-      (emp.usuario?.nombre && emp.usuario.nombre.toLowerCase().includes(texto)) ||
-      (emp.usuario?.email && emp.usuario.email.toLowerCase().includes(texto)) ||
-      (emp.departamento && emp.departamento.toLowerCase().includes(texto))
+    this.empleadosFiltrados = this.empleados.filter(
+      (emp) =>
+        (emp.usuario?.nombre &&
+          emp.usuario.nombre.toLowerCase().includes(texto)) ||
+        (emp.usuario?.email &&
+          emp.usuario.email.toLowerCase().includes(texto)) ||
+        (emp.departamento && emp.departamento.toLowerCase().includes(texto)),
     );
   }
 
@@ -100,12 +111,13 @@ export class GestionEmpleadosPage {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
+    const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
 
-    this.http.get(environment.apiUrl+'/rrhh/posibles-managers', { headers })
+    this.http
+      .get(environment.apiUrl + '/rrhh/posibles-managers', { headers })
       .subscribe({
-        next: (res: any) => this.posiblesManagers = res,
-        error: (err) => console.error('Error al cargar mánagers', err)
+        next: (res: any) => (this.posiblesManagers = res),
+        error: (err) => console.error('Error al cargar mánagers', err),
       });
   }
 
@@ -113,11 +125,14 @@ export class GestionEmpleadosPage {
   crearEmpleado(modal: any) {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
-      'Authorization': 'Basic ' + token,
-      'Content-Type': 'application/json'
+      Authorization: 'Basic ' + token,
+      'Content-Type': 'application/json',
     });
 
-    this.http.post(environment.apiUrl+'/rrhh/alta-empleado', this.nuevoEmpleado, { headers })
+    this.http
+      .post(environment.apiUrl + '/rrhh/alta-empleado', this.nuevoEmpleado, {
+        headers,
+      })
       .subscribe({
         next: () => {
           this.mostrarToast('Empleado dado de alta correctamente', 'success');
@@ -127,13 +142,21 @@ export class GestionEmpleadosPage {
           this.cargarPosiblesManagers();
 
           // Reseteamos formulario y cerramos modal
-          this.nuevoEmpleado = { nombre: '', email: '', password: '', rol: 'EMPLEADO', departamento: '', puesto: '', idManager: null };
+          this.nuevoEmpleado = {
+            nombre: '',
+            email: '',
+            password: '',
+            rol: 'EMPLEADO',
+            departamento: '',
+            puesto: '',
+            idManager: null,
+          };
           modal.dismiss();
         },
         error: (err) => {
           const msg = err.error?.error || 'Error al crear empleado';
           this.mostrarToast(msg, 'danger');
-        }
+        },
       });
   }
 
@@ -143,7 +166,7 @@ export class GestionEmpleadosPage {
       message: mensaje,
       duration: 3000,
       color: color,
-      position: 'bottom'
+      position: 'bottom',
     });
     toast.present();
   }

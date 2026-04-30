@@ -6,9 +6,15 @@ import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { addIcons } from 'ionicons';
 import {
-  mailOutline, briefcaseOutline, logOutOutline, lockClosedOutline,
-  closeOutline, personCircleOutline, locationOutline, calendarOutline,
-  eyeOffOutline
+  mailOutline,
+  briefcaseOutline,
+  logOutOutline,
+  lockClosedOutline,
+  closeOutline,
+  personCircleOutline,
+  locationOutline,
+  calendarOutline,
+  eyeOffOutline,
 } from 'ionicons/icons';
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
 import { environment } from 'src/environments/environment.prod';
@@ -18,10 +24,9 @@ import { environment } from 'src/environments/environment.prod';
   templateUrl: './perfil.page.html',
   styleUrls: ['./perfil.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, HeaderComponent]
+  imports: [IonicModule, CommonModule, FormsModule, HeaderComponent],
 })
 export class PerfilPage {
-
   empleado: any = null;
 
   // Modelo del formulario de contraseña
@@ -32,12 +37,18 @@ export class PerfilPage {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private toastController: ToastController
+    private toastController: ToastController,
   ) {
     addIcons({
-      mailOutline, briefcaseOutline, logOutOutline, lockClosedOutline,
-      closeOutline, personCircleOutline, locationOutline, calendarOutline,
-      eyeOffOutline
+      mailOutline,
+      briefcaseOutline,
+      logOutOutline,
+      lockClosedOutline,
+      closeOutline,
+      personCircleOutline,
+      locationOutline,
+      calendarOutline,
+      eyeOffOutline,
     });
   }
 
@@ -57,14 +68,16 @@ export class PerfilPage {
     // 2. Hacemos la petición para actualizar los datos
     const token = localStorage.getItem('token');
     if (token) {
-      const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
-      this.http.get(environment.apiUrl+'/empleados/perfil', { headers })
+      const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
+      this.http
+        .get(environment.apiUrl + '/empleados/perfil', { headers })
         .subscribe({
           next: (res: any) => {
             this.empleado = res;
             localStorage.setItem('empleadoLogueado', JSON.stringify(res)); // Mantenemos el local sincronizado
           },
-          error: (err) => console.error('Error al actualizar datos del perfil desde BD', err)
+          error: (err) =>
+            console.error('Error al actualizar datos del perfil desde BD', err),
         });
     }
   }
@@ -83,7 +96,7 @@ export class PerfilPage {
       message: mensaje,
       duration: 3000,
       color: color,
-      position: 'bottom'
+      position: 'bottom',
     });
     toast.present();
   }
@@ -97,16 +110,17 @@ export class PerfilPage {
 
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
-      'Authorization': 'Basic ' + token,
-      'Content-Type': 'application/json'
+      Authorization: 'Basic ' + token,
+      'Content-Type': 'application/json',
     });
 
     const body = {
       actual: this.passActual,
-      nueva: this.passNueva
+      nueva: this.passNueva,
     };
 
-    this.http.put(environment.apiUrl+'/usuarios/cambiar-password', body, { headers })
+    this.http
+      .put(environment.apiUrl + '/usuarios/cambiar-password', body, { headers })
       .subscribe({
         next: () => {
           this.mostrarMensaje('¡Contraseña actualizada con éxito!', 'success');
@@ -117,8 +131,11 @@ export class PerfilPage {
           modal.dismiss();
         },
         error: (err) => {
-          this.mostrarMensaje(err.error?.error || 'Error al cambiar la contraseña', 'danger');
-        }
+          this.mostrarMensaje(
+            err.error?.error || 'Error al cambiar la contraseña',
+            'danger',
+          );
+        },
       });
   }
 }

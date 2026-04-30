@@ -44,7 +44,7 @@ export class VozEmpleadoPage {
     const datos = localStorage.getItem('empleadoLogueado');
     if (datos) {
       const empleado = JSON.parse(datos);
-      this.idEmpresa = empleado.empresa.idEmpresa;
+      this.idEmpresa = empleado.empresa.id_empresa;
       this.idEmpleado = empleado.idEmpleado;
       this.nombreUsuarioActual = empleado.usuario?.nombre || 'Compañero/a';
 

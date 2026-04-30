@@ -6,9 +6,13 @@ import { RouterModule, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { addIcons } from 'ionicons';
 import {
-  calendarOutline, airplaneOutline, megaphoneOutline,
-  timeOutline, informationCircleOutline,
-  playCircleOutline, stopCircleOutline
+  calendarOutline,
+  airplaneOutline,
+  megaphoneOutline,
+  timeOutline,
+  informationCircleOutline,
+  playCircleOutline,
+  stopCircleOutline,
 } from 'ionicons/icons';
 import { HeaderComponent } from 'src/app/shared/componentes/header/header.component';
 import { environment } from 'src/environments/environment.prod';
@@ -18,7 +22,13 @@ import { environment } from 'src/environments/environment.prod';
   templateUrl: './inicio.page.html',
   styleUrls: ['./inicio.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, RouterModule, HeaderComponent],
+  imports: [
+    IonicModule,
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    HeaderComponent,
+  ],
 })
 export class InicioPage implements OnInit, OnDestroy {
   // Datos principales
@@ -41,12 +51,16 @@ export class InicioPage implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private toastController: ToastController
+    private toastController: ToastController,
   ) {
     addIcons({
-      calendarOutline, airplaneOutline, megaphoneOutline,
-      timeOutline, informationCircleOutline,
-      playCircleOutline, stopCircleOutline
+      calendarOutline,
+      airplaneOutline,
+      megaphoneOutline,
+      timeOutline,
+      informationCircleOutline,
+      playCircleOutline,
+      stopCircleOutline,
     });
   }
 
@@ -58,7 +72,8 @@ export class InicioPage implements OnInit, OnDestroy {
 
     if (datosGuardados) {
       const empleado = JSON.parse(datosGuardados);
-      this.nombreUsuario = empleado?.nombreUsuario || empleado?.usuario?.email || 'Compañero/a';
+      this.nombreUsuario =
+        empleado?.nombreUsuario || empleado?.usuario?.email || 'Compañero/a';
       this.idEmpleadoLogueado = empleado?.idEmpleado;
       const idEmpresa = empleado?.empresa?.id_empresa;
 
@@ -90,102 +105,143 @@ export class InicioPage implements OnInit, OnDestroy {
   // Carga las noticias
   cargarNoticias(idEmpresa: number) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
-    this.http.get<any[]>(environment.apiUrl+`/noticias/empresa/${idEmpresa}`, { headers }).subscribe({
-      next: (data) => this.noticias = data,
-      error: () => console.warn('No se pudieron cargar las noticias.')
-    });
+    const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
+    this.http
+      .get<
+        any[]
+      >(environment.apiUrl + `/noticias/empresa/${idEmpresa}`, { headers })
+      .subscribe({
+        next: (data) => (this.noticias = data),
+        error: () => console.warn('No se pudieron cargar las noticias.'),
+      });
   }
 
   // Carga el comunicado más reciente
   cargarUltimaPublicacion(idEmpresa: number) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
-    this.http.get<any[]>(environment.apiUrl+`/voz-empleado/empresa/${idEmpresa}`, { headers }).subscribe({
-      next: (publicaciones) => {
-        if (publicaciones && publicaciones.length > 0) this.ultimaPublicacion = publicaciones[0];
-      }
-    });
+    const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
+    this.http
+      .get<
+        any[]
+      >(environment.apiUrl + `/voz-empleado/empresa/${idEmpresa}`, { headers })
+      .subscribe({
+        next: (publicaciones) => {
+          if (publicaciones && publicaciones.length > 0)
+            this.ultimaPublicacion = publicaciones[0];
+        },
+      });
   }
 
-// Busca cuándo es el siguiente turno laboral
+  // Busca cuándo es el siguiente turno laboral
   cargarProximoTurno(idEmpleado: number) {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
+    const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
 
-    this.http.get<any>(environment.apiUrl+`/cuadrante/proximo/${idEmpleado}`, { headers }).subscribe({
-      next: (turnoBackend) => {
-        if (turnoBackend) {
-          // 1. Miramos qué tipo de turno nos manda el Backend (MAÑANA, TARDE, NOCHE)
-          const tipoTurno = turnoBackend.turno?.toUpperCase();
-          let horasAsignadas = 'Horario sin definir';
+    this.http
+      .get<any>(environment.apiUrl + `/cuadrante/proximo/${idEmpleado}`, {
+        headers,
+      })
+      .subscribe({
+        next: (turnoBackend) => {
+          if (turnoBackend) {
+            // 1. Miramos qué tipo de turno nos manda el Backend (MAÑANA, TARDE, NOCHE)
+            const tipoTurno = turnoBackend.turno?.toUpperCase();
+            let horasAsignadas = 'Horario sin definir';
 
-          // 2. Lo traducimos a horas reales
-          if (tipoTurno === 'MAÑANA') horasAsignadas = '08:00 - 16:00';
-          else if (tipoTurno === 'TARDE') horasAsignadas = '16:00 - 00:00';
-          else if (tipoTurno === 'NOCHE') horasAsignadas = '00:00 - 08:00';
+            // 2. Lo traducimos a horas reales
+            if (tipoTurno === 'MAÑANA') horasAsignadas = '08:00 - 16:00';
+            else if (tipoTurno === 'TARDE') horasAsignadas = '16:00 - 00:00';
+            else if (tipoTurno === 'NOCHE') horasAsignadas = '00:00 - 08:00';
 
-          // 3. Lo guardamos para que el HTML lo pinte perfecto
-          this.proximoTurno = {
-            fecha: turnoBackend.fecha || 'Fecha por confirmar',
-            horario: horasAsignadas
-          };
-        }
-      },
-      error: (err) => console.error('No se pudo cargar el próximo turno', err)
-    });
+            // 3. Lo guardamos para que el HTML lo pinte perfecto
+            this.proximoTurno = {
+              fecha: turnoBackend.fecha || 'Fecha por confirmar',
+              horario: horasAsignadas,
+            };
+          }
+        },
+        error: (err) =>
+          console.error('No se pudo cargar el próximo turno', err),
+      });
   }
 
   // --- LÓGICA DE FICHAJE ---
   // Comprueba si el usuario está trabajando hoy y carga su línea temporal
   cargarEstadoFichaje() {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
+    const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
 
-    this.http.get<any>(environment.apiUrl+`/fichajes/estado/${this.idEmpleadoLogueado}`, { headers }).subscribe({
-      next: (res) => {
-        this.fichajesHoy = res.fichajes || [];
-        this.trabajando = res.trabajando;
+    this.http
+      .get<any>(
+        environment.apiUrl + `/fichajes/estado/${this.idEmpleadoLogueado}`,
+        { headers },
+      )
+      .subscribe({
+        next: (res) => {
+          this.fichajesHoy = res.fichajes || [];
+          this.trabajando = res.trabajando;
 
-        if (this.trabajando && res.horaEntradaActual) {
-          const fechaUTC = res.horaEntradaActual.endsWith('Z') ? res.horaEntradaActual : res.horaEntradaActual + 'Z';
-          this.horaEntradaActual = new Date(fechaUTC);
-          this.iniciarTemporizador();
-        } else {
-          this.detenerTemporizador();
-          this.horaEntradaActual = null;
-        }
-      },
-      error: (err) => console.error('Error cargando fichajes', err)
-    });
+          if (this.trabajando && res.horaEntradaActual) {
+            const fechaUTC = res.horaEntradaActual.endsWith('Z')
+              ? res.horaEntradaActual
+              : res.horaEntradaActual + 'Z';
+            this.horaEntradaActual = new Date(fechaUTC);
+            this.iniciarTemporizador();
+          } else {
+            this.detenerTemporizador();
+            this.horaEntradaActual = null;
+          }
+        },
+        error: (err) => console.error('Error cargando fichajes', err),
+      });
   }
 
   // Inicia la jornada laboral
   ficharEntrada() {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
+    const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
 
-    this.http.post(environment.apiUrl+`/fichajes/entrada/${this.idEmpleadoLogueado}`, {}, { headers }).subscribe({
-      next: () => {
-        this.mostrarToast('Entrada registrada con éxito', 'success');
-        this.cargarEstadoFichaje();
-      },
-      error: (err) => this.mostrarToast(err.error?.error || 'Error al fichar entrada', 'danger')
-    });
+    this.http
+      .post(
+        environment.apiUrl + `/fichajes/entrada/${this.idEmpleadoLogueado}`,
+        {},
+        { headers },
+      )
+      .subscribe({
+        next: () => {
+          this.mostrarToast('Entrada registrada con éxito', 'success');
+          this.cargarEstadoFichaje();
+        },
+        error: (err) =>
+          this.mostrarToast(
+            err.error?.error || 'Error al fichar entrada',
+            'danger',
+          ),
+      });
   }
 
   // Termina la jornada laboral
   ficharSalida() {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
+    const headers = new HttpHeaders({ Authorization: 'Basic ' + token });
 
-    this.http.put(environment.apiUrl+`/fichajes/salida/${this.idEmpleadoLogueado}`, {}, { headers }).subscribe({
-      next: () => {
-        this.mostrarToast('Salida registrada con éxito', 'success');
-        this.cargarEstadoFichaje();
-      },
-      error: (err) => this.mostrarToast(err.error?.error || 'Error al fichar salida', 'danger')
-    });
+    this.http
+      .put(
+        environment.apiUrl + `/fichajes/salida/${this.idEmpleadoLogueado}`,
+        {},
+        { headers },
+      )
+      .subscribe({
+        next: () => {
+          this.mostrarToast('Salida registrada con éxito', 'success');
+          this.cargarEstadoFichaje();
+        },
+        error: (err) =>
+          this.mostrarToast(
+            err.error?.error || 'Error al fichar salida',
+            'danger',
+          ),
+      });
   }
 
   // --- TEMPORIZADOR DE FICHAJE ---
@@ -213,13 +269,26 @@ export class InicioPage implements OnInit, OnDestroy {
   }
 
   async mostrarToast(mensaje: string, color: string) {
-    const toast = await this.toastController.create({ message: mensaje, duration: 3000, color, position: 'bottom' });
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: 3000,
+      color,
+      position: 'bottom',
+    });
     toast.present();
   }
 
   // --- NAVEGACIÓN ---
-  goCuadrante() { this.router.navigate(['/cuadrante'], { queryParams: { tab: 'horario' } }); }
-  goSolicitudes() { this.router.navigate(['/cuadrante'], { queryParams: { tab: 'ausencias' } }); }
-  goVozEmpleado() { this.router.navigate(['/voz-empleado']); }
-  goNoticias() { this.router.navigate(['/noticias']); }
+  goCuadrante() {
+    this.router.navigate(['/cuadrante'], { queryParams: { tab: 'horario' } });
+  }
+  goSolicitudes() {
+    this.router.navigate(['/cuadrante'], { queryParams: { tab: 'ausencias' } });
+  }
+  goVozEmpleado() {
+    this.router.navigate(['/voz-empleado']);
+  }
+  goNoticias() {
+    this.router.navigate(['/noticias']);
+  }
 }

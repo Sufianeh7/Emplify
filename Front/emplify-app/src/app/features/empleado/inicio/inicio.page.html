@@ -1,10 +1,8 @@
 <app-header></app-header>
 
 <ion-content class="app-background">
-
   <div class="news-slider-container">
     <div class="news-scroll" (scroll)="onScrollNoticias($event)">
-
       <div class="news-card blue-bg" *ngIf="!noticias || noticias.length === 0">
         <div class="badge">Todas las noticias</div>
         <h2>Bienvenido a Emplify, {{ nombreUsuario }}</h2>
@@ -42,22 +40,33 @@
   </div>
 
   <div class="dashboard-container">
-
-    <div class="flat-card full ion-activatable ripple-parent" (click)="goCuadrante()">
+    <div
+      class="flat-card full ion-activatable ripple-parent"
+      (click)="goCuadrante()"
+    >
       <h3>Próximo turno</h3>
       <!-- Creada clase shift-text -->
       <p class="shift-text" *ngIf="proximoTurno">
         <strong>{{ proximoTurno.fecha }}</strong> • {{ proximoTurno.horario }}
       </p>
       <p *ngIf="!proximoTurno">No tienes turnos programados próximamente.</p>
-      <div class="action-link"><ion-icon name="calendar-outline"></ion-icon> Ver mi cuadrante</div>
+      <div class="action-link">
+        <ion-icon name="calendar-outline"></ion-icon> Ver mi cuadrante
+      </div>
       <ion-ripple-effect></ion-ripple-effect>
     </div>
 
-    <div class="flat-card full ion-activatable ripple-parent" (click)="goSolicitudes()">
+    <div
+      class="flat-card full ion-activatable ripple-parent"
+      (click)="goSolicitudes()"
+    >
       <h3>Tiempo libre y permisos</h3>
-      <p>Administra tus solicitudes de vacaciones, ausencias o bajas médicas.</p>
-      <div class="action-link"><ion-icon name="airplane-outline"></ion-icon> Solicitar días</div>
+      <p>
+        Administra tus solicitudes de vacaciones, ausencias o bajas médicas.
+      </p>
+      <div class="action-link">
+        <ion-icon name="airplane-outline"></ion-icon> Solicitar días
+      </div>
       <ion-ripple-effect></ion-ripple-effect>
     </div>
 
@@ -71,19 +80,37 @@
       <div *ngIf="trabajando" class="cronometro-container">
         <ion-icon name="time-outline" class="spin-icon"></ion-icon>
         <span class="tiempo">{{ tiempoActualTrabajando }}</span>
-        <p class="hora-entrada">Entraste a las {{ horaEntradaActual | date:'HH:mm' }}</p>
+        <p class="hora-entrada">
+          Entraste a las {{ horaEntradaActual | date:'HH:mm' }}
+        </p>
       </div>
 
-      <ion-button *ngIf="!trabajando" expand="block" class="btn-fichar btn-entrada" (click)="ficharEntrada()">
-        <ion-icon name="play-circle-outline" slot="start"></ion-icon> Registrar Entrada
+      <ion-button
+        *ngIf="!trabajando"
+        expand="block"
+        class="btn-fichar btn-entrada"
+        (click)="ficharEntrada()"
+      >
+        <ion-icon name="play-circle-outline" slot="start"></ion-icon> Registrar
+        Entrada
       </ion-button>
 
-      <ion-button *ngIf="trabajando" expand="block" fill="outline" class="btn-fichar btn-salida" (click)="ficharSalida()">
-        <ion-icon name="stop-circle-outline" slot="start"></ion-icon> Registrar Salida
+      <ion-button
+        *ngIf="trabajando"
+        expand="block"
+        fill="outline"
+        class="btn-fichar btn-salida"
+        (click)="ficharSalida()"
+      >
+        <ion-icon name="stop-circle-outline" slot="start"></ion-icon> Registrar
+        Salida
       </ion-button>
     </div>
 
-    <div class="flat-card full with-icon ion-activatable ripple-parent" (click)="goVozEmpleado()">
+    <div
+      class="flat-card full with-icon ion-activatable ripple-parent"
+      (click)="goVozEmpleado()"
+    >
       <!-- NOTA: He pasado el background al SCSS también -->
       <div class="icon-box megaphone-bg">
         <ion-icon name="megaphone-outline" class="megaphone-icon"></ion-icon>
@@ -94,26 +121,23 @@
 
         <ng-container *ngIf="ultimaPublicacion">
           <!-- Creada clase post-title -->
-          <p class="post-title">
-            {{ ultimaPublicacion?.titulo }}
-          </p>
+          <p class="post-title">{{ ultimaPublicacion?.titulo }}</p>
           <!-- Creada clase post-excerpt -->
-          <p class="post-excerpt">
-            {{ ultimaPublicacion?.contenido }}
-          </p>
+          <p class="post-excerpt">{{ ultimaPublicacion?.contenido }}</p>
         </ng-container>
 
         <ng-container *ngIf="!ultimaPublicacion">
           <!-- Creada clase post-empty -->
           <p class="post-empty">
-            Accede al tablón para ver comunicados o encuestas recientes.
+            Accede al tablón para ver comunicados o sugerencias recientes.
           </p>
         </ng-container>
 
-        <div class="action-link"><ion-icon name="information-circle-outline"></ion-icon> Ver tablón</div>
+        <div class="action-link">
+          <ion-icon name="information-circle-outline"></ion-icon> Ver tablón
+        </div>
       </div>
       <ion-ripple-effect></ion-ripple-effect>
     </div>
-
   </div>
 </ion-content>
