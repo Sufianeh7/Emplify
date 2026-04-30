@@ -58,9 +58,9 @@ export class InicioPage implements OnInit, OnDestroy {
 
     if (datosGuardados) {
       const empleado = JSON.parse(datosGuardados);
-      this.nombreUsuario = empleado?.usuario?.nombre || empleado?.usuario?.email || 'Compañero/a';
+      this.nombreUsuario = empleado?.nombreUsuario || empleado?.usuario?.email || 'Compañero/a';
       this.idEmpleadoLogueado = empleado?.idEmpleado;
-      const idEmpresa = empleado?.empresa?.idEmpresa;
+      const idEmpresa = empleado?.empresa?.id_empresa;
 
       if (idEmpresa) {
         this.cargarUltimaPublicacion(idEmpresa);

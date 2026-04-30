@@ -24,7 +24,6 @@
   background: linear-gradient(to bottom, #ffffff 0%, #005a8d 100%);
   padding: 10px 20px 40px 20px;
   text-align: center;
-  margin-bottom: 20px;
   position: relative;
   z-index: 1;
 
@@ -36,7 +35,7 @@
   .avatar-container {
     width: 90px;
     height: 90px;
-    margin: 0 auto 15px auto;
+    margin: 20px auto 20px auto;
     border-radius: 50%;
     padding: 3px;
     background: rgba(255, 255, 255, 0.2);
@@ -171,6 +170,7 @@
     background: #ffffff;
     border-top: 1px solid #e7e9e9;
     border-bottom: 1px solid #e7e9e9;
+    border-radius: 10px;
 
     @media (prefers-color-scheme: dark) {
       background: var(--ion-color-step-50, #1e1e1e);

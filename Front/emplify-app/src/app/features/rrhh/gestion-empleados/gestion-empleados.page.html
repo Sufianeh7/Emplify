@@ -55,7 +55,8 @@
 
   </div>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" style="margin-bottom: 20px;">
+  <!-- Reemplazado style por clase fab-container -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="fab-container">
     <ion-fab-button class="fab-corporativo" id="modal-nuevo-empleado">
       <ion-icon name="person-add-outline"></ion-icon>
     </ion-fab-button>
@@ -64,13 +65,14 @@
   <ion-modal trigger="modal-nuevo-empleado" #modalNuevo [initialBreakpoint]="0.9" [breakpoints]="[0, 0.9, 1]">
     <ng-template>
       <ion-header class="ion-no-border">
-        <ion-toolbar style="--background: #f2f4f8;">
+        <!-- Reemplazados los styles en línea por clases -->
+        <ion-toolbar class="modal-toolbar">
           <ion-buttons slot="start">
-            <ion-button (click)="modalNuevo.dismiss()" color="dark">
-              <ion-icon name="close-outline" style="font-size: 1.5rem;"></ion-icon>
+            <ion-button (click)="modalNuevo.dismiss()" class="modal-close-btn">
+              <ion-icon name="close-outline"></ion-icon>
             </ion-button>
           </ion-buttons>
-          <ion-title style="font-weight: 700; color: #1a1a1a;">Alta de Empleado</ion-title>
+          <ion-title class="modal-title">Alta de Empleado</ion-title>
         </ion-toolbar>
       </ion-header>
 
@@ -116,7 +118,8 @@
 
         </div>
 
-        <ion-button expand="block" class="btn-corporativo ion-margin-top" style="margin-top: 25px;"
+        <!-- Reemplazado style por clase form-submit-btn -->
+        <ion-button expand="block" class="btn-corporativo ion-margin-top form-submit-btn"
           [disabled]="!nuevoEmpleado.nombre || !nuevoEmpleado.email || !nuevoEmpleado.password"
           (click)="crearEmpleado(modalNuevo)">
           <ion-icon slot="start" name="person-add-outline"></ion-icon>

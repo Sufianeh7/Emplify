@@ -165,3 +165,41 @@
     --background: #3880ff;
   }
 }
+
+.fab-container {
+  margin-bottom: 20px;
+}
+
+.form-submit-btn {
+  margin-top: 25px;
+}
+
+/* --- ESTILOS DEL MODAL --- */
+.modal-toolbar {
+  --background: #f2f4f8;
+
+  @media (prefers-color-scheme: dark) {
+    --background: var(--ion-color-step-50, #1e1e1e);
+  }
+}
+
+.modal-title {
+  font-weight: 700;
+  color: #1a1a1a;
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--ion-text-color, #ffffff);
+  }
+}
+
+.modal-close-btn {
+  color: #1a1a1a;
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--ion-text-color, #ffffff);
+  }
+
+  ion-icon {
+    font-size: 1.5rem;
+  }
+}

@@ -38,7 +38,7 @@ export class GestionNoticiasPage {
   // Asegura la carga de datos cada vez que se entra a la vista
   ionViewWillEnter() {
     const empleado = JSON.parse(localStorage.getItem('empleadoLogueado') || '{}');
-    this.idEmpresaLogueada = empleado?.empresa?.idEmpresa;
+    this.idEmpresaLogueada = empleado?.empresa?.id_empresa;
 
     if (this.idEmpresaLogueada) {
       this.cargarDatos();
@@ -50,7 +50,6 @@ export class GestionNoticiasPage {
     this.cargarMuro();
   }
 
-  // --- 1. GESTIÓN DEL CARRUSEL ---
   cargarNoticias() {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });
@@ -84,7 +83,6 @@ export class GestionNoticiasPage {
       });
   }
 
-  // --- 2. GESTIÓN DEL MURO SOCIAL ---
   cargarMuro() {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({ 'Authorization': 'Basic ' + token });

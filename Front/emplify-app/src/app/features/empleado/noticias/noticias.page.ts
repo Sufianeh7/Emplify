@@ -30,7 +30,7 @@ export class NoticiasPage {
   // Descarga las noticias de la empresa logueada
   cargarNoticias() {
     const empleado = JSON.parse(localStorage.getItem('empleadoLogueado') || '{}');
-    const idEmpresa = empleado?.empresa?.idEmpresa;
+    const idEmpresa = empleado?.empresa?.id_empresa;
     const token = localStorage.getItem('token');
 
     if (idEmpresa && token) {

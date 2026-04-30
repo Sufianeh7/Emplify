@@ -10,7 +10,7 @@
     </div>
 
     <div class="main-info">
-      <h2>{{ empleado?.usuario?.nombre || 'Cargando...' }}</h2>
+      <h2>{{ empleado?.nombreUsuario || 'Cargando...' }}</h2>
       <p class="subtitle">{{ empleado?.puesto || 'Puesto no asignado' }}</p>
       <p class="subtitle-dept">{{ empleado?.departamento || 'Sin departamento' }}</p>
     </div>
@@ -20,10 +20,7 @@
 
     <div class="flat-card full supervisor-section">
       <div class="section-title-row">
-        <h3>Supervisor</h3>
-        <span class="badge-visibility">
-          <ion-icon name="eye-off-outline"></ion-icon> No público
-        </span>
+        <h3>Mánager</h3>
       </div>
 
       <div class="supervisor-info">
@@ -32,7 +29,7 @@
           <ion-icon *ngIf="!empleado?.manager" name="person-circle-outline" style="font-size: 50px; color: #d5d9d9;"></ion-icon>
         </div>
         <div class="sup-details">
-          <h4>{{ empleado?.manager?.usuario?.nombre || 'Pendiente de asignar' }}</h4>
+          <h4>{{ empleado?.manager?.nombreUsuario || 'Pendiente de asignar' }}</h4>
           <p>{{ empleado?.manager?.puesto || 'Puesto sin definir' }}</p>
         </div>
       </div>
@@ -61,11 +58,6 @@
         <div class="detail-item">
           <label>Ubicación</label>
           <span>{{ empleado?.empresa?.direccion || 'Sede Principal' }}</span>
-        </div>
-
-        <div class="detail-item">
-          <label>Fecha de contratación</label>
-          <span>{{ (empleado?.fechaRegistro | date:'dd MMM yyyy') || 'Sin registrar' }}</span>
         </div>
 
       </div>
