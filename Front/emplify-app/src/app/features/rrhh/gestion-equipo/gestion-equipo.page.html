@@ -37,7 +37,7 @@
               {{ getInicial(sol.empleado?.usuario?.nombre || sol.empleado?.usuario?.email) }}
             </div>
             <div>
-              <h3 class="name">{{ sol.empleado?.usuario?.nombre || sol.empleado?.usuario?.email }}</h3>
+              <h3 class="name">{{ sol.empleado?.usuario?.nombre || sol.empleado?.nombre || sol.empleado?.usuario?.email || 'Sin nombre' }}</h3>
               <p class="role">{{ sol.empleado?.puesto || 'Empleado' }}</p>
             </div>
           </div>
