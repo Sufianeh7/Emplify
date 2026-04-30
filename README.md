@@ -59,16 +59,20 @@ FLUSH PRIVILEGES;
 Abre el archivo de configuración en Back/backend/src/main/resources/application.properties y confirma o actualiza los credenciales de MySQL:
 
 ```
-spring.application.name=backend
+spring.application.name=emplify-backend
 
-# Conexión MySQL
-spring.datasource.url=jdbc:mysql://localhost:3306/emplify_db?createDatabaseIfNotExist=true&serverTimezone=UTC
-spring.datasource.username=root
-spring.datasource.password=
+# --- CONFIGURACION DE BASE DE DATOS ---
+spring.datasource.url=${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/emplify_db?createDatabaseIfNotExist=true&serverTimezone=UTC}
+spring.datasource.username=${SPRING_DATASOURCE_USERNAME:root}
+spring.datasource.password=${SPRING_DATASOURCE_PASSWORD:}
 
-# Hibernate — crea o actualiza las tablas automáticamente desde el modelo de entidades
+# --- CONFIGURACION JPA / HIBERNATE ---
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
+spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+
+# --- CONFIGURACION DE SERIALIZACION ---
+spring.jackson.serialization.fail-on-empty-beans=false
 ```
 
 💡 Consejo: Los campos clave a modificar son `spring.datasource.username` y `spring.datasource.password` si tu configuración de MySQL es distinta a la de por defecto.
@@ -136,6 +140,27 @@ Luego inserta una fila en la tabla `usuario`:
 ```
 INSERT INTO usuario (nombre, email, password, rol, activo)
 VALUES ('Admin', 'admin@ejemplo.com', '$2a$10$...pega-tu-hash-aqui...', 'ADMIN', 1);
+```
+
+En la tabla `empresa`:
+
+```
+INSERT INTO empresa (nombre, sector, direccion)
+VALUES ('Emplify', 'Tecnología', 'Calle Direccion 123')
+```
+
+En la tabla `empleado`:
+
+```
+INSERT INTO empleado (id_empresa, id_usuario, id_manager, asuntos_propios_disponibles, vacaciones_disponibles, departamento, puesto)
+VALUES (1, 1, 1, 3, 22, 'IT', 'Administrador del sistema')
+```
+
+En la tabla `tipo_solicitud`:
+
+```
+INSERT INTO tipo_solicitud (dias_anuales, nombre)
+VALUES (22, 'VACACIONES'), (3, 'ASUNTOS PROPIOS'), (null, 'BAJA MÉDICA')
 ```
 
 ### 🖥️ ¿Qué se está ejecutando?
