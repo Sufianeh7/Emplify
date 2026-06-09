@@ -7,6 +7,12 @@
 ![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 
+📱 Vista Previa de la Aplicación
+
+<a href="https://emplify-jade.vercel.app/home" target="_blank">
+  <img src="ruta/a/tu/imagen.png" alt="Emplify Portal del Empleado" width="400">
+</a>
+
 Bienvenido a la guía de inicio rápido de **Emplify**. Sigue estos pasos para instalar los requisitos previos, configurar MySQL, arrancar el backend (Spring Boot) y el frontend (Ionic), e iniciar sesión por primera vez.
 
 > Al finalizar esta guía, tendrás el backend de Emplify ejecutándose en el puerto `8080` y el frontend en el puerto `8100`, con una sesión activa y funcional en tu navegador.
