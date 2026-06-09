@@ -9,9 +9,7 @@
 
 📱 Vista Previa de la Aplicación
 
-<a href="https://emplify-jade.vercel.app/home" target="_blank">
-  <img src="ruta/a/tu/imagen.png" alt="Emplify Portal del Empleado" width="400">
-</a>
+(assets/images/inicio.png)](https://emplify-jade.vercel.app/inicio)
 
 Bienvenido a la guía de inicio rápido de **Emplify**. Sigue estos pasos para instalar los requisitos previos, configurar MySQL, arrancar el backend (Spring Boot) y el frontend (Ionic), e iniciar sesión por primera vez.
 
