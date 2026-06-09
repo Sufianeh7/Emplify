@@ -7,7 +7,7 @@
 ![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 
-📱 Vista Previa de la Aplicación
+## 📱 Vista Previa de la Aplicación
 
 <p align="center">
   <a href="https://emplify-jade.vercel.app/" target="_blank">
