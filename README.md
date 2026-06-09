@@ -10,8 +10,11 @@
 📱 Vista Previa de la Aplicación
 
 <p align="center">
+    <a href="https://emplify-jade.vercel.app/" target="_blank">
+    <img src="Front/emplify-app/src/assets/images/login.png" alt="Emplify Portal del Empleado - Login" height="500">
+  </a>
   <a href="https://emplify-jade.vercel.app/inicio" target="_blank">
-    <img src="Front/emplify-app/src/assets/images/inicio.png" alt="Emplify Portal del Empleado" height="500">
+    <img src="Front/emplify-app/src/assets/images/inicio.png" alt="Emplify Portal del Empleado - Inicio" height="500">
   </a>
 </p>
 
