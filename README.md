@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="https://emplify-jade.vercel.app/inicio" target="_blank">
-    <img src="Front/emplify-app/src/assets/images/inicio.png" alt="Emplify Portal del Empleado" height="1000">
+    <img src="Front/emplify-app/src/assets/images/inicio.png" alt="Emplify Portal del Empleado" height="800">
   </a>
 </p>
 
